@@ -43,8 +43,6 @@ for qq = 1 : N_Qg  %looping through all the flow rates
     disp('A3_2 Finished generating the geological field model! Woop!')
 end
     
-
-fclose(fid4);
 %end
 disp('....')
 disp('Finished, well done little computer!!!!')
@@ -95,3 +93,4 @@ end
 %     fid4 = fopen('Backup_Errors.txt','a');
 %     fprintf(fid4, '%.4f %.4f %.4f %.4f \r\n',[ (IT),k_eff_mD_hor, k_eff_mD_hor_2, k_eff_mD_vert]);
 % end
+%fclose(fid4);
