@@ -1,0 +1,42 @@
+% These are the parameters for input
+
+Correlation lengths in grid cells, different realizations
+*corr: [0 10 2; 1 1 1; 2 2 2]
+
+Loop through all correlation lengths, and have N_real realizations per length.
+*Nreal = 1; 
+
+%------------flow conditions----------
+Flow rate, in m^3/day
+*Qg_tot = [46];
+Number of pore volumes to inject         
+*PVt = 0.5; %
+Time step increment to output analysis files (in PV)
+*dtn = 0.001;           
+
+% ------------reservoir--------------
+Reservoir fine scale properties
+Thickness of Endurance site: 250m
+width = 10km, depth = 4km
+Topmost depth of bunter sandstone is 1400m but lets just model 20m thick interval (based on well 42/25d-3)
+Reservior_bottom = Reservior_top + 260; %1523;  %lowermost injection point - from K reports
+*Rtop = 1416; 
+*Rbom = 1496;
+X (horizontal) size of domain (m)
+Y (horizontal) size of domain (m)
+*Lx = 200; 
+*Ly = 200; 
+size of cells
+*ds_x = 4;
+*ds_y = 4;
+*ds_z = 4;
+
+%---------UPSCALED PARAMETERS----------
+%Homogenising subvolume sizes. Here Nx is the size of the sub volume in voxels. number of CMG coarse cells in each direction - upscaled parameters (our upscaled grid size). Upscaling parameters. Sub values are the number of fine scale grid cells in each upscaled subvolume.
+*Nx_sub = 2; 
+*Ny_sub = 2;
+*Nz_sub = 2;
+
+
+exe_path_report = 'D:\CMG\RESULTS\2020.20\Win_x64\exe\report.exe';
+exe_path_run = 'D:\CMG\IMEX\2020.23\Win_x64\EXE\mx202023.exe';
