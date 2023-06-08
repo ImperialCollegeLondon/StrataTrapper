@@ -12,4 +12,6 @@ All function codes in the folder (Functions)  <br>
 Setting & fluid properties for simuatione in folder (Input) <br>
 The visualization and intermediate files are stored in the folder (Output) <br>
 The Eclipse running files after upscaling are stored in the folder (Result) <br>
+A0_mian.m is the main code. A1--A5.m codes are functions called by A0, and can also be run individually.
+
 
