@@ -7,7 +7,9 @@ along with Sam Krevor (s.krevor@imperial.ac.uk) or Senyou An (s.an@imperial.ac.u
 If not, see <http://www.gnu.org/licenses/>.                                                <br> 
 ********************************************************************************************<br> 
 
-* Code structure
-
-Change the setting & fluid properties for simuatione and  
+* Code structure <br>
+All function codes in the folder (Functions)  <br>
+Setting & fluid properties for simuatione in folder (Input) <br>
+The visualization and intermediate files are stored in the folder (Output) <br>
+The Eclipse running files after upscaling are stored in the folder (Result) <br>
 
