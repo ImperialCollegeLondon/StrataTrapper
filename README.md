@@ -7,6 +7,7 @@ along with Sam Krevor (s.krevor@imperial.ac.uk) or Senyou An (s.an@imperial.ac.u
 If not, see <http://www.gnu.org/licenses/>.                                                <br> 
 ********************************************************************************************<br> 
 
-*Code structure
+* Code structure
+
 Change the setting & fluid properties for simuatione and  
 
