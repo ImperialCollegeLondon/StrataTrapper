@@ -18,3 +18,8 @@ A0_mian.m is the main code. A1--A5.m codes are functions called by A0, and can a
 Change parameters in Input floder .<br>
 Run A0_mian.m to call all funtions, without need to change other codes. <br>
 If users would like to re-run A1--A5.m codes individually, it is also doable.  <br>
+
+* Reference <br>
+Please refer to the user guide for more detailed instructions.  <br>
+If you want to learn more about the theory behind StrataTrapper, please refer to the following paper(s).  <br>
+Jackson, Samuel J., and Samuel Krevor. "Small‐scale capillary heterogeneity linked to rapid plume migration during co 2 storage." Geophysical Research Letters 47.18 (2020): e2020GL088616.
