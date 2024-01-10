@@ -1,26 +1,50 @@
-# StrataTrapper
+# Field scale model generation and upscaling [toolkit](https://github.com/ImperialCollegeLondon/StrataTrapper)
 
-*********************** Field scale model generation and upscaling *********************** <br>
-This is a tool to generate heterogeneous fine-scale model with specific correlation length & <br>
-update model for two-phase flow simulation. You should have received a copy of the GNU <br>
-along with Sam Krevor (s.krevor@imperial.ac.uk) or Senyou An (s.an@imperial.ac.uk).        <br>
-If not, see <http://www.gnu.org/licenses/>.                                                <br> 
-********************************************************************************************<br> 
+![StrataTrapper logo](./img/StrataTrapper.jpg)
 
-* Code structure <br>
-All function codes are in the folder (Functions).  <br>
-Setting & fluid properties for simulation in folder (Input). <br>
-The visualization and intermediate files are stored in the folder (Output). <br>
-The Eclipse running files after upscaling are stored in the folder (Result). <br>
-A0_mian.m is the main code. A1--A5.m codes are functions called by A0, and can also be run individually.
+* [What is StrataTrapper upscaling toolkit?](#what-is-stratatrapper-upscaling-toolkit)
+* [Code structure](#code-structure)
+* [How to run codes](#how-to-run-codes)
+* [References](#references)
 
-* How to run codes <br>
-Change parameters in Input folder .<br>
-Run A0_mian.m to call all functions, without the need to change other codes. <br>
-If users would like to re-run A1--A5.m codes individually, it is also doable.  <br>
-The generated Eclipse running dataset is based on version 2019. Change it if needed. <br>
+## What is StrataTrapper upscaling toolkit?
 
-* Reference <br>
-Please refer to the user guide for more detailed instructions.  <br>
-If you want to learn more about the theory behind StrataTrapper, please refer to the following paper(s).  <br>
-Jackson, Samuel J., and Samuel Krevor. "Small‐scale capillary heterogeneity linked to rapid plume migration during co 2 storage." Geophysical Research Letters 47.18 (2020): e2020GL088616.
+This is a tool to generate heterogeneous fine-scale model with specific correlation length & update model for two-phase flow simulation.
+
+## Code structure
+
+`A0_mian.m` is the main script to run.
+`A1` – `A5` scripts are called by `A0_mian.m`, and can also be run individually.
+
+|Folder     |Contents                                                            |
+|-----------|--------------------------------------------------------------------|
+|`Functions`|internal helper functions                                           |
+|`Input`    |input settings & fluid properties for simulation                    |
+|`Output`   |produced visualisations and intermediate files                      |
+|`Reference`|the User Manual                                                     |
+|`Result`   |generated `.DATA` file (+includes) in ECLIPSE format (version 2019) |
+
+Input/output directories as a whole are the precomputed example
+to describe file formats and provide a reference for comparisons and testing.
+
+Other folder and files are repository-related.
+
+## How to run codes
+
+1. Go to `Input` folder and adjust parameters of a numerical model
+2. Run `A0_mian.m` and wait for the completion
+3. Re-run sub-scripts `A1` – `A5` if considered necessary
+4. Use `Output/*.vtk` files for visualisation and other needs
+5. Use `Result/ECLIPSE_RUN.DATA` as an input for reservoir simulation software.
+  The generated file corresponds to the version 2019 of ECLIPSE.
+
+## References
+
+Please refer to the User Manual in the `Reference` folder
+for more detailed description of the algorithm with visual examples.
+
+More about motivation and theory behind the StrataTrapper approach in the paper:
+> Samuel J. Jackson, Samuel Krevor\
+> **Small-Scale Capillary Heterogeneity Linked to Rapid Plume Migration During CO2 Storage**\
+> *Geophysical Research Letters* | 2020\
+> <https://doi.org/10.1029/2020GL088616>
