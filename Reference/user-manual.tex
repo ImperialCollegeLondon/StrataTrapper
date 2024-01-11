@@ -1,0 +1,102 @@
+\documentclass{article}
+% \documentclass[draft,linenumbers]{agujournal}
+
+\usepackage{appendix}
+\usepackage{pifont}
+\usepackage{subfigure}
+\usepackage[utf8]{inputenc}
+\usepackage{CJK}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{bm}
+\usepackage{etoolbox}
+\usepackage{float}
+\usepackage{lineno}
+\usepackage{color}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{graphicx,subfigure}
+\usepackage{multirow}
+\usepackage{algpseudocode}
+\usepackage[linesnumbered,ruled]{algorithm2e}
+\usepackage{hyperref}
+\usepackage{authblk}
+\def\CO2{CO\textsubscript{2}}
+\def\N2{N\textsubscript{2}}
+
+\title{The user manual of StrataTrapper software}
+
+\author[1]{Senyou An}
+\author[1]{Nele Wenck}
+\author[1]{Ann Muggeridge}
+\author[1]{\href{mailto:s.krevor@imperial.ac.uk}{Samuel Krevor}}
+
+\affil[1]{Department of Earth Science and Engineering, Imperial College London, London, SW7 2AZ, UK}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+    Accurately considering the heterogeneity, particularly the capillary pressure heterogeneity, in reservoir characterisation, which will be further utilized for  multiphase flow simulation.
+\end{abstract}
+
+
+\section{Introduction}
+
+In StrataTrapper we translate cutting edge research on the geological fluid dynamics and trapping of \CO2 into innovative characterisation and modelling software tools that will be used by industry to reduce risks and costs of \CO2 storage projects. The tools will be commercialised through incorporation into the \CO2 reservoir simulation platform OpenGoSim, in addition to being made open-source. We will demonstrate the applicability of these tools to the Endurance field in the Southern North Sea and the East Mey Site in the Central and Northern North Sea. The result of the work will be the commercialisation of the StrataTrapper reservoir simulation tools for the rapid screening, risking, project design, and management of \CO2 storage.
+
+Reservoir simulations of injected \CO2 plumes are central to the successful engineering and management of \CO2 storage. Plume migration rates and direction determine the storage efficiency and significance of potential leakage pathways. The extent of residual and dissolution trapping are quantified through simulation based history matching. Increasing simulation accuracy can de-risk and lower costs throughout the lifetime of a storage project including appraisal, project design, implementation, and abandonment.
+
+Recent work at Imperial College London and University of Cambridge has identified that major inaccuracies in current modelling approaches are due to previously ignored impacts of small scale (cm-m) heterogeneities in multiphase flow properties. Plume migration rates, and the extent of residual and dissolution trapping in a field can all be enhanced by over 200\% by these flow heterogeneities. The research has demonstrated the importance of these processes. There is now an opportunity to commercialise the research into simulation tools for site screening, appraisal, and forecast modelling of use by practitioners.
+We estimate that offshore storage costs may be reduced by 10\% through this improved modelling approach, saving £10s of millions per project. The structure of StrataTrapper is designed to realise the commercial potential of the research advances in flow physics.
+Consortium partners BP, Storegga, and Drax are project developers of CCUS clusters in the UK, and would like to make use of these tools. OpenGoSim provides the commercial platform necessary for these organisations and already works with BP and Storegga on the analysis of sites in the UK.\@
+The open publication of the research basis and engagement with additional practitioners will facilitate broader uptake. Demonstrations of the toolset with case studies within the UK will show the practicality and importance of this approach for modelling \CO2 storage.
+
+\section{Methodology}\label{sec:method}
+
+\input{1algorithm}
+
+\section{Conclusions}\label{sec:Conclusions}
+
+\begin{figure}[H]
+    \centering    \centerline{\includegraphics[width=0.8\textwidth]{Figures/porosity.pdf}}
+    \caption{The correlated porosity field in fine-scale grid}\label{porosity}
+\end{figure}
+
+\begin{figure}[H]
+    \centering    \centerline{\includegraphics[width=1.1\textwidth]{Figures/Permeability.pdf}}
+    \caption{The correlated absolute permeability field in fine-scale grid}\label{Permeability}
+\end{figure}
+
+\begin{figure}[H]
+    \centering    \centerline{\includegraphics[width=0.8\textwidth]{Figures/Pe.pdf}}
+    \caption{The correlated absolute permeability field in fine-scale grid}\label{Pe}
+\end{figure}
+
+\begin{figure}[H]
+    \centering    \centerline{\includegraphics[width=1\textwidth]{Figures/porosity2.pdf}}
+    \caption{The upscaling of correlated porosity field}\label{porosity2}
+\end{figure}
+
+\begin{figure}[H]
+    \centering    \centerline{\includegraphics[width=1\textwidth]{Figures/Pe2.pdf}}
+    \caption{Upscaled capillary pressure curve in each block}\label{Pe2}
+\end{figure}
+
+\begin{figure}[H]
+    \centering    \centerline{\includegraphics[width=0.8\textwidth]{Figures/Permeability2.pdf}}
+    \caption{Directionally upscaled relative permeability in coarsen cells}\label{Permeability2}
+\end{figure}
+
+\nocite{*}
+
+\section*{Acknowledgements}
+We gratefully acknowledge funding from the Shell Digital Rocks II programme at Imperial College London.
+
+\section*{Data Availability}
+The readers can find the input data and raw data of figures presented in the manuscript in the Mendeley repository with the doi: 10.17632/5rcpb43g4w.2.
+
+\bibliographystyle{ieeetr}
+\bibliography{reference}
+
+\end{document}
