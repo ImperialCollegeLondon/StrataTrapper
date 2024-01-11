@@ -5,6 +5,7 @@
 * [What is StrataTrapper upscaling toolkit?](#what-is-stratatrapper-upscaling-toolkit)
 * [Code structure](#code-structure)
 * [How to run codes](#how-to-run-codes)
+* [Contributing](#contributing)
 * [References](#references)
 
 ## What is StrataTrapper upscaling toolkit?
@@ -37,6 +38,10 @@ Other folder and files are repository-related.
 4. Use `Output/*.vtk` files for visualisation and other needs
 5. Use `Result/ECLIPSE_RUN.DATA` as an input for reservoir simulation software.
   The generated file corresponds to the version 2019 of ECLIPSE.
+
+## Contributing
+
+Everyone is welcome to open [issues](https://github.com/ImperialCollegeLondon/StrataTrapper/issues) and [pull requests](https://github.com/ImperialCollegeLondon/StrataTrapper/pulls).
 
 ## References
 
