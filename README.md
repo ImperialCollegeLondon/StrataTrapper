@@ -10,7 +10,7 @@
 
 ## What is StrataTrapper upscaling toolkit?
 
-This is a tool to generate heterogeneous fine-scale model with specific correlation length & update model for two-phase flow simulation.
+This is a tool to generate heterogeneous fine-scale models with specific correlation length & update model for two-phase flow simulation.
 
 ## Code structure
 
