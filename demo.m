@@ -29,7 +29,7 @@ curves_plot(mask, strata_trapped, params);
 
 %% OGS inputs generation
 
-export_fut = parfeval(backgroundPool,@()ogs_export(G,mask,strata_trapped,'model/'), 0); % async call to function
+export_fut = parfeval(backgroundPool,@()ogs_export(grid,mask,strata_trapped,'model/'), 0); % async call to function
 
 ogs_export_base(grid, strata_trapped, params); % base model parameters
 
