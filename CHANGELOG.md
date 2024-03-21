@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.2.0...v0.2.1) (2024-03-21)
+
+
+### Bug Fixes
+
+* :bug: misprint in function argument name ([dcd727d](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/dcd727db1e13ad07adfd6017bd379f0d8f687ad1))
+
 ## [0.2.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.1.0...v0.2.0) (2024-03-21)
 
 
