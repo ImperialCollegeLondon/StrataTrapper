@@ -1,8 +1,9 @@
 on:
-  workflow_dispatch:
   push:
     branches:
       - dev
+
+  workflow_dispatch:
 
 permissions:
   contents: write
