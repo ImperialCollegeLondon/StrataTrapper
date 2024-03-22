@@ -3,41 +3,49 @@
 ![StrataTrapper logo](./img/StrataTrapper.jpg)
 
 * [What is StrataTrapper upscaling toolkit?](#what-is-stratatrapper-upscaling-toolkit)
-* [Code structure](#code-structure)
-* [How to run codes](#how-to-run-codes)
+* [Structure](#structure)
+* [Running](#running)
+* [Versions](#versions)
 * [Contributing](#contributing)
 * [References](#references)
 
 ## What is StrataTrapper upscaling toolkit?
 
-This is a tool to generate heterogeneous fine-scale model with specific correlation length & update model for two-phase flow simulation.
+This is a tool to generate heterogeneous fine-scale model with specific correlation lengths & update model for coarse two-phase flow simulation.
 
-## Code structure
+## Structure
 
-`A0_mian.m` is the main script to run.
-`A1` – `A5` scripts are called by `A0_mian.m`, and can also be run individually.
+Top-level scripts and functions are in the repository root, and the rest in in [`src/`](src) folder.
 
-|Folder     |Contents                                                            |
-|-----------|--------------------------------------------------------------------|
-|`Functions`|internal helper functions                                           |
-|`Input`    |input settings & fluid properties for simulation                    |
-|`Output`   |produced visualisations and intermediate files                      |
-|`Reference`|the User Manual                                                     |
-|`Result`   |generated `.DATA` file (+includes) in ECLIPSE format (version 2019) |
+[`demo.m`](demo.m) script is an implementation of the running guideline below.\
+Feel free to play with it and use as an example for your own scripts.
 
-Input/output directories as a whole are the precomputed example
-to describe file formats and provide a reference for comparisons and testing.
+## Running
 
-Other folder and files are repository-related.
+1. Run [`stratup.m`](startup.m) to setup MATLAB Path.
+2. [optional] Start a parallel pool to run computations there.
+3. Setup reservoir model properties and algorithm options in the same format as produced by
+  [`gen_params`](src/gen_params.m) and [`gen_options`](src/gen_options.m) functions.
+4. Create logical `mask` to filter out impermeable cells and/or define an arbitrary subset of cells to process.
+5. Run [`strata_trapper`](strata_trapper.m) function with all those arguments optionally enabling a UI progress bar.
+6. Export the outputs to [PFLOTRAN-OGS](https://docs.opengosim.com/)-compatible text files using [`ogs_export`](ogs_export.m) function.
+7. Interact and visualise outputs the same way as in the demo script or any other way of your preference.
 
-## How to run codes
+Tips:
 
-1. Go to `Input` folder and adjust parameters of a numerical model
-2. Run `A0_mian.m` and wait for the completion
-3. Re-run sub-scripts `A1` – `A5` if considered necessary
-4. Use `Output/*.vtk` files for visualisation and other needs
-5. Use `Result/ECLIPSE_RUN.DATA` as an input for reservoir simulation software.
-  The generated file corresponds to the version 2019 of ECLIPSE.
+* Usually, MATLAB runs `startup.m` scripts automatically if they are in a startup folder.
+* The heaviest part of the algorithm is essentially parallel with no synchronisation.\
+  So, using several parallel workers usually results in a proportional performance boost.
+
+## Versions
+
+The original version of the toolkit is [v0.1.0](https://github.com/ImperialCollegeLondon/StrataTrapper/tree/v0.1.0).\
+It has its own structure and some unique functionality,\
+so it may worth attention as much as later versions.
+
+[CHANGELOG.md](CHANGELOG.md) describes the version history and key changes.
+
+Other versions can be accessed via [tags](https://github.com/ImperialCollegeLondon/StrataTrapper/tags) and [releases](https://github.com/ImperialCollegeLondon/StrataTrapper/releases) sections of the repository.
 
 ## Contributing
 
@@ -45,10 +53,8 @@ Everyone is welcome to open [issues](https://github.com/ImperialCollegeLondon/St
 
 ## References
 
-Please refer to the User Manual in the `Reference` folder
-for more detailed description of the algorithm with visual examples.
+The StrataTrapper algorithm as well as motivation and theory behind it are in the paper:
 
-More about motivation and theory behind the StrataTrapper approach in the paper:
 > Samuel J. Jackson, Samuel Krevor\
 > **Small-Scale Capillary Heterogeneity Linked to Rapid Plume Migration During CO2 Storage**\
 > *Geophysical Research Letters* | 2020\
