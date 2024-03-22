@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.2.1...v0.2.2) (2024-03-22)
+
+
+### Documentation
+
+* :memo: Update README ([a18fc58](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/a18fc58432d9ef603c8d75a32ae8e39d8a59d92a))
+
 ## [0.2.1](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.2.0...v0.2.1) (2024-03-21)
 
 
