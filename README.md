@@ -2,16 +2,19 @@
 
 ![StrataTrapper logo](./img/StrataTrapper.jpg)
 
-* [What is StrataTrapper upscaling toolkit?](#what-is-stratatrapper-upscaling-toolkit)
+* [The StrataTrapper codes](#the-stratatrapper-codes)
 * [Structure](#structure)
 * [Running](#running)
 * [Versions](#versions)
 * [Contributing](#contributing)
 * [References](#references)
 
-## What is StrataTrapper upscaling toolkit?
+## The StrataTrapper codes
 
-This is a tool to generate heterogeneous fine-scale model with specific correlation lengths & update model for coarse two-phase flow simulation.
+This is the StrataTrapper **upscaling toolkit**.
+It generates heterogeneous fine-scale models with specific correlation lengths to update coarse-scale two-phase flow models.
+
+Another tool is the **reduced-physics model** [CO2GraVISim](https://github.com/ajobutler/CO2GraVISim).
 
 ## Structure
 
