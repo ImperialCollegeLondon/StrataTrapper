@@ -93,7 +93,7 @@ function [pc_mid_tot, sw_mid, pc_mid, invaded_mat_mid, converged] = mip_iteratio
     pc_func_inv, pc_deriv, ...
     tol_sw)
 
-invaded_mat_mid = check_box_connectivity(pc_mid, entry_pressures, Nz_sub, Nx_sub, Ny_sub);
+invaded_mat_mid = calc_percolation(pc_mid, entry_pressures);
 
 volume = prod(dr);
 sub_volume = volume./double(Nz_sub*Nx_sub*Ny_sub);
