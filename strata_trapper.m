@@ -19,8 +19,8 @@ krg = zeros(G.cells.num,3,length(saturations));
 cells_num = min(length(mask),G.cells.num);
 mask = mask(1:cells_num);
 
+wb_queue = parallel.pool.DataQueue;
 if enable_waitbar
-    wb_queue = parallel.pool.DataQueue;
     parforWaitbar(0,sum(mask));
     afterEach(wb_queue,@parforWaitbar);
 end
