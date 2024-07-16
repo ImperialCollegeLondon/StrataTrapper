@@ -57,8 +57,6 @@ parfor cell_index = 1:cells_num
 end
 
 krw(:,:,saturations<=params.rel_perm.sw_resid) = 0;
-krg(:,:,saturations<=params.rel_perm.sw_resid) = 1;
-krg(:,:,end) = 0;
 
 strata_trapped = struct(...
     'porosity', poro_upscaled, ...
