@@ -27,19 +27,3 @@ params.capil.j_entry = params.capil.pres_entry / (sqrt(params.poro.mean/params.p
 params.rel_perm.wat_func = @(sw) max((sw - params.rel_perm.sw_resid)./(1 - params.rel_perm.sw_resid),0);
 params.rel_perm.gas_func = @(sg) min(sg./(1 - params.rel_perm.sw_resid),1);
 end
-
-function pc = brooks_corey(sw,sw_resid,p_entry,lambda)
-if sw <= sw_resid
-    pc = Inf;
-    return;
-end
-sw = min(sw,1);
-pc = p_entry .* ((1-sw_resid)./(sw-sw_resid)).^(1/lambda);
-end
-
-function dpc_dsw = brooks_corey_deriv(sw,sw_resid,p_entry,lambda)
-A = p_entry .* (1-sw_resid).^(1/lambda);
-B = sw_resid;
-C = -(1/lambda);
-dpc_dsw = A.*C .* (sw - B).^(C-1);
-end
