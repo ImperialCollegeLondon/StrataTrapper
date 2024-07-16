@@ -23,8 +23,7 @@ sub_permeability = params.perm_corr(sub_porosity);
 
 %% calculate fine-scale sub_entry_pressures
 
-sub_entry_pressures = calc_entry_pressure(sub_porosity, sub_permeability, ...
-    params.capil.j_entry, params.capil.angle, params.capil.tension);
+sub_entry_pressures = params.capil.pres_func(1,sub_porosity, sub_permeability);
 
 end
 
