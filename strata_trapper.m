@@ -104,7 +104,7 @@ state = state + 1;
 elapsed = toc(timer_val);
 
 time_to_report = (elapsed - last_reported_time) > 1;
-state_to_report = (state - last_reported_state) > final_state * 0.001;
+state_to_report = (state - last_reported_state) > final_state * 0.01;
 
 if ~(time_to_report || state_to_report)
     return;
