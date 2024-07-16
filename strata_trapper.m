@@ -41,15 +41,10 @@ parfor cell_index = 1:cells_num
 
     poro_upscaled(cell_index) = porosity;
     perm_upscaled(cell_index,:) = Kabs;
-    cap_pres_upscaled(cell_index,:) = interp1(sw_upscaled,pc_upscaled,saturations,"linear","extrap");
+    cap_pres_upscaled(cell_index,:) = pc_upscaled;
 
-    for i = 1:3
-        krw_cell(i,:) = monotonize(sw_upscaled, krw_cell(i,:),  1);
-        krg_cell(i,:) = monotonize(sw_upscaled, krg_cell(i,:), -1);
-    end
-
-    krw(cell_index,:,:) = interp1(sw_upscaled, krw_cell', saturations, "linear")';
-    krg(cell_index,:,:) = interp1(sw_upscaled, krg_cell', saturations, "linear")';
+    krw(cell_index,:,:) = krw_cell;
+    krg(cell_index,:,:) = krg_cell;
 
     if enable_waitbar
         send(wb_queue,cell_index);
