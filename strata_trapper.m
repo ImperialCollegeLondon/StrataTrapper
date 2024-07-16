@@ -10,7 +10,7 @@ end
 perm_upscaled = zeros(G.cells.num, 3);
 poro_upscaled = zeros(G.cells.num, 1);
 
-saturations = unique([linspace(options.sat_min,1,options.sat_num_points),params.rel_perm.sw_resid]);
+saturations = linspace(params.rel_perm.sw_resid,1,options.sat_num_points);
 
 cap_pres_upscaled = zeros(G.cells.num,length(saturations));
 krw = zeros(G.cells.num,  3,length(saturations));
