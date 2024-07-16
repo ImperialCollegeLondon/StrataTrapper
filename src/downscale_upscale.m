@@ -21,4 +21,8 @@ end
     subscale_dims, sub_porosity, sub_permeability, sub_entry_pressures ...
     );
 
+pc_upscaled = interp1(sw_upscaled,pc_upscaled,saturations,"linear","extrap");
+krw = interp1(sw_upscaled, krw', saturations, "linear","extrap")';
+krg = interp1(sw_upscaled, krg', saturations, "linear","extrap")';
+
 end
