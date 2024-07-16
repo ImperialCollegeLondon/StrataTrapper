@@ -1,4 +1,4 @@
-function write_mappings(prefix,G,perm,poro)
+function write_mappings(prefix,G,perm)
 [curve_mapping, permeable_cells] = cell_to_curve(G, perm);
 
 keywords = ["KRNUMX","KRNUMY","KRNUMZ","SATNUM"];
@@ -20,11 +20,5 @@ parfor keyword_num = 1:length(keywords)
     file_name = join([prefix,keyword,".grdecl"],'');
     write_curve_nums(file_name,keyword,perm_mapping(:,keyword_num),0,0);
 end
-
-poro_mapping = zeros(G.cells.num,1);
-poro_mapping(G.cells.indexMap) = poro;
-keyword = "PORO";
-file_name = join([prefix,keyword,".grdecl"],'');
-write_curve_nums(file_name,"PORO",poro_mapping,0,0);
 
 end
