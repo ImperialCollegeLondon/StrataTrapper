@@ -1,6 +1,7 @@
-function strata_trapped = strata_trapper(G, mask, params, options, enable_waitbar)
+function strata_trapped = strata_trapper(G, rock, mask, params, options, enable_waitbar)
 arguments
     G              (1,1) struct
+    rock           (1,1) struct
     mask           (:,1) logical
     params         (1,1) struct
     options        (1,1) struct
@@ -8,7 +9,6 @@ arguments
 end
 
 perm_upscaled = zeros(G.cells.num, 3);
-poro_upscaled = zeros(G.cells.num, 1);
 
 saturations = linspace(params.rel_perm.sw_resid,1,options.sat_num_points);
 
@@ -26,20 +26,17 @@ if enable_waitbar
 end
 
 DR = [G.DX,G.DY,G.DZ];
+perm = rock.perm;
+poro = rock.poro;
 
 parfor cell_index = 1:cells_num
     if ~mask(cell_index)
         continue;
     end
 
-    [porosity, Kabs, sw_upscaled, pc_upscaled, krg_cell, krw_cell] = ...
-        downscale_upscale(DR(cell_index,:), saturations , params, options);
+    [Kabs, ~, pc_upscaled, krg_cell, krw_cell] = downscale_upscale(...
+        poro(cell_index), perm(cell_index,:), DR(cell_index,:), saturations , params, options);
 
-    if porosity <= 0
-        error('Resulted in non-positive upscaled porosity')
-    end
-
-    poro_upscaled(cell_index) = porosity;
     perm_upscaled(cell_index,:) = Kabs;
     cap_pres_upscaled(cell_index,:) = pc_upscaled;
 
@@ -54,7 +51,6 @@ end
 krw(:,:,saturations<=params.rel_perm.sw_resid) = 0;
 
 strata_trapped = struct(...
-    'porosity', poro_upscaled, ...
     'permeability', perm_upscaled, ...
     'saturation', saturations,...
     'capillary_pressure', cap_pres_upscaled, ...
