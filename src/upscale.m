@@ -118,7 +118,7 @@ deriv = pc_deriv(sw_mid, mean(entry_pressures,'all'));
 
 dpc = sw_err*deriv;
 
-pc_mid = pc_mid + dpc * 0.5;
+pc_mid = pc_mid + dpc * 0.8;
 if ~isfinite(pc_mid)
     error('')
 end
