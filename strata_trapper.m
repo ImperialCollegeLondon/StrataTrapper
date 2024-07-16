@@ -81,7 +81,7 @@ persistent state wb final_state timer_val last_reported_state last_reported_time
 if nargin == 2
     state = 0;
     final_state = max_iterations;
-    wb = waitbar(state,sprintf('0/%u iterations', final_state),'Name','StrataTrapper');
+    wb = waitbar(state,sprintf('%u cells to upscale', final_state),'Name','StrataTrapper');
     timer_val = tic();
 
     last_reported_state = state;
@@ -95,7 +95,7 @@ end
 
 if nargin == 3
     elapsed = duration(seconds(toc(timer_val)),'Format','hh:mm:ss');
-    message = sprintf('%u coarse cells in %s',final_state,elapsed);
+    message = sprintf('%u cells upscaled\n in %s',final_state,elapsed);
     waitbar(1,wb,message);
     return;
 end
@@ -106,16 +106,17 @@ elapsed = toc(timer_val);
 time_to_report = (elapsed - last_reported_time) > 1;
 state_to_report = (state - last_reported_state) > final_state * 0.001;
 
-if and(~time_to_report,~state_to_report)
+if ~(time_to_report || state_to_report)
     return;
 end
 
 last_reported_state = state;
 last_reported_time = elapsed;
 
-t_expected = elapsed * final_state / state;
-eta = duration(seconds(t_expected - elapsed),'Format','hh:mm:ss');
-elapsed = duration(seconds(elapsed),'Format','hh:mm:ss');
-message = sprintf('%u/%u coarse cells\n passed: %s | ETA: %s',state,final_state,elapsed,eta);
+pace_integral = elapsed/state;
+eta_estimate = (final_state - state) * pace_integral;
+eta = duration(seconds(eta_estimate),'Format','hh:mm:ss');
+elapsed_str = duration(seconds(elapsed),'Format','hh:mm:ss');
+message = sprintf('%u/%u cells upscaled\n passed: %s | ETA: %s',state,final_state,elapsed_str,eta);
 waitbar(state/final_state,wb,message);
 end
