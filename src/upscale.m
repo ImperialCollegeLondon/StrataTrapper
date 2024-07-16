@@ -53,17 +53,8 @@ for index_saturation = 1:length(saturations)
     kg_mat_local = kg_mat_local.*permeabilities; % FIXME scaling to absolute permeabilities
     kw_mat_local = kw_mat_local.*permeabilities; % FIXME scaling to absolute permeabilities
 
-    kg_phase_connected_local = zeros(1,3);
-    kw_phase_connected_local = zeros(1,3);
-
-    [kg_phase_connected_local(1), ~] = check_axis_connectivity(kg_mat_local, Nx_sub, Nz_sub,Ny_sub,tol_kr, 1, Ny_sub); %z
-    [kg_phase_connected_local(2), ~] = check_axis_connectivity(kg_mat_local, Nx_sub, Nz_sub,Ny_sub,tol_kr, 2, Nx_sub); %y
-    [kg_phase_connected_local(3), ~] = check_axis_connectivity(kg_mat_local, Nx_sub, Nz_sub,Ny_sub,tol_kr, 3, Nz_sub); %x
-
-    [kw_phase_connected_local(1), ~] = check_axis_connectivity(kw_mat_local, Nx_sub, Nz_sub,Ny_sub,tol_kr, 1, Ny_sub);%z
-    [kw_phase_connected_local(2), ~] = check_axis_connectivity(kw_mat_local, Nx_sub, Nz_sub,Ny_sub,tol_kr, 2, Nx_sub);%y
-    [kw_phase_connected_local(3), ~] = check_axis_connectivity(kw_mat_local, Nx_sub, Nz_sub,Ny_sub,tol_kr, 3, Nz_sub);%x
-
+    kg_phase_connected_local = check_axis_connectivity(kg_mat_local, Nx_sub, Ny_sub, Nz_sub, tol_kr);
+    kw_phase_connected_local = check_axis_connectivity(kw_mat_local, Nx_sub, Ny_sub, Nz_sub, tol_kr);
 
     [krg(:,index_saturation), krw(:,index_saturation)] = calc_phase_permeabilities(...
         dr_sub, Kabs, ...
