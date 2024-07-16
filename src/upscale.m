@@ -26,7 +26,7 @@ for index_saturation = 1:length(saturations)
 
     sw_target = saturations(index_saturation);
 
-    pc_mid = params.capil.pres_func(sw_target, mean(entry_pressures,'all'));
+    pc_mid = params.capil.pres_func(sw_target, mean(porosities,'all'), mean(permeabilities,'all'));
     sw_mid = sw_target;
 
     calc_endpoint = index_saturation == 1 || index_saturation == length(saturations);
@@ -34,7 +34,7 @@ for index_saturation = 1:length(saturations)
 
     for iteration_num=1:max_iterations
         [pc_mid_tot, sw_mid, pc_mid, invaded_mat_mid, converged] = mip_iteration(...
-            sw_target, dr, entry_pressures, porosities, pc_mid, ...
+            sw_target, dr, entry_pressures, porosities, permeabilities, pc_mid, ...
             Nz_sub, Nx_sub, Ny_sub,...
             params.capil.pres_func_inv, params.capil.pres_deriv,...
             options.sat_tol ...
@@ -50,8 +50,8 @@ for index_saturation = 1:length(saturations)
 
     sw = invaded_mat_mid .* sw_mid + ~invaded_mat_mid .* 1;
 
-    kg_mat_local = params.rel_perm.gas_func(1-sw);
-    kw_mat_local = params.rel_perm.wat_func(sw);
+    kg_mat_local = params.rel_perm.calc_krg(1-sw);
+    kw_mat_local = params.rel_perm.calc_krw(sw);
 
     kg_mat_local = kg_mat_local.*permeabilities;
     kw_mat_local = kw_mat_local.*permeabilities;
@@ -88,7 +88,7 @@ end
 end
 
 function [pc_mid_tot, sw_mid, pc_mid, invaded_mat_mid, converged] = mip_iteration(...
-    sw_target, dr, entry_pressures, porosities, pc_mid,...
+    sw_target, dr, entry_pressures, porosities, permeabilities, pc_mid,...
     Nz_sub, Nx_sub, Ny_sub, ...
     pc_func_inv, pc_deriv, ...
     tol_sw)
@@ -100,7 +100,7 @@ sub_volume = volume./double(Nz_sub*Nx_sub*Ny_sub);
 pore_volumes = porosities .* sub_volume;
 pore_volume = sum(pore_volumes,'all');
 
-sub_sw_mid = invaded_mat_mid .* pc_func_inv(pc_mid,entry_pressures) + ~invaded_mat_mid .* 1;
+sub_sw_mid = invaded_mat_mid .* pc_func_inv(pc_mid,porosities,permeabilities) + ~invaded_mat_mid .* 1;
 sub_sw_mid(~isfinite(sub_sw_mid)) = 1;
 sw_mid = sum(sub_sw_mid.*pore_volumes,'all')/pore_volume;
 
@@ -117,7 +117,7 @@ if converged
     return;
 end
 
-deriv = pc_deriv(sw_mid, mean(entry_pressures,'all'));
+deriv = pc_deriv(sw_mid, mean(porosities,'all'), mean(permeabilities,'all'));
 
 dpc = sw_err*deriv;
 
