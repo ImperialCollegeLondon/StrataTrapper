@@ -13,9 +13,9 @@ Kabs = upscale_permeability(permeabilities, dr_sub(1),dr_sub(2),dr_sub(3));
 sw_upscaled = saturations;
 pc_upscaled = zeros(size(saturations));
 
-Nz_sub = downscale_dims(3);
 Nx_sub = downscale_dims(1);
 Ny_sub = downscale_dims(2);
+Nz_sub = downscale_dims(3);
 
 krg = zeros(3,length(sw_upscaled));
 krw = zeros(3,length(sw_upscaled));
@@ -23,7 +23,7 @@ krw = zeros(3,length(sw_upscaled));
 tol_kr = options.perm_min_threshold;
 
 for index_saturation = 1:length(saturations)
-    
+
     sw_target = saturations(index_saturation);
 
     pc_mid = params.capil.pres_func(sw_target, mean(entry_pressures,'all'));
@@ -107,7 +107,7 @@ sw_mid = sum(sub_sw_mid.*pore_volumes,'all')/pore_volume;
 pc_mid_tot = sum((1-sub_sw_mid).*pore_volumes.*pc_mid,"all")/(pore_volume*(1-sw_mid));
 
 if sw_mid >=1
-    pc_mid_tot = pc_mid; % FIXME remove
+    pc_mid_tot = pc_mid;
 end
 
 sw_err = sw_target - sw_mid;
