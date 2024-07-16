@@ -28,8 +28,11 @@ for index_saturation = 1:length(saturations)
 
     pc_mid = params.capil.pres_func(sw_target, mean(entry_pressures,'all'));
     sw_mid = sw_target;
-    for iteration_num=1:1000
-        
+
+    calc_endpoint = index_saturation == 1 || index_saturation == length(saturations);
+    max_iterations = calc_endpoint*1000 + ~calc_endpoint*2;
+
+    for iteration_num=1:max_iterations
         [pc_mid_tot, sw_mid, pc_mid, invaded_mat_mid, converged] = mip_iteration(...
             sw_target, dr, entry_pressures, porosities, pc_mid, ...
             Nz_sub, Nx_sub, Ny_sub,...
