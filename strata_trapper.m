@@ -1,11 +1,12 @@
-function strata_trapped = strata_trapper(G, rock, mask, params, options, enable_waitbar)
+function strata_trapped = strata_trapper(G, rock, mask, params, options, enable_waitbar,num_par_workers)
 arguments
-    G              (1,1) struct
-    rock           (1,1) struct
-    mask           (:,1) logical
-    params         (1,1) struct
-    options        (1,1) struct
-    enable_waitbar (1,1) logical = false;
+    G               (1,1) struct
+    rock            (1,1) struct
+    mask            (:,1) logical
+    params          (1,1) struct
+    options         (1,1) struct
+    enable_waitbar  (1,1) logical = false;
+    num_par_workers (1,1) uint32  = Inf;
 end
 
 perm_upscaled = zeros(G.cells.num, 3);
@@ -29,7 +30,7 @@ DR = [G.DX,G.DY,G.DZ];
 perm = rock.perm;
 poro = rock.poro;
 
-parfor cell_index = 1:cells_num
+parfor (cell_index = 1:cells_num, num_par_workers)
     if ~mask(cell_index)
         continue;
     end
