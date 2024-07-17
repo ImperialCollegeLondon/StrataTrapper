@@ -21,9 +21,10 @@ sub_porosity = max(sub_porosity,0);
 
 %% calculate fine-scale permeability
 
-sub_permeability = rsgen3D(dr,subscale_dims,params.corr_lens,@(N)sub_permeability);
-sub_permeability = normalize(sub_permeability,log(perm_coarse(1)));
-sub_permeability = exp(sub_permeability);
+sub_permeability_log = log(sub_permeability);
+sub_permeability_log = rsgen3D(dr,subscale_dims,params.corr_lens,@(N)sub_permeability_log);
+sub_permeability_log = normalize(sub_permeability_log,log(perm_coarse));
+sub_permeability = exp(sub_permeability_log);
 
 %% calculate fine-scale sub_entry_pressures
 
