@@ -1,61 +1,58 @@
 %% StrataTrapper demonstration
 
-ppool = parpool; % start default parpool (optional)
+parpool(); % start default parpool (optional)
 
-%% Input params
+%% Inputs
 
-params = gen_params();
-options = gen_options();
+params  = gen_params (); % rock and fluid parameters
+options = gen_options(); % StrataTrapper options
 
-%% Subscaling demo
+%% Downscaling demo
 
-subscale_demo(params, options);
+downscale_demo(params, options);
 
-%% Grid geometry
+%% Grid & rock properties
 
-grid = grid_demo();
-is_permeable = rand(grid.cells.num,1) > 0.1;
-mask = is_permeable(1:1000); % process only a subset of cells
+[grid, rock] = grid_demo(params);
 
 %% Run StrataTrapper
 
-enable_waitbar = true;
+mask = rand(grid.cells.num,1) < 0.001; % process only a fraction of cells
 
-strata_trapped = strata_trapper(grid, mask, params, options, enable_waitbar);
+enable_waitbar = true;
+num_par_workers = Inf; % use all parallel workers from the pool
+
+strata_trapped = strata_trapper(grid, rock, mask, params, options, enable_waitbar, num_par_workers);
 
 %% Visualize saturation functions
 
-curves_plot(mask, strata_trapped, params);
+plot_result(rock, mask, strata_trapped, params);
 
 %% OGS inputs generation
 
-export_fut = parfeval(backgroundPool,@()ogs_export(grid,mask,strata_trapped,'model/'), 0); % async call to function
-
-ogs_export_base(grid, strata_trapped, params); % base model parameters
+% run in background
+export_fut = parfeval(backgroundPool, @()ogs_export(grid,mask,strata_trapped), 0);
 
 %% helpers
 
-function subscale_demo(params, options)
+function downscale_demo(params, options)
 
-options.subscale = 20 * meter();
-
-[~, sub_porosity, sub_permeability, sub_entry_pressures, ~] = downscale(...
+[~, sub_porosity, sub_permeability, sub_entry_pressures] = downscale(...
+    0.1, 100*milli*darcy,...
     [400,400,0.1].*meter(),...
     params, options ...
     );
 
-fig = figure('WindowStyle','docked','Name','Sub-scaling demonstration');
-tiles = tiledlayout(fig,'flow',TileSpacing='compact',Padding='tight');
+fig = figure;
+tiles = tiledlayout(fig,'flow',TileSpacing='tight',Padding='tight');
 
     function slice_plot(ax,data,title_str,units_str)
-        imagesc(ax,data',...
+        imagesc(ax,data,...
             'YData',linspace(0,400,size(data,2)), ...
             'XData',linspace(0,400,size(data,1))...
             );
 
         axis(ax,'equal');
-        xlabel(ax,'x, m');
-        ylabel(ax,'y, m');
 
         ax.XLimitMethod="tight";
         ax.YLimitMethod="tight";
@@ -65,46 +62,87 @@ tiles = tiledlayout(fig,'flow',TileSpacing='compact',Padding='tight');
         ylabel(cb,units_str);
     end
 
-slice_plot(nexttile(tiles),squeeze(sub_porosity(2,:,:)),'Porosity','');
+slice_plot(nexttile(tiles),squeeze(sub_porosity(:,:,2)),'Porosity','');
 
-slice_plot(nexttile(tiles),squeeze(sub_entry_pressures(2,:,:)./kilo()),'Entry pressure','kPa');
+slice_plot(nexttile(tiles),squeeze(sub_entry_pressures(:,:,2)./barsa()),'Entry pressure','bar');
 
-slice_plot(nexttile(tiles),squeeze(sub_permeability(2,:,:)./(milli()*darcy())),'Permeability','mD');
-
+slice_plot(nexttile(tiles),squeeze(sub_permeability(:,:,2)./(milli()*darcy())),'Permeability','mD');
+xlabel(tiles,'x, m');
+ylabel(tiles,'y, m');
 end
 
-function [grid] = grid_demo()
-grid.cartDims = [82, 123, 36];
+function [grid, rock] = grid_demo(params)
+grid.cartDims = [80, 120, 35];
 grid.cells.num = prod(grid.cartDims);
 grid.cells.indexMap = 1:grid.cells.num;
+
 grid.DX = 400 * meter() * ones(grid.cells.num,1);
 grid.DY = grid.DX;
 grid.DZ = 0.1 * meter() * ones(grid.cells.num,1);
+
+poro_perm = params.poro_perm_gen(grid.cells.num);
+rock.poro = poro_perm(1,:)';
+rock.poro = max(rock.poro,0);
+
+rock.perm = poro_perm(2,:)';
 end
 
-function curves_plot(mask, strata_trapped, params)
-sub_data = @(data,mask,direction) squeeze(data(mask,direction,:));
+function plot_result(rock, mask, strata_trapped, params)
 
-fig_krw = figure('WindowStyle','docked','Name','krw');
-tiles_krw = tiledlayout(fig_krw,'flow',TileSpacing='compact',Padding='tight');
+    function curves_plot(mask, strata_trapped, params)
+        sub_data = @(data,mask,direction) squeeze(data(mask,direction,:));
 
-stat_plot(nexttile(tiles_krw),'Water relative permeability along X-axis','',strata_trapped.saturation,params.rel_perm.wat_func,sub_data(strata_trapped.rel_perm_wat,mask,1));
-stat_plot(nexttile(tiles_krw),'Water relative permeability along Y-axis','',strata_trapped.saturation,params.rel_perm.wat_func,sub_data(strata_trapped.rel_perm_wat,mask,2));
-stat_plot(nexttile(tiles_krw),'Water relative permeability along Z-axis','',strata_trapped.saturation,params.rel_perm.wat_func,sub_data(strata_trapped.rel_perm_wat,mask,3));
+        tiles_krw = tiledlayout(figure(),3,2,TileSpacing='compact',Padding='tight');
 
-fig_krg = figure('WindowStyle','docked','Name','krg');
-tiles_krg = tiledlayout(fig_krg,'flow',TileSpacing='compact',Padding='tight');
+        stat_plot(nexttile(tiles_krw),'Water, along X-axis','',strata_trapped.saturation,params.rel_perm.calc_krw,sub_data(strata_trapped.rel_perm_wat,mask,1));
+        yscale("log");
+        stat_plot(nexttile(tiles_krw),'Gas, along X-axis','',strata_trapped.saturation,@(sw) params.rel_perm.calc_krg(1-sw),sub_data(strata_trapped.rel_perm_gas,mask,1));
+        yscale("log");
 
-stat_plot(nexttile(tiles_krg),'Gas relative permeability along X-axis','',strata_trapped.saturation,@(sw) params.rel_perm.gas_func(1-sw),sub_data(strata_trapped.rel_perm_gas,mask,1));
-stat_plot(nexttile(tiles_krg),'Gas relative permeability along Y-axis','',strata_trapped.saturation,@(sw) params.rel_perm.gas_func(1-sw),sub_data(strata_trapped.rel_perm_gas,mask,2));
-stat_plot(nexttile(tiles_krg),'Gas relative permeability along Z-axis','',strata_trapped.saturation,@(sw) params.rel_perm.gas_func(1-sw),sub_data(strata_trapped.rel_perm_gas,mask,3));
+        stat_plot(nexttile(tiles_krw),'Water, along Y-axis','',strata_trapped.saturation,params.rel_perm.calc_krw,sub_data(strata_trapped.rel_perm_wat,mask,2));
+        yscale("log");
+        stat_plot(nexttile(tiles_krw),'Gas, along Y-axis','',strata_trapped.saturation,@(sw) params.rel_perm.calc_krg(1-sw),sub_data(strata_trapped.rel_perm_gas,mask,2));
+        yscale("log");
 
-fig_pc = figure('WindowStyle','docked','Name','pc');
-stat_plot(axes(fig_pc),'Capillary pressure','bar',strata_trapped.saturation,@(sw) params.capil.pres_func(sw,params.capil.pres_entry)./barsa(),strata_trapped.capillary_pressure(mask,:)./barsa());
+        stat_plot(nexttile(tiles_krw),'Water, along Z-axis','',strata_trapped.saturation,params.rel_perm.calc_krw,sub_data(strata_trapped.rel_perm_wat,mask,3));
+        yscale("log");
+        stat_plot(nexttile(tiles_krw),'Gas, along Z-axis','',strata_trapped.saturation,@(sw) params.rel_perm.calc_krg(1-sw),sub_data(strata_trapped.rel_perm_gas,mask,3));
+        yscale("log");
+
+        xlabel(tiles_krw,'Wetting phase saturation');
+        ylabel(tiles_krw,'Relative permeability');
+    end
+
+curves_plot(mask, strata_trapped, params);
+
+
+base_cap = strata_trapped;
+base_cap.permeability = rock.perm;
+for i = 1:length(base_cap.saturation)
+    base_cap.capillary_pressure(mask,i) = params.capil.pres_func(base_cap.saturation(i),rock.poro(mask),geomean(rock.perm(mask,:),2));
+end
+
+tiles_pc = tiledlayout(figure(),'flow',TileSpacing='compact',Padding='tight');
+
+pc_base = nexttile(tiles_pc);
+y_lim_base = stat_plot(pc_base,'Base','',base_cap.saturation,[],base_cap.capillary_pressure(mask,:)./barsa());
+pc_base.YScale='log';
+
+[y_lim_strat, pc_strat] = stat_plot(nexttile(tiles_pc),'StrataTrapped','',strata_trapped.saturation,[],strata_trapped.capillary_pressure(mask,:)./barsa());
+pc_strat.YScale='log';
+
+y_lim_concat = [y_lim_base;y_lim_strat];
+y_lim_both = [min(y_lim_concat(:,1)),max(y_lim_concat(:,2))];
+
+ylim(pc_base,y_lim_both);
+ylim(pc_strat,y_lim_both);
+
+xlabel(tiles_pc,'Wetting phase saturation');
+ylabel(tiles_pc,'Capillary pressure, bar');
 
 end
 
-function ax = stat_plot(ax, name, y_label, x_data, base_func, data)
+function [y_lim, ax] = stat_plot(ax, name, y_label, x_data, base_func, data,color)
 arguments
     ax
     name char
@@ -112,9 +150,10 @@ arguments
     x_data (1,:) double
     base_func
     data   (:,:) double
+    color = 'blue'
 end
 
-parallelcoords(ax,data,'Quantile',0.01,'XData',x_data);
+parallelcoords(ax,data,'Quantile',0.01,'XData',x_data,'Color',color);
 
 if ~isempty(base_func)
     hold(ax,'on');
@@ -123,40 +162,26 @@ if ~isempty(base_func)
 end
 
 title(ax,name);
-
-xlabel(ax,'Wetting phase saturation');
-xlim(ax,[0,1]);
+xlabel(ax,'');
 ax.XTickMode='auto';
 ax.XTickLabelMode='auto';
 ax.XLimitMethod="tickaligned";
 
-% ylim(ax,[0,max(data,[],'all')]);
 ylabel(ax,y_label);
 ax.YLimitMethod="tight";
 
-legend(ax,{'Median','Quantiles 0.01 and 0.99','','Intrinsic curve'},'Location','best');
+legends = {'Median','Quantiles 0.01 and 0.99',''};
+if ~isempty(base_func)
+    legends{end+1} = 'Intrinsic curve';
 end
 
-function ogs_export_base(G, strata_trapped, params)
-perm_base = params.perm_corr(strata_trapped.porosity)./milli()./darcy();
-perm_base(strata_trapped.porosity == 0) = 0;
+legend(ax,legends,'Location','best');
 
-perm_base_mapping = zeros(G.cells.num,1);
-perm_base_mapping(G.cells.indexMap) = perm_base;
-
-write_curve_nums("model/base-PERMX.grdecl","PERMX",perm_base_mapping,0,0);
-write_curve_nums("model/base-PERMY.grdecl","PERMY",perm_base_mapping,0,0);
-write_curve_nums("model/base-PERMZ.grdecl","PERMZ",perm_base_mapping,0,0);
-
-swfn_base = [strata_trapped.saturation; ...
-    params.rel_perm.wat_func(strata_trapped.saturation); ...
-    params.capil.pres_func(strata_trapped.saturation,params.capil.pres_entry)./barsa()];
-
-sg = unique([1-strata_trapped.saturation,1]);
-
-sgfn_base = [sg; params.rel_perm.gas_func(sg); zeros(size(sg))];
-
-format_spec ='%f\t%f\t%f\n';
-swfn_base_str = sprintf(format_spec,swfn_base)
-sgfn_base_str = sprintf(format_spec,sgfn_base)
+try
+    [yu,yl,ym] = ax.Children(:).YData;
+    ydata = [yu,yl,ym];
+    y_lim = [min(ydata),max(ydata)];
+catch err
+    y_lim = [nan,nan];
+end
 end

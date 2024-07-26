@@ -3,10 +3,10 @@ arguments
     G              (1,1) struct
     mask           (:,1) logical
     strata_trapped (1,1) struct
-    output_prefix  char   = 'model/'
+    output_prefix  char   = 'model/gen/'
 end
 
-write_mappings(output_prefix,G,strata_trapped.permeability ./ milli ./ darcy(), strata_trapped.porosity);
+write_mappings(output_prefix,G,strata_trapped.permeability ./ milli ./ darcy());
 
 generate_sfn(...
     mask, ...
@@ -16,4 +16,3 @@ generate_sfn(...
     strata_trapped.rel_perm_gas, ...
     output_prefix, '.dat');
 end
-
