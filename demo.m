@@ -31,7 +31,7 @@ plot_result(rock, mask, strata_trapped, params);
 %% OGS inputs generation
 
 % run in background
-export_fut = parfeval(backgroundPool, @()ogs_export(grid,mask,strata_trapped), 0);
+export_fut = parfeval(backgroundPool,@ogs_export,0,grid,mask,strata_trapped);
 
 %% helpers
 
@@ -87,33 +87,46 @@ rock.poro = max(rock.poro,0);
 rock.perm = poro_perm(2,:)';
 end
 
-function plot_result(rock, mask, strata_trapped, params)
+function curves_plot(mask, strata_trapped, params,scale)
+arguments
+    mask 
+    strata_trapped 
+    params 
+    scale = "log"
+end
+sub_data = @(data,mask,direction) squeeze(data(mask,direction,:));
 
-    function curves_plot(mask, strata_trapped, params)
-        sub_data = @(data,mask,direction) squeeze(data(mask,direction,:));
+tiles_krw = tiledlayout(figure(),3,2,TileSpacing='compact',Padding='tight');
 
-        tiles_krw = tiledlayout(figure(),3,2,TileSpacing='compact',Padding='tight');
+stat_plot(nexttile(tiles_krw),'Water, along X-axis','',strata_trapped.saturation,params.rel_perm.calc_krw,sub_data(strata_trapped.rel_perm_wat,mask,1));
+yscale(scale);
+stat_plot(nexttile(tiles_krw),'Gas, along X-axis','',strata_trapped.saturation,@(sw) params.rel_perm.calc_krg(1-sw),sub_data(strata_trapped.rel_perm_gas,mask,1));
+yscale(scale);
 
-        stat_plot(nexttile(tiles_krw),'Water, along X-axis','',strata_trapped.saturation,params.rel_perm.calc_krw,sub_data(strata_trapped.rel_perm_wat,mask,1));
-        yscale("log");
-        stat_plot(nexttile(tiles_krw),'Gas, along X-axis','',strata_trapped.saturation,@(sw) params.rel_perm.calc_krg(1-sw),sub_data(strata_trapped.rel_perm_gas,mask,1));
-        yscale("log");
+stat_plot(nexttile(tiles_krw),'Water, along Y-axis','',strata_trapped.saturation,params.rel_perm.calc_krw,sub_data(strata_trapped.rel_perm_wat,mask,2));
+yscale(scale);
+stat_plot(nexttile(tiles_krw),'Gas, along Y-axis','',strata_trapped.saturation,@(sw) params.rel_perm.calc_krg(1-sw),sub_data(strata_trapped.rel_perm_gas,mask,2));
+yscale(scale);
 
-        stat_plot(nexttile(tiles_krw),'Water, along Y-axis','',strata_trapped.saturation,params.rel_perm.calc_krw,sub_data(strata_trapped.rel_perm_wat,mask,2));
-        yscale("log");
-        stat_plot(nexttile(tiles_krw),'Gas, along Y-axis','',strata_trapped.saturation,@(sw) params.rel_perm.calc_krg(1-sw),sub_data(strata_trapped.rel_perm_gas,mask,2));
-        yscale("log");
+stat_plot(nexttile(tiles_krw),'Water, along Z-axis','',strata_trapped.saturation,params.rel_perm.calc_krw,sub_data(strata_trapped.rel_perm_wat,mask,3));
+yscale(scale);
+stat_plot(nexttile(tiles_krw),'Gas, along Z-axis','',strata_trapped.saturation,@(sw) params.rel_perm.calc_krg(1-sw),sub_data(strata_trapped.rel_perm_gas,mask,3));
+yscale(scale);
 
-        stat_plot(nexttile(tiles_krw),'Water, along Z-axis','',strata_trapped.saturation,params.rel_perm.calc_krw,sub_data(strata_trapped.rel_perm_wat,mask,3));
-        yscale("log");
-        stat_plot(nexttile(tiles_krw),'Gas, along Z-axis','',strata_trapped.saturation,@(sw) params.rel_perm.calc_krg(1-sw),sub_data(strata_trapped.rel_perm_gas,mask,3));
-        yscale("log");
+xlabel(tiles_krw,'Wetting phase saturation');
+ylabel(tiles_krw,'Relative permeability');
+end
 
-        xlabel(tiles_krw,'Wetting phase saturation');
-        ylabel(tiles_krw,'Relative permeability');
-    end
+function plot_result(rock, mask, strata_trapped, params, kr_scale)
+arguments
+    rock 
+    mask 
+    strata_trapped 
+    params 
+    kr_scale = "log"
+end
 
-curves_plot(mask, strata_trapped, params);
+curves_plot(mask, strata_trapped, params, kr_scale);
 
 
 base_cap = strata_trapped;

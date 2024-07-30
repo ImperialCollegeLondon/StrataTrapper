@@ -50,6 +50,7 @@ parfor (cell_index = 1:cells_num, num_par_workers)
 end
 
 krw(:,:,saturations<=params.rel_perm.sw_resid) = 0;
+krg(krg<0) = 0;
 
 strata_trapped = struct(...
     'permeability', perm_upscaled, ...
@@ -66,16 +67,16 @@ end
 end
 
 function parforWaitbar(~,max_iterations,~)
-persistent state wb final_state timer_val last_reported_state last_reported_time
+persistent state wb final_state start_time last_reported_state last_reported_time
 
 if nargin == 2
     state = 0;
     final_state = max_iterations;
     wb = waitbar(state,sprintf('%u cells to upscale', final_state),'Name','StrataTrapper');
-    timer_val = tic();
+    start_time = tic();
 
     last_reported_state = state;
-    last_reported_time = timer_val;
+    last_reported_time = start_time;
     return;
 end
 
@@ -84,14 +85,14 @@ if ~isvalid(wb)
 end
 
 if nargin == 3
-    elapsed = duration(seconds(toc(timer_val)),'Format','hh:mm:ss');
+    elapsed = duration(seconds(toc(start_time)),'Format','hh:mm:ss');
     message = sprintf('%u cells upscaled\n in %s',final_state,elapsed);
     waitbar(1,wb,message);
     return;
 end
 
 state = state + 1;
-elapsed = toc(timer_val);
+elapsed = toc(start_time);
 
 time_to_report = (elapsed - last_reported_time) > 1;
 state_to_report = (state - last_reported_state) > final_state * 0.01;
