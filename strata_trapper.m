@@ -50,6 +50,7 @@ parfor (cell_index = 1:cells_num, num_par_workers)
 end
 
 krw(:,:,saturations<=params.rel_perm.sw_resid) = 0;
+krg(krg<0) = 0;
 
 strata_trapped = struct(...
     'permeability', perm_upscaled, ...
