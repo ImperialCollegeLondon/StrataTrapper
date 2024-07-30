@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.4.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.3.0...v0.4.0) (2024-07-30)
+
+
+### Bug Fixes
+
+* :bug: `calc_percolation`: proper search window + performance ([bc053e4](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/bc053e49460d16be78626e2de32e655b095b217b))
+* :bug: `rsgen3D` internal meshing ([b98c3c5](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/b98c3c5f94c8ae2fa709f1b1505b43dc07f08664))
+* :bug: connectivity for permeability computation ([7e2d900](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/7e2d9002fed96eb89a5f6699bec80be75fc8badc))
+* :bug: fix negative gas rel. perms. as computational artifacts ([cc52d1e](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/cc52d1e9be7d97dc246bbd315806631a6f4cb203))
+* :bug: permeability upscaling ([fb4598d](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/fb4598d8e9925dac0fb0a5e8f988e259f3831ec2))
+
+
+### Documentation
+
+* :memo: update `demo` script ([e9a07b5](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/e9a07b54d7e18b82b7e31cb16b9127b4aa5b28a7))
+
 ## [0.3.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.2.3...v0.3.0) (2024-07-17)
 
 
