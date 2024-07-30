@@ -39,11 +39,15 @@ arguments
     corr_lens (1,3) double
     dist      = @(N) randn(N)
 end
-X = linspace(-0.5,0.5,dims(1)).*dr(1)*(1 - 1/double(dims(1)));
-Y = linspace(-0.5,0.5,dims(2)).*dr(2)*(1 - 1/double(dims(2)));
-Z = linspace(-0.5,0.5,dims(3)).*dr(3)*(1 - 1/double(dims(3)));
+x = linspace(-0.5,0.5,dims(1)).*dr(1)*(1 - 1/double(dims(1)));
+y = linspace(-0.5,0.5,dims(2)).*dr(2)*(1 - 1/double(dims(2)));
+z = linspace(-0.5,0.5,dims(3)).*dr(3)*(1 - 1/double(dims(3)));
 
-[X,Y,Z] = meshgrid(X,Y,Z);
+[X,Y,Z] = meshgrid(x,y,z);
+
+X = permute(X,[2 1 3]);
+Y = permute(Y,[2 1 3]);
+Z = permute(Z,[2 1 3]);
 
 D = dist(dims.*2-1);
 
