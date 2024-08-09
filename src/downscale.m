@@ -1,4 +1,4 @@
-function [subscale_dims, sub_porosity, sub_permeability, sub_entry_pressures] ...
+function [subscale_dims, sub_porosity, sub_permeability] ...
     = downscale(porosity, perm_coarse, dr, params, options)
 
 subscale_dims = max(ceil(dr./options.subscale),3);
@@ -25,10 +25,6 @@ sub_permeability_log = log(sub_permeability);
 sub_permeability_log = rsgen3D(dr,subscale_dims,params.corr_lens,@(N)sub_permeability_log);
 sub_permeability_log = normalize(sub_permeability_log,log(perm_coarse));
 sub_permeability = exp(sub_permeability_log);
-
-%% calculate fine-scale sub_entry_pressures
-
-sub_entry_pressures = params.capil.pres_func(1,sub_porosity, sub_permeability);
 
 end
 
