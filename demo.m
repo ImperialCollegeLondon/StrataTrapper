@@ -5,7 +5,7 @@ parpool(); % start default parpool (optional)
 %% Inputs
 
 params  = gen_params (); % rock and fluid parameters
-options = gen_options(); % StrataTrapper options
+options = Options();     % StrataTrapper options
 
 %% Downscaling demo
 
