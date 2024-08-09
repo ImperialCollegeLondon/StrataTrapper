@@ -1,6 +1,6 @@
-function strata_trapped = strata_trapper(G, rock, mask, params, options, enable_waitbar,num_par_workers)
+function strata_trapped = strata_trapper(grid, rock, mask, params, options, enable_waitbar, num_par_workers)
 arguments
-    G               (1,1) struct
+    grid            (1,1) struct
     rock            (1,1) struct
     mask            (:,1) logical
     params          (1,1) struct
@@ -9,15 +9,15 @@ arguments
     num_par_workers (1,1) uint32  = Inf;
 end
 
-perm_upscaled = zeros(G.cells.num, 3);
+perm_upscaled = zeros(grid.cells.num, 3);
 
 saturations = linspace(params.rel_perm.sw_resid,1,options.sat_num_points);
 
-cap_pres_upscaled = zeros(G.cells.num,length(saturations));
-krw = zeros(G.cells.num,  3,length(saturations));
-krg = zeros(G.cells.num,3,length(saturations));
+cap_pres_upscaled = zeros(grid.cells.num,length(saturations));
+krw = zeros(grid.cells.num,3,length(saturations));
+krg = zeros(grid.cells.num,3,length(saturations));
 
-cells_num = min(length(mask),G.cells.num);
+cells_num = min(length(mask),grid.cells.num);
 mask = mask(1:cells_num);
 
 wb_queue = parallel.pool.DataQueue;
@@ -26,7 +26,7 @@ if enable_waitbar
     afterEach(wb_queue,@parforWaitbar);
 end
 
-DR = [G.DX,G.DY,G.DZ];
+DR = [grid.DX,grid.DY,grid.DZ];
 perm = rock.perm;
 poro = rock.poro;
 
