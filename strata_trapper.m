@@ -1,23 +1,23 @@
-function strata_trapped = strata_trapper(G, rock, mask, params, options, enable_waitbar,num_par_workers)
+function strata_trapped = strata_trapper(grid, sub_rock, mask, params, options, enable_waitbar, num_par_workers)
 arguments
-    G               (1,1) struct
-    rock            (1,1) struct
+    grid            (1,1) struct
+    sub_rock        (1,:) struct
     mask            (:,1) logical
-    params          (1,1) struct
-    options         (1,1) struct
+    params          (1,1) Params
+    options         (1,1) Options = Options();
     enable_waitbar  (1,1) logical = false;
     num_par_workers (1,1) uint32  = Inf;
 end
 
-perm_upscaled = zeros(G.cells.num, 3);
+perm_upscaled = zeros(grid.cells.num, 3);
 
-saturations = linspace(params.rel_perm.sw_resid,1,options.sat_num_points);
+saturations = linspace(params.sw_resid,1,options.sat_num_points);
 
-cap_pres_upscaled = zeros(G.cells.num,length(saturations));
-krw = zeros(G.cells.num,  3,length(saturations));
-krg = zeros(G.cells.num,3,length(saturations));
+cap_pres_upscaled = nan(grid.cells.num,length(saturations));
+krw = nan(grid.cells.num,3,length(saturations));
+krg = nan(grid.cells.num,3,length(saturations));
 
-cells_num = min(length(mask),G.cells.num);
+cells_num = min(length(mask),grid.cells.num);
 mask = mask(1:cells_num);
 
 wb_queue = parallel.pool.DataQueue;
@@ -26,19 +26,20 @@ if enable_waitbar
     afterEach(wb_queue,@parforWaitbar);
 end
 
-DR = [G.DX,G.DY,G.DZ];
-perm = rock.perm;
-poro = rock.poro;
+DR = [grid.DX,grid.DY,grid.DZ];
 
 parfor (cell_index = 1:cells_num, num_par_workers)
     if ~mask(cell_index)
         continue;
     end
 
-    [Kabs, ~, pc_upscaled, krg_cell, krw_cell] = downscale_upscale(...
-        poro(cell_index), perm(cell_index,:), DR(cell_index,:), saturations , params, options);
+    sub_porosity = sub_rock(cell_index).poro;
+    sub_permeability = sub_rock(cell_index).perm;
 
-    perm_upscaled(cell_index,:) = Kabs;
+    [perm_upscaled_cell, pc_upscaled, krw_cell, krg_cell] = upscale(...
+        DR(cell_index,:), saturations, params, options, sub_porosity, sub_permeability);
+
+    perm_upscaled(cell_index,:) = perm_upscaled_cell;
     cap_pres_upscaled(cell_index,:) = pc_upscaled;
 
     krw(cell_index,:,:) = krw_cell;
@@ -49,7 +50,7 @@ parfor (cell_index = 1:cells_num, num_par_workers)
     end
 end
 
-krw(:,:,saturations<=params.rel_perm.sw_resid) = 0;
+krw(:,:,saturations<=params.sw_resid) = 0;
 krg(krg<0) = 0;
 
 strata_trapped = struct(...

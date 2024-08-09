@@ -1,14 +1,15 @@
-function [Kabs, sw_upscaled, pc_upscaled, krw, krg] = upscale(...
-    dr, saturations, params, options, ...
-    downscale_dims, porosities, permeabilities, entry_pressures)
+function [perm_upscaled, pc_upscaled, krw, krg] = upscale(...
+    dr, saturations, params, options, porosities, permeabilities)
 
 if max(porosities,[],'all') <= 0
     error('inactive cell');
 end
 
+downscale_dims = size(porosities);
+
 dr_sub = dr ./ downscale_dims;
 
-Kabs = upscale_permeability(permeabilities, dr_sub(1),dr_sub(2),dr_sub(3));
+perm_upscaled = upscale_permeability(permeabilities, dr_sub(1),dr_sub(2),dr_sub(3));
 
 sw_upscaled = saturations;
 pc_upscaled = zeros(size(saturations));
@@ -20,11 +21,13 @@ Nz_sub = downscale_dims(3);
 krg = zeros(3,length(sw_upscaled));
 krw = zeros(3,length(sw_upscaled));
 
+entry_pressures = params.cap_pressure.func(1,porosities,permeabilities);
+
 for index_saturation = 1:length(saturations)
 
     sw_target = saturations(index_saturation);
 
-    pc_mid = params.capil.pres_func(sw_target, mean(porosities,'all'), mean(permeabilities,'all'));
+    pc_mid = params.cap_pressure.func(sw_target, mean(porosities,'all'), mean(permeabilities,'all'));
     sw_mid = sw_target;
 
     calc_endpoint = index_saturation == 1 || index_saturation == length(saturations);
@@ -34,7 +37,7 @@ for index_saturation = 1:length(saturations)
         [pc_mid_tot, sw_mid, pc_mid, invaded_mat_mid, converged] = mip_iteration(...
             sw_target, dr, entry_pressures, porosities, permeabilities, pc_mid, ...
             Nz_sub, Nx_sub, Ny_sub,...
-            params.capil.pres_func_inv, params.capil.pres_deriv,...
+            params.cap_pressure,...
             options.sat_tol ...
             );
 
@@ -48,13 +51,13 @@ for index_saturation = 1:length(saturations)
 
     sw = invaded_mat_mid .* sw_mid + ~invaded_mat_mid .* 1;
 
-    kg_mat_local = params.rel_perm.calc_krg(1-sw);
-    kw_mat_local = params.rel_perm.calc_krw(sw);
+    kg_mat_local = params.krg.func(1-sw);
+    kw_mat_local = params.krw.func(sw);
 
     kg_mat_local = kg_mat_local.*permeabilities;
     kw_mat_local = kw_mat_local.*permeabilities;
 
-    [krg(:,index_saturation), krw(:,index_saturation)] = calc_phase_permeabilities(dr_sub, Kabs, kg_mat_local, kw_mat_local);
+    [krg(:,index_saturation), krw(:,index_saturation)] = calc_phase_permeabilities(dr_sub, perm_upscaled, kg_mat_local, kw_mat_local);
 end
 
 sw_upscaled(end) = 1;
@@ -74,12 +77,16 @@ if ~allfinite(pc_upscaled)
     disp(pc_upscaled);
 end
 
+pc_upscaled = interp1(sw_upscaled, pc_upscaled, saturations, "linear","extrap");
+krw         = interp1(sw_upscaled,        krw', saturations, "linear","extrap")';
+krg         = interp1(sw_upscaled,        krg', saturations, "linear","extrap")';
+
 end
 
 function [pc_mid_tot, sw_mid, pc_mid, invaded_mat_mid, converged] = mip_iteration(...
     sw_target, dr, entry_pressures, porosities, permeabilities, pc_mid,...
     Nz_sub, Nx_sub, Ny_sub, ...
-    pc_func_inv, pc_deriv, ...
+    cap_pressure,...
     tol_sw)
 
 invaded_mat_mid = calc_percolation(pc_mid, entry_pressures);
@@ -89,7 +96,7 @@ sub_volume = volume./double(Nz_sub*Nx_sub*Ny_sub);
 pore_volumes = porosities .* sub_volume;
 pore_volume = sum(pore_volumes,'all');
 
-sub_sw_mid = invaded_mat_mid .* pc_func_inv(pc_mid,porosities,permeabilities) + ~invaded_mat_mid .* 1;
+sub_sw_mid = invaded_mat_mid .* cap_pressure.inv(pc_mid,porosities,permeabilities) + ~invaded_mat_mid .* 1;
 sub_sw_mid(~isfinite(sub_sw_mid)) = 1;
 sw_mid = sum(sub_sw_mid.*pore_volumes,'all')/pore_volume;
 
@@ -106,7 +113,7 @@ if converged
     return;
 end
 
-deriv = pc_deriv(sw_mid, mean(porosities,'all'), mean(permeabilities,'all'));
+deriv = cap_pressure.deriv(sw_mid, mean(porosities,'all'), mean(permeabilities,'all'));
 
 dpc = sw_err*deriv;
 
@@ -117,11 +124,11 @@ end
 pc_mid = max(pc_mid,min(entry_pressures,[],'all'));
 end
 
-function [krg, krw] = calc_phase_permeabilities(dr_sub, Kabs, kg_mat, kw_mat)
+function [krg, krw] = calc_phase_permeabilities(dr_sub, perm_upscaled, kg_mat, kw_mat)
 
-Kx = Kabs(1);
-Ky = Kabs(2);
-Kz = Kabs(3);
+Kx = perm_upscaled(1);
+Ky = perm_upscaled(2);
+Kz = perm_upscaled(3);
 
 Kalli = zeros(1,6);
 
