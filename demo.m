@@ -64,7 +64,7 @@ tiles = tiledlayout(fig,'flow',TileSpacing='tight',Padding='tight');
 
 slice_plot(nexttile(tiles),squeeze(sub_porosity(:,:,2)),'Porosity','');
 
-sub_entry_pressures = params.capil.pres_func(1, sub_porosity, sub_permeability);
+sub_entry_pressures = params.cap_pressure.func(1, sub_porosity, sub_permeability);
 
 slice_plot(nexttile(tiles),squeeze(sub_entry_pressures(:,:,2)./barsa()),'Entry pressure','bar');
 

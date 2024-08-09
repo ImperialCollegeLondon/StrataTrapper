@@ -19,13 +19,13 @@ Nz_sub = downscale_dims(3);
 krg = zeros(3,length(sw_upscaled));
 krw = zeros(3,length(sw_upscaled));
 
-entry_pressures = params.capil.pres_func(1,porosities,permeabilities);
+entry_pressures = params.cap_pressure.func(1,porosities,permeabilities);
 
 for index_saturation = 1:length(saturations)
 
     sw_target = saturations(index_saturation);
 
-    pc_mid = params.capil.pres_func(sw_target, mean(porosities,'all'), mean(permeabilities,'all'));
+    pc_mid = params.cap_pressure.func(sw_target, mean(porosities,'all'), mean(permeabilities,'all'));
     sw_mid = sw_target;
 
     calc_endpoint = index_saturation == 1 || index_saturation == length(saturations);
@@ -35,7 +35,7 @@ for index_saturation = 1:length(saturations)
         [pc_mid_tot, sw_mid, pc_mid, invaded_mat_mid, converged] = mip_iteration(...
             sw_target, dr, entry_pressures, porosities, permeabilities, pc_mid, ...
             Nz_sub, Nx_sub, Ny_sub,...
-            params.capil.pres_func_inv, params.capil.pres_deriv,...
+            params.cap_pressure,...
             options.sat_tol ...
             );
 
@@ -80,7 +80,7 @@ end
 function [pc_mid_tot, sw_mid, pc_mid, invaded_mat_mid, converged] = mip_iteration(...
     sw_target, dr, entry_pressures, porosities, permeabilities, pc_mid,...
     Nz_sub, Nx_sub, Ny_sub, ...
-    pc_func_inv, pc_deriv, ...
+    cap_pressure,...
     tol_sw)
 
 invaded_mat_mid = calc_percolation(pc_mid, entry_pressures);
@@ -90,7 +90,7 @@ sub_volume = volume./double(Nz_sub*Nx_sub*Ny_sub);
 pore_volumes = porosities .* sub_volume;
 pore_volume = sum(pore_volumes,'all');
 
-sub_sw_mid = invaded_mat_mid .* pc_func_inv(pc_mid,porosities,permeabilities) + ~invaded_mat_mid .* 1;
+sub_sw_mid = invaded_mat_mid .* cap_pressure.inv(pc_mid,porosities,permeabilities) + ~invaded_mat_mid .* 1;
 sub_sw_mid(~isfinite(sub_sw_mid)) = 1;
 sw_mid = sum(sub_sw_mid.*pore_volumes,'all')/pore_volume;
 
@@ -107,7 +107,7 @@ if converged
     return;
 end
 
-deriv = pc_deriv(sw_mid, mean(porosities,'all'), mean(permeabilities,'all'));
+deriv = cap_pressure.deriv(sw_mid, mean(porosities,'all'), mean(permeabilities,'all'));
 
 dpc = sw_err*deriv;
 
