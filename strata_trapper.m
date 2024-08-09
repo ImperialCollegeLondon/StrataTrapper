@@ -13,9 +13,9 @@ perm_upscaled = zeros(grid.cells.num, 3);
 
 saturations = linspace(params.sw_resid,1,options.sat_num_points);
 
-cap_pres_upscaled = zeros(grid.cells.num,length(saturations));
-krw = zeros(grid.cells.num,3,length(saturations));
-krg = zeros(grid.cells.num,3,length(saturations));
+cap_pres_upscaled = nan(grid.cells.num,length(saturations));
+krw = nan(grid.cells.num,3,length(saturations));
+krg = nan(grid.cells.num,3,length(saturations));
 
 cells_num = min(length(mask),grid.cells.num);
 mask = mask(1:cells_num);
