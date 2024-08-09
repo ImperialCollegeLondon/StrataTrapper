@@ -47,19 +47,19 @@ sub_data = @(data,mask,direction) squeeze(data(mask,direction,:));
 
 tiles_krw = tiledlayout(figure(),3,2,TileSpacing='compact',Padding='tight');
 
-stat_plot(nexttile(tiles_krw),'Water, along X-axis','',strata_trapped.saturation,params.rel_perm.calc_krw,sub_data(strata_trapped.rel_perm_wat,mask,1));
+stat_plot(nexttile(tiles_krw),'Water, along X-axis','',strata_trapped.saturation,@(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,mask,1));
 yscale(scale);
-stat_plot(nexttile(tiles_krw),'Gas, along X-axis','',strata_trapped.saturation,@(sw) params.rel_perm.calc_krg(1-sw),sub_data(strata_trapped.rel_perm_gas,mask,1));
-yscale(scale);
-
-stat_plot(nexttile(tiles_krw),'Water, along Y-axis','',strata_trapped.saturation,params.rel_perm.calc_krw,sub_data(strata_trapped.rel_perm_wat,mask,2));
-yscale(scale);
-stat_plot(nexttile(tiles_krw),'Gas, along Y-axis','',strata_trapped.saturation,@(sw) params.rel_perm.calc_krg(1-sw),sub_data(strata_trapped.rel_perm_gas,mask,2));
+stat_plot(nexttile(tiles_krw),'Gas, along X-axis','',strata_trapped.saturation,@(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,mask,1));
 yscale(scale);
 
-stat_plot(nexttile(tiles_krw),'Water, along Z-axis','',strata_trapped.saturation,params.rel_perm.calc_krw,sub_data(strata_trapped.rel_perm_wat,mask,3));
+stat_plot(nexttile(tiles_krw),'Water, along Y-axis','',strata_trapped.saturation,@(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,mask,2));
 yscale(scale);
-stat_plot(nexttile(tiles_krw),'Gas, along Z-axis','',strata_trapped.saturation,@(sw) params.rel_perm.calc_krg(1-sw),sub_data(strata_trapped.rel_perm_gas,mask,3));
+stat_plot(nexttile(tiles_krw),'Gas, along Y-axis','',strata_trapped.saturation,@(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,mask,2));
+yscale(scale);
+
+stat_plot(nexttile(tiles_krw),'Water, along Z-axis','',strata_trapped.saturation,@(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,mask,3));
+yscale(scale);
+stat_plot(nexttile(tiles_krw),'Gas, along Z-axis','',strata_trapped.saturation,@(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,mask,3));
 yscale(scale);
 
 xlabel(tiles_krw,'Wetting phase saturation');

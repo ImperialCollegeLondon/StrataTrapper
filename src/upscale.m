@@ -49,8 +49,8 @@ for index_saturation = 1:length(saturations)
 
     sw = invaded_mat_mid .* sw_mid + ~invaded_mat_mid .* 1;
 
-    kg_mat_local = params.rel_perm.calc_krg(1-sw);
-    kw_mat_local = params.rel_perm.calc_krw(sw);
+    kg_mat_local = params.krg.func(1-sw);
+    kw_mat_local = params.krw.func(sw);
 
     kg_mat_local = kg_mat_local.*permeabilities;
     kw_mat_local = kw_mat_local.*permeabilities;

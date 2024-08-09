@@ -15,9 +15,32 @@ perm_gen = @(num_samples) exp(randn(1,num_samples) + log(100)) * milli * darcy;
 poro_perm_gen = @(num_samples) [poro_gen(num_samples); perm_gen(num_samples)];
 params.poro_perm_gen = poro_perm_gen;
 
-params.rel_perm.calc_krw = @(sw) calc_krw(sw);
-params.rel_perm.calc_krg = @(sg) calc_krg(sg);
-[~, params.rel_perm.sw_resid] = calc_krw(0);
+krw_data = [...
+     0.12	0		
+     0.15	0.05		
+     0.25	0.1		
+     0.35	0.3		
+     0.45	0.55		
+     0.65	0.85		 
+     0.8	0.97		
+     0.9	1		
+     1	    1
+     ];
+params.krw = TableFunction(krw_data);
+params.sw_resid = krw_data(1,1);
+
+krg_data = [...
+        0.0 0
+        0.1	0.01
+        0.2	0.02
+        0.35 0.04
+        0.55 0.2
+        0.65 0.4
+        0.75 0.7
+        0.85 1
+        0.88 1
+        ];
+params.krg = TableFunction(krg_data);
 
 params.capil.pres_func = @(sw,poro,perm) calc_capillary_pressure(sw,poro,perm,...
     params.capil.sw_barrier,...
