@@ -11,7 +11,7 @@ end
 
 perm_upscaled = zeros(grid.cells.num, 3);
 
-saturations = linspace(params.rel_perm.sw_resid,1,options.sat_num_points);
+saturations = linspace(params.sw_resid,1,options.sat_num_points);
 
 cap_pres_upscaled = zeros(grid.cells.num,length(saturations));
 krw = zeros(grid.cells.num,3,length(saturations));
@@ -49,7 +49,7 @@ parfor (cell_index = 1:cells_num, num_par_workers)
     end
 end
 
-krw(:,:,saturations<=params.rel_perm.sw_resid) = 0;
+krw(:,:,saturations<=params.sw_resid) = 0;
 krg(krg<0) = 0;
 
 strata_trapped = struct(...
