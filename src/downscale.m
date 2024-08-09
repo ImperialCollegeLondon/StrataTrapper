@@ -1,28 +1,27 @@
-function [subscale_dims, sub_porosity, sub_permeability] ...
-    = downscale(porosity, perm_coarse, dr, params, options)
+function [sub_porosity, sub_permeability] = downscale(porosity, perm_coarse, dr, downscale_params)
 
-subscale_dims = max(ceil(dr./options.subscale),3);
+subscale_dims = max(ceil(dr./downscale_params.subscale),3);
 even_dims = mod(subscale_dims,2)==0;
 subscale_dims(even_dims) = subscale_dims(even_dims)+1;
 
 %% generate initial relizations
 
 gen_dims = subscale_dims.*2-1;
-sub_poro_perm = params.poro_perm_gen(prod(gen_dims));
+sub_poro_perm = downscale_params.poro_perm_gen(prod(gen_dims));
 
 sub_porosity = reshape(sub_poro_perm(1,:),gen_dims);
 sub_permeability = reshape(sub_poro_perm(2,:),gen_dims);
 
 %% generate fine-scale porosity
 
-sub_porosity = rsgen3D(dr,subscale_dims,params.corr_lens,@(N)sub_porosity);
+sub_porosity = rsgen3D(dr,subscale_dims,downscale_params.corr_lens,@(N)sub_porosity);
 sub_porosity = normalize(sub_porosity,porosity);
 sub_porosity = max(sub_porosity,0);
 
 %% calculate fine-scale permeability
 
 sub_permeability_log = log(sub_permeability);
-sub_permeability_log = rsgen3D(dr,subscale_dims,params.corr_lens,@(N)sub_permeability_log);
+sub_permeability_log = rsgen3D(dr,subscale_dims,downscale_params.corr_lens,@(N)sub_permeability_log);
 sub_permeability_log = normalize(sub_permeability_log,log(perm_coarse));
 sub_permeability = exp(sub_permeability_log);
 

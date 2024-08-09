@@ -4,16 +4,18 @@ parpool(); % start default parpool (optional)
 
 %% Inputs
 
-params  = gen_params (); % rock and fluid parameters
+params  = gen_params (); % input rock-fluid parameters
 options = Options();     % StrataTrapper options
+
+downscale_params = gen_downscale_params();
 
 %% Downscaling demo
 
-downscale_demo(params, options);
+downscale_demo(params, downscale_params);
 
 %% Grid & rock properties
 
-[grid, rock] = grid_demo(params);
+[grid, rock] = grid_demo(downscale_params);
 
 %% Run StrataTrapper
 
@@ -22,7 +24,9 @@ mask = rand(grid.cells.num,1) < 0.001; % process only a fraction of cells
 enable_waitbar = true;
 num_par_workers = Inf; % use all parallel workers from the pool
 
-strata_trapped = strata_trapper(grid, rock, mask, params, options, enable_waitbar, num_par_workers);
+sub_rock = downscale_all(grid,rock,mask,downscale_params,num_par_workers);
+
+strata_trapped = strata_trapper(grid, sub_rock, mask, params, options, enable_waitbar, num_par_workers);
 
 %% Visualize saturation functions
 
@@ -35,13 +39,10 @@ export_fut = parfeval(backgroundPool,@ogs_export,0,grid,mask,strata_trapped);
 
 %% helpers
 
-function downscale_demo(params, options)
+function downscale_demo(params,downscale_params)
 
-[~, sub_porosity, sub_permeability] = downscale(...
-    0.1, 100*milli*darcy,...
-    [400,400,0.1].*meter(),...
-    params, options ...
-    );
+[sub_porosity, sub_permeability] = downscale(...
+    0.1, 100*milli*darcy, [400,400,0.1].*meter(),downscale_params);
 
 fig = figure;
 tiles = tiledlayout(fig,'flow',TileSpacing='tight',Padding='tight');
@@ -73,7 +74,7 @@ xlabel(tiles,'x, m');
 ylabel(tiles,'y, m');
 end
 
-function [grid, rock] = grid_demo(params)
+function [grid, rock] = grid_demo(downscale_params)
 grid.cartDims = [80, 120, 35];
 grid.cells.num = prod(grid.cartDims);
 grid.cells.indexMap = 1:grid.cells.num;
@@ -82,10 +83,9 @@ grid.DX = 400 * meter() * ones(grid.cells.num,1);
 grid.DY = grid.DX;
 grid.DZ = 0.1 * meter() * ones(grid.cells.num,1);
 
-poro_perm = params.poro_perm_gen(grid.cells.num);
+poro_perm = downscale_params.poro_perm_gen(grid.cells.num);
 rock.poro = poro_perm(1,:)';
 rock.poro = max(rock.poro,0);
 
 rock.perm = poro_perm(2,:)';
 end
-

@@ -1,9 +1,9 @@
-function strata_trapped = strata_trapper(grid, rock, mask, params, options, enable_waitbar, num_par_workers)
+function strata_trapped = strata_trapper(grid, sub_rock, mask, params, options, enable_waitbar, num_par_workers)
 arguments
     grid            (1,1) struct
-    rock            (1,1) struct
+    sub_rock        (1,:) struct
     mask            (:,1) logical
-    params          (1,1) struct
+    params          (1,1) Params
     options         (1,1) Options = Options();
     enable_waitbar  (1,1) logical = false;
     num_par_workers (1,1) uint32  = Inf;
@@ -27,18 +27,19 @@ if enable_waitbar
 end
 
 DR = [grid.DX,grid.DY,grid.DZ];
-perm = rock.perm;
-poro = rock.poro;
 
 parfor (cell_index = 1:cells_num, num_par_workers)
     if ~mask(cell_index)
         continue;
     end
 
-    [Kabs, ~, pc_upscaled, krg_cell, krw_cell] = downscale_upscale(...
-        poro(cell_index), perm(cell_index,:), DR(cell_index,:), saturations , params, options);
+    sub_porosity = sub_rock(cell_index).poro;
+    sub_permeability = sub_rock(cell_index).perm;
 
-    perm_upscaled(cell_index,:) = Kabs;
+    [perm_upscaled_cell, pc_upscaled, krw_cell, krg_cell] = upscale(...
+        DR(cell_index,:), saturations, params, options, sub_porosity, sub_permeability);
+
+    perm_upscaled(cell_index,:) = perm_upscaled_cell;
     cap_pres_upscaled(cell_index,:) = pc_upscaled;
 
     krw(cell_index,:,:) = krw_cell;
