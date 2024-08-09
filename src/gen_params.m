@@ -1,13 +1,4 @@
 function [params] = gen_params()
-params = struct(...
-    'corr_lens', [50,50,0].*meter()...
-);
-
-poro_gen = @(num_samples) randn(1,num_samples)*0.01 + 0.2;
-perm_gen = @(num_samples) exp(randn(1,num_samples) + log(100)) * milli * darcy;
-
-poro_perm_gen = @(num_samples) [poro_gen(num_samples); perm_gen(num_samples)];
-params.poro_perm_gen = poro_perm_gen;
 
 krw_data = [...
      0.12	0		
@@ -20,8 +11,6 @@ krw_data = [...
      0.9	1		
      1	    1
      ];
-params.krw = TableFunction(krw_data);
-params.sw_resid = krw_data(1,1);
 
 krg_data = [...
         0.0 0
@@ -34,7 +23,6 @@ krg_data = [...
         0.85 1
         0.88 1
         ];
-params.krg = TableFunction(krg_data);
 
 contact_angle   = deg2rad(0);
 surface_tension = 20 * dyne() / (centi()*meter());
@@ -49,5 +37,22 @@ leverett_j_data = [
         0.9 3
         1 2
         ];
-params.cap_pressure = CapPressure(contact_angle,surface_tension,TableFunction(leverett_j_data));
+
+params = Params(...
+    TableFunction(krw_data),...
+    TableFunction(krg_data),...
+    CapPressure(...
+    contact_angle,...
+    surface_tension,...
+    TableFunction(leverett_j_data)));
+
+%% Downscaling params
+params = struct(params);
+
+params.corr_lens = [50,50,0].*meter();
+
+poro_gen = @(num_samples) randn(1,num_samples)*0.01 + 0.2;
+perm_gen = @(num_samples) exp(randn(1,num_samples) + log(100)) * milli * darcy;
+
+params.poro_perm_gen = @(num_samples) [poro_gen(num_samples); perm_gen(num_samples)];
 end
