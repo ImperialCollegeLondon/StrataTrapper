@@ -14,13 +14,12 @@ if porosity <= 0
     return;
 end
 
-[subscale_dims, sub_porosity, sub_permeability, sub_entry_pressures] ...
-    = downscale(porosity, perm_coarse, dr, params, options);
+[subscale_dims, sub_porosity, sub_permeability] = downscale(...
+    porosity, perm_coarse, dr, params, options);
 
 [Kabs, sw_upscaled, pc_upscaled, krw, krg] = upscale(...
     dr, saturations, params, options, ...
-    subscale_dims, sub_porosity, sub_permeability, sub_entry_pressures ...
-    );
+    subscale_dims, sub_porosity, sub_permeability);
 
 pc_upscaled = interp1(sw_upscaled,pc_upscaled,saturations,"linear","extrap");
 krw = interp1(sw_upscaled, krw', saturations, "linear","extrap")';

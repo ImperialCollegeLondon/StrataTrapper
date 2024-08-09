@@ -37,7 +37,7 @@ export_fut = parfeval(backgroundPool,@ogs_export,0,grid,mask,strata_trapped);
 
 function downscale_demo(params, options)
 
-[~, sub_porosity, sub_permeability, sub_entry_pressures] = downscale(...
+[~, sub_porosity, sub_permeability] = downscale(...
     0.1, 100*milli*darcy,...
     [400,400,0.1].*meter(),...
     params, options ...
@@ -63,6 +63,8 @@ tiles = tiledlayout(fig,'flow',TileSpacing='tight',Padding='tight');
     end
 
 slice_plot(nexttile(tiles),squeeze(sub_porosity(:,:,2)),'Porosity','');
+
+sub_entry_pressures = params.capil.pres_func(1, sub_porosity, sub_permeability);
 
 slice_plot(nexttile(tiles),squeeze(sub_entry_pressures(:,:,2)./barsa()),'Entry pressure','bar');
 

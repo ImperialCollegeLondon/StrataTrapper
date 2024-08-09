@@ -1,6 +1,5 @@
 function [Kabs, sw_upscaled, pc_upscaled, krw, krg] = upscale(...
-    dr, saturations, params, options, ...
-    downscale_dims, porosities, permeabilities, entry_pressures)
+    dr, saturations, params, options, downscale_dims, porosities, permeabilities)
 
 if max(porosities,[],'all') <= 0
     error('inactive cell');
@@ -19,6 +18,8 @@ Nz_sub = downscale_dims(3);
 
 krg = zeros(3,length(sw_upscaled));
 krw = zeros(3,length(sw_upscaled));
+
+entry_pressures = params.capil.pres_func(1,porosities,permeabilities);
 
 for index_saturation = 1:length(saturations)
 
