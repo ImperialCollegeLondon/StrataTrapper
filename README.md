@@ -12,27 +12,30 @@
 ## The StrataTrapper codes
 
 This is the StrataTrapper **upscaling toolkit**.
-It generates heterogeneous fine-scale models with specific correlation lengths to update coarse-scale two-phase flow models.
+It can also generate heterogeneous fine-scale models with specific correlation lengths to re-upscale given coarse-scale two-phase flow models.
 
 Another tool is the **reduced-physics model** [CO2GraVISim](https://github.com/ajobutler/CO2GraVISim).
 
 ## Structure
 
-Top-level scripts and functions are in the repository root, and the rest in in [`src/`](src) folder.
+Top-level scripts and functions are in the repository root, and the rest is in [`src/`](src) folder.
 
 [`demo.m`](demo.m) script is an implementation of the running guideline below.\
 Feel free to play with it and use as an example for your own scripts.
 
 ## Running
 
-1. Run [`stratup.m`](startup.m) to setup MATLAB Path.
-2. [optional] Start a parallel pool to run computations there.
-3. Setup reservoir model properties and algorithm options in the same format as produced by
-  [`gen_params`](src/gen_params.m) and [`gen_options`](src/gen_options.m) functions.
+1. Run [`startup.m`](startup.m) to setup MATLAB Path.
+   1. Optional: start a parallel pool to run computations there.
+2. Read or generate target coarse grid dimensions
+and input fine-scale porosity and permeability for each coarse block.
+3. Setup input rock-fluid properties and algorithm options represented by
+  [`Params`](src/Params.m) and [`Options`](src/Options.m) classes.
 4. Create logical `mask` to filter out impermeable cells and/or define an arbitrary subset of cells to process.
-5. Run [`strata_trapper`](strata_trapper.m) function with all those arguments optionally enabling a UI progress bar.
-6. Export the outputs to [PFLOTRAN-OGS](https://docs.opengosim.com/)-compatible text files using [`ogs_export`](ogs_export.m) function.
-7. Interact and visualise outputs the same way as in the demo script or any other way of your preference.
+5. Run [`strata_trapper`](strata_trapper.m) function with arbitrary number of parallel workers
+optionally enabling a UI progress bar.
+6. Visualise outputs with [`plot_result`](plot_result.m) function
+7. Export the outputs to [PFLOTRAN-OGS](https://docs.opengosim.com/)-compatible text files using [`ogs_export`](ogs_export.m) function.
 
 Tips:
 
