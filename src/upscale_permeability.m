@@ -83,7 +83,7 @@ end
 
 for dir = dirs(mask)
     A_diag_all = A_diag;
-    cond_dir_x2 = cond(:,dir);
+    cond_dir_x2 = cond(:,dir)*2;
 
     dirs_orth = dirs(dirs~=dir);
     is_inner_orth = prod(is_inner(:,dirs_orth),2);
@@ -134,7 +134,7 @@ for dir = dirs(mask)
 
     dist_to_area = L(dir)^2 / V;
 
-    Kabs(dir) = Q / Muw / (Pin-Pout) * dist_to_area;
+    Kabs(dir) = Q * Muw * dist_to_area / (Pin-Pout);
 
     if isnan(Kabs(dir))
         warning('unexpected NaN detected');
