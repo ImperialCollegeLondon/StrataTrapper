@@ -75,6 +75,10 @@ if ~allfinite(pc_upscaled)
     disp(pc_upscaled);
 end
 
+pc_upscaled = interp1(sw_upscaled, pc_upscaled, saturations, "linear","extrap");
+krw         = interp1(sw_upscaled,        krw', saturations, "linear","extrap")';
+krg         = interp1(sw_upscaled,        krg', saturations, "linear","extrap")';
+
 end
 
 function [pc_mid_tot, sw_mid, pc_mid, invaded_mat_mid, converged] = mip_iteration(...
