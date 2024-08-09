@@ -1,9 +1,11 @@
 function [Kabs, sw_upscaled, pc_upscaled, krw, krg] = upscale(...
-    dr, saturations, params, options, downscale_dims, porosities, permeabilities)
+    dr, saturations, params, options, porosities, permeabilities)
 
 if max(porosities,[],'all') <= 0
     error('inactive cell');
 end
+
+downscale_dims = size(porosities);
 
 dr_sub = dr ./ downscale_dims;
 
