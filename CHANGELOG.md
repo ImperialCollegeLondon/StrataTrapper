@@ -1,5 +1,36 @@
 # Changelog
 
+## [0.5.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.4.0...v0.5.0) (2024-08-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* :children_crossing: Separate downscaling from upscaling
+
+### Features
+
+* :sparkles: `CapPressure` class ([b0e51f1](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/b0e51f1acc1fa1b0dc773b27ab0bfe5686baca55))
+* :sparkles: add centi multiplier ([22214f8](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/22214f8dccdec628d3be166f9a1353c0975d6f16))
+* :sparkles: add dyne as force unit ([4cd975c](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/4cd975cef83fdf665740440e31150e95fe3bf061))
+* :sparkles: Implement StrataTrapper parameters as class ([c6dc14c](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/c6dc14c57bb950fba52b3b6323f2f890ad93cdee))
+* :sparkles: make `options` a class with validated properties ([a02bf4a](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/a02bf4ae7a3e1959ddc206ac74c893fd4dfbb22c))
+* :sparkles: Relative permeability via new `TableFunction` class ([cfed173](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/cfed173222906bf0e37f9c0f8c24f814d57dbeed))
+
+
+### Bug Fixes
+
+* :adhesive_bandage: `strata_trapper`: initialize output arrays with NaN ([0f13d2c](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/0f13d2c76a25153c9639baf5bc585a8acdc14c13))
+* :adhesive_bandage: `upscale` calculate downscale dimensions inside ([de68c8b](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/de68c8b9edd69ef3a4f6d86177552ae2482bd7d1))
+* :adhesive_bandage: `upscale`: interpolate upscaled curves inside ([45bd142](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/45bd1429e2b198ffdef92ca358cfbcb5c979c1e6))
+* :bug: permeability upscaling ([8815ca6](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/8815ca6c9d1e5adc5290ce547d1e3b1d3f9db553))
+* :children_crossing: Compute entry pressures during upscaling ([b088eaf](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/b088eaf2ebfca50e2b9ec187ad6df56774823214))
+* :children_crossing: Separate downscaling from upscaling ([b551c73](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/b551c73d0ff2f6d4af0c1c1c50bc15eb17552234))
+
+
+### Documentation
+
+* :memo: Update `README.md` ([7219f1a](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/7219f1a4e4effcb64d8359039df54e8c0046d6b5))
+
 ## [0.4.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.3.0...v0.4.0) (2024-07-30)
 
 
