@@ -4,7 +4,7 @@ arguments
     rock            (1,1) struct
     mask            (:,1) logical
     params          (1,1) struct
-    options         (1,1) struct
+    options         (1,1) Options = Options();
     enable_waitbar  (1,1) logical = false;
     num_par_workers (1,1) uint32  = Inf;
 end

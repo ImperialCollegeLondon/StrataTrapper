@@ -6,7 +6,7 @@ arguments
     dr          (1,3) double
     saturations (1,:) double
     params      (1,1) struct
-    options     (1,1) struct
+    options     (1,1) Options
 end
 
 
