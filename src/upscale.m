@@ -1,4 +1,4 @@
-function [Kabs, sw_upscaled, pc_upscaled, krw, krg] = upscale(...
+function [perm_upscaled, sw_upscaled, pc_upscaled, krw, krg] = upscale(...
     dr, saturations, params, options, porosities, permeabilities)
 
 if max(porosities,[],'all') <= 0
@@ -9,7 +9,7 @@ downscale_dims = size(porosities);
 
 dr_sub = dr ./ downscale_dims;
 
-Kabs = upscale_permeability(permeabilities, dr_sub(1),dr_sub(2),dr_sub(3));
+perm_upscaled = upscale_permeability(permeabilities, dr_sub(1),dr_sub(2),dr_sub(3));
 
 sw_upscaled = saturations;
 pc_upscaled = zeros(size(saturations));
@@ -57,7 +57,7 @@ for index_saturation = 1:length(saturations)
     kg_mat_local = kg_mat_local.*permeabilities;
     kw_mat_local = kw_mat_local.*permeabilities;
 
-    [krg(:,index_saturation), krw(:,index_saturation)] = calc_phase_permeabilities(dr_sub, Kabs, kg_mat_local, kw_mat_local);
+    [krg(:,index_saturation), krw(:,index_saturation)] = calc_phase_permeabilities(dr_sub, perm_upscaled, kg_mat_local, kw_mat_local);
 end
 
 sw_upscaled(end) = 1;
@@ -124,11 +124,11 @@ end
 pc_mid = max(pc_mid,min(entry_pressures,[],'all'));
 end
 
-function [krg, krw] = calc_phase_permeabilities(dr_sub, Kabs, kg_mat, kw_mat)
+function [krg, krw] = calc_phase_permeabilities(dr_sub, perm_upscaled, kg_mat, kw_mat)
 
-Kx = Kabs(1);
-Ky = Kabs(2);
-Kz = Kabs(3);
+Kx = perm_upscaled(1);
+Ky = perm_upscaled(2);
+Kz = perm_upscaled(3);
 
 Kalli = zeros(1,6);
 
