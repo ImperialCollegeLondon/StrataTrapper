@@ -1,6 +1,6 @@
 function Kabs = upscale_permeability(permeabilities,Lx,Ly,Lz,mask)
 arguments
-    permeabilities (:,:,:) double
+    permeabilities (:,:,:,3) double
     Lx (1,1) double
     Ly (1,1) double
     Lz (1,1) double
@@ -9,7 +9,7 @@ end
 
 Kabs = [0,0,0];
 
-[x0,y0,z0] = size(permeabilities);
+[x0,y0,z0,~] = size(permeabilities);
 
 Q = 1;
 Muw = 1;
@@ -19,20 +19,26 @@ x=x0+2;
 y=y0+2;
 z=z0+2;
 
-L = [Lx*x0,Ly*y0,Lz*z0];
+L_sub = [Lx,Ly,Lz];
+V_sub = prod(L_sub);
+L = L_sub.*[x0,y0,z0];
 V = prod(L);
 Nr_ext = [x,y,z];
 
-Kai = zeros(x,y,z);
-Kai(2:end-1,2:end-1,2:end-1) = permeabilities;
+cond = zeros(x*y*z,3);
 
-cond_common = Kai(:) ./ Muw;
+dirs=1:3;
 
-cond(:,1) = cond_common .* (Ly * Lz / Lx);
-cond(:,2) = cond_common .* (Lx * Lz / Ly);
-cond(:,3) = cond_common .* (Lx * Ly / Lz);
+for dir=dirs
+    area_to_dist = V_sub/L_sub(dir)^2;
+    perm_dir = zeros(x,y,z);
+    perm_dir(2:end-1,2:end-1,2:end-1) = permeabilities(:,:,:,dir);
+    cond(:,dir) = perm_dir(:) .* area_to_dist ./ Muw;
+end
 
-idx_conductive = find(cond_common>0);
+cond_sum = sum(abs(cond),2);
+
+idx_conductive = find(cond_sum>0);
 
 idx_adj(:,1,1) = idx_conductive - 1;
 idx_adj(:,1,2) = idx_conductive + 1;
@@ -53,8 +59,6 @@ map_to_cond(1:num_cells_ext,1)=0;
 map_to_cond(idx_conductive) = 1:length(idx_conductive);
 
 A_ndiag{3,2} = [];
-
-dirs=1:3;
 
 for dir=dirs
     cond_dir = cond(:,dir);
@@ -89,7 +93,7 @@ for dir = dirs(mask)
     is_inner_orth = prod(is_inner(:,dirs_orth),2);
 
     is_to_bound_L = (lin_to_sub(:,dir) == 2) & is_inner_orth;
-    idx_cond_to_bound_L = find(is_to_bound_L & (cond_common>0));
+    idx_cond_to_bound_L = find(is_to_bound_L & (cond(:,dir)>0));
 
     cond_dir_Lx2 = cond_dir_x2(idx_cond_to_bound_L);
     A_diag_all(num_eqs,3) = A_diag_all(num_eqs,3) + sum(cond_dir_Lx2);
@@ -104,7 +108,7 @@ for dir = dirs(mask)
     Ain = [pos_eq_in,pos_var_in,repmat(-cond_dir_Lx2,[2,1])];
 
     is_to_bound_R = (lin_to_sub(:,dir) == (Nr_ext(dir)-1)) & is_inner_orth;
-    idx_cond_to_bound_R = find(is_to_bound_R & (cond_common>0));
+    idx_cond_to_bound_R = find(is_to_bound_R & (cond(:,dir)>0));
 
     cond_dir_Rx2 = cond_dir_x2(idx_cond_to_bound_R);
 
