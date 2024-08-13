@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.1](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.6.0...v0.6.1) (2024-08-13)
+
+
+### Documentation
+
+* :memo: CI status badge in README ([d2772df](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/d2772df2e78baf6ad5668cb9844783bece354a41))
+
 ## [0.6.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.5.0...v0.6.0) (2024-08-13)
 
 
