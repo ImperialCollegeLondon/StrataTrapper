@@ -12,7 +12,7 @@ curves_plot(mask, strata_trapped, params, kr_scale);
 base_cap = strata_trapped;
 base_cap.permeability = rock.perm;
 for i = 1:length(base_cap.saturation)
-    base_cap.capillary_pressure(mask,i) = params.cap_pressure.func(base_cap.saturation(i),rock.poro(mask),geomean(rock.perm(mask,:),2));
+    base_cap.capillary_pressure(mask,i) = params.cap_pressure.func(base_cap.saturation(i),rock.poro(mask),rock.perm(mask,:));
 end
 
 tiles_pc = tiledlayout(figure(),'flow',TileSpacing='compact',Padding='tight');

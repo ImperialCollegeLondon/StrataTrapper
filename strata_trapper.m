@@ -52,6 +52,7 @@ end
 
 krw(:,:,saturations<=params.sw_resid) = 0;
 krg(krg<0) = 0;
+krg(:,:,saturations>=1)=0;
 
 strata_trapped = struct(...
     'permeability', perm_upscaled, ...
