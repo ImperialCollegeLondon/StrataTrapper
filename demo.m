@@ -1,6 +1,8 @@
 %% StrataTrapper demonstration
 
-parpool(); % start default parpool (optional)
+if isempty(gcp('nocreate'))
+    parpool(); % start default parpool (optional)
+end
 
 %% Inputs
 
