@@ -78,7 +78,7 @@ if nargin == 2
     start_time = tic();
 
     last_reported_state = state;
-    last_reported_time = start_time;
+    last_reported_time = 0;
     return;
 end
 
