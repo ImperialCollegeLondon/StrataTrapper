@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.6.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.5.0...v0.6.0) (2024-08-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* :sparkles: anisotropic permeability downscaling
+* :sparkles: anisotropic permeability upscaling
+
+### Features
+
+* :sparkles: anisotropic permeability downscaling ([604bfe3](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/604bfe394d33ed1e57926e46963ed5419b8aec2e))
+* :sparkles: anisotropic permeability upscaling ([91bc3e1](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/91bc3e14ec048561af156f9730132d1181a34796))
+* :sparkles: capillary pressure under anisotropic permeability ([0f420c9](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/0f420c9524df9c2762605def7c860fe2152065d7))
+
+
+### Bug Fixes
+
+* :adhesive_bandage: `demo.m`: existing parpool case ([0b0ff1a](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/0b0ff1ae4b1d997bdc571276a6d92fc0e98d206e))
+* :adhesive_bandage: gas rel. perm. at Sw=1 ([8e7c771](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/8e7c771407ebecea56de63d66b362e628e8c8777))
+* :adhesive_bandage: iterative MIP: relax saturation tolerance ([9f0bd39](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/9f0bd39a0102cff5952ec57b92c1d9acb77306aa))
+
 ## [0.5.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.4.0...v0.5.0) (2024-08-09)
 
 
