@@ -7,7 +7,7 @@ end
 %% Inputs
 
 params  = gen_params (); % input rock-fluid parameters
-options = Options();     % StrataTrapper options
+options = Options);     % StrataTrapper options
 
 downscale_params = gen_downscale_params();
 
