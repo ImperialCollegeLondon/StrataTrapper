@@ -42,7 +42,7 @@ export_fut = parfeval(backgroundPool,@ogs_export,0,grid,mask,strata_trapped);
 function downscale_demo(params,downscale_params)
 
 [sub_porosity, sub_permeability] = downscale(...
-    0.1, 100*milli*darcy, [400,400,0.1].*meter(),downscale_params);
+    0.1, 100*milli*darcy * [1,1,0.5], [400,400,0.1].*meter(),downscale_params);
 
 fig = figure;
 tiles = tiledlayout(fig,'flow',TileSpacing='tight',Padding='tight');
@@ -65,11 +65,13 @@ tiles = tiledlayout(fig,'flow',TileSpacing='tight',Padding='tight');
 
 slice_plot(nexttile(tiles),squeeze(sub_porosity(:,:,2)),'Porosity','');
 
-sub_entry_pressures = params.cap_pressure.func(1, sub_porosity, sub_permeability);
+perm_to_plot = params.cap_pressure.transform_perm(sub_porosity,sub_permeability);
+
+sub_entry_pressures = params.cap_pressure.func(1, sub_porosity, perm_to_plot);
 
 slice_plot(nexttile(tiles),squeeze(sub_entry_pressures(:,:,2)./barsa()),'Entry pressure','bar');
 
-slice_plot(nexttile(tiles),squeeze(sub_permeability(:,:,2)./(milli()*darcy())),'Permeability','mD');
+slice_plot(nexttile(tiles),squeeze(perm_to_plot(:,:,2)./(milli()*darcy())),'Permeability','mD');
 xlabel(tiles,'x, m');
 ylabel(tiles,'y, m');
 end
@@ -87,5 +89,8 @@ poro_perm = downscale_params.poro_perm_gen(grid.cells.num);
 rock.poro = poro_perm(1,:)';
 rock.poro = max(rock.poro,0);
 
-rock.perm = poro_perm(2,:)';
+perm_x = poro_perm(2,:)';
+perm_y = perm_x;
+perm_z = perm_x*0.5;
+rock.perm = [perm_x,perm_y,perm_z];
 end
