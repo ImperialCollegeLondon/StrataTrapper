@@ -96,11 +96,11 @@ sub_volume = volume./double(Nz_sub*Nx_sub*Ny_sub);
 pore_volumes = porosities .* sub_volume;
 pore_volume = sum(pore_volumes,'all');
 
-sub_sw_mid = invaded_mat_mid .* cap_pressure.inv(pc_mid,porosities,permeabilities) + ~invaded_mat_mid .* 1;
-sub_sw_mid(~isfinite(sub_sw_mid)) = 1;
-sw_mid = sum(sub_sw_mid.*pore_volumes,'all')/pore_volume;
+sub_sw = invaded_mat_mid .* cap_pressure.inv(pc_mid,porosities,permeabilities) + ~invaded_mat_mid .* 1;
+sub_sw(~isfinite(sub_sw)) = 1;
+sw_mid = sum(sub_sw.*pore_volumes,'all')/pore_volume;
 
-pc_mid_tot = sum((1-sub_sw_mid).*pore_volumes.*pc_mid,"all")/(pore_volume*(1-sw_mid));
+pc_mid_tot = sum((1-sub_sw).*pore_volumes.*pc_mid,"all")/(pore_volume*(1-sw_mid));
 
 if sw_mid >=1
     pc_mid_tot = pc_mid;
