@@ -1,0 +1,21 @@
+name: Backup
+on:
+  push:
+    branches: ["main","dev"]
+  schedule:
+    - cron: '0 0 * * *'
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          if git remote get-url backup; then
+            echo "Remote 'backup' already exists"
+          else
+            git remote add backup ${{ secrets.BACKUP_URL }}
+            echo "Added remote 'backup'"
+          fi
+          git push --mirror backup
+        env:
+          BACKUP_PAT: ${{ secrets.BACKUP_PAT }}
