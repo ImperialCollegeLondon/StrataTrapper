@@ -17,5 +17,3 @@ jobs:
             echo "Added remote 'backup'"
           fi
           git push --mirror backup
-        env:
-          BACKUP_PAT: ${{ secrets.BACKUP_PAT }}
