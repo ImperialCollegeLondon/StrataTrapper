@@ -38,7 +38,7 @@ classdef CapPressure
             arguments
                 obj (1,1) CapPressure
                 pc  (1,1) double
-                poro double {mustBePositive}
+                poro double {mustBeNonnegative}
                 perm double {mustBeNonnegative}
             end
 
