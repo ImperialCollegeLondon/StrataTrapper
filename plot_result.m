@@ -9,7 +9,7 @@ end
 
 leverett_j_upscaled = params.cap_pressure.inv_lj(strata_trapped.capillary_pressure(mask,:),rock.poro(mask),strata_trapped.permeability(mask,:));
 
-[y_lim_pc, ax_pc] =  stat_plot(axes(figure),'Leverett J-function','',strata_trapped.saturation,...
+[~, ax_pc] =  stat_plot(axes(figure),'Leverett J-function','',strata_trapped.saturation,...
     @(sw)params.cap_pressure.leverett_j.func(sw), leverett_j_upscaled,true);
 
 ax_pc.YScale='log';
