@@ -7,24 +7,36 @@ arguments
     kr_scale = "log"
 end
 
-leverett_j_upscaled = params.cap_pressure.inv_lj(strata_trapped.capillary_pressure(mask,:),rock.poro(mask),strata_trapped.permeability(mask,:));
+[t_all,t_kr,t_krw,t_krg,ax_pc,ax_krw_x,ax_krw_y,ax_krw_z,ax_krg_x,ax_krg_y,ax_krg_z] = nested_tiles();
 
-[~, ax_pc] =  stat_plot(axes(figure),'Leverett J-function','',strata_trapped.saturation,...
+leverett_j_upscaled = params.cap_pressure.inv_lj(...
+    strata_trapped.capillary_pressure(mask,:),...
+    rock.poro(mask),strata_trapped.permeability(mask,:));
+
+[~, ax_pc] =  stat_plot(ax_pc,'Leverett J-function','',strata_trapped.saturation,...
     @(sw)params.cap_pressure.leverett_j.func(sw), leverett_j_upscaled,true);
-
-ax_pc.YScale='log';
-% ylim(ax_pc,y_lim_pc);
-
-xlabel(ax_pc,'Wetting phase saturation');
+title(ax_pc,'Leverett J-function');
 ylabel(ax_pc,'[-]');
+ax_pc.YScale='log';
+curves_plot([ax_krw_x,ax_krw_y,ax_krw_z;ax_krg_x,ax_krg_y,ax_krg_z], mask, strata_trapped, params, kr_scale);
 
-curves_plot(mask, strata_trapped, params, kr_scale);
+xlabel(t_all,'Wetting phase saturation');
+ylabel(t_kr,'relative permeability');
+title(t_krw,'Water');
+title(t_krg,'Gas');
 
+subtitle(ax_krw_x,'x','Interpreter','latex');
+subtitle(ax_krw_y,'y','Interpreter','latex');
+subtitle(ax_krw_z,'z','Interpreter','latex');
+subtitle(ax_krg_x,'x','Interpreter','latex');
+subtitle(ax_krg_y,'y','Interpreter','latex');
+subtitle(ax_krg_z,'z','Interpreter','latex');
 end
 
 
-function curves_plot(mask, strata_trapped, params,scale)
+function curves_plot(ax_kr,mask, strata_trapped, params,scale)
 arguments
+    ax_kr
     mask
     strata_trapped
     params
@@ -32,25 +44,20 @@ arguments
 end
 sub_data = @(data,mask,direction) squeeze(data(mask,direction,:));
 
-tiles_krw = tiledlayout(figure(),3,2,TileSpacing='tight',Padding='tight');
+stat_plot(ax_kr(1,1),'','',strata_trapped.saturation,@(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,mask,1));
+yscale(ax_kr(1,1),scale);
+stat_plot(ax_kr(2,1),'','',strata_trapped.saturation,@(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,mask,1));
+yscale(ax_kr(2,1),scale);
 
-stat_plot(nexttile(tiles_krw),'Water, along X-axis','',strata_trapped.saturation,@(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,mask,1));
-yscale(scale);
-stat_plot(nexttile(tiles_krw),'Gas, along X-axis','',strata_trapped.saturation,@(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,mask,1));
-yscale(scale);
+stat_plot(ax_kr(1,2),'','',strata_trapped.saturation,@(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,mask,2));
+yscale(ax_kr(1,2),scale);
+stat_plot(ax_kr(2,2),'','',strata_trapped.saturation,@(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,mask,2));
+yscale(ax_kr(2,2),scale);
 
-stat_plot(nexttile(tiles_krw),'Water, along Y-axis','',strata_trapped.saturation,@(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,mask,2));
-yscale(scale);
-stat_plot(nexttile(tiles_krw),'Gas, along Y-axis','',strata_trapped.saturation,@(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,mask,2));
-yscale(scale);
-
-stat_plot(nexttile(tiles_krw),'Water, along Z-axis','',strata_trapped.saturation,@(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,mask,3),true);
-yscale(scale);
-stat_plot(nexttile(tiles_krw),'Gas, along Z-axis','',strata_trapped.saturation,@(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,mask,3));
-yscale(scale);
-
-xlabel(tiles_krw,'Wetting phase saturation');
-ylabel(tiles_krw,'Relative permeability');
+stat_plot(ax_kr(1,3),'','',strata_trapped.saturation,@(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,mask,3));
+yscale(ax_kr(1,3),scale);
+stat_plot(ax_kr(2,3),'','',strata_trapped.saturation,@(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,mask,3));
+yscale(ax_kr(2,3),scale);
 end
 
 
@@ -70,17 +77,16 @@ parallelcoords(ax,data,'Quantile',0.01,'XData',x_data,'Color',color);
 
 if ~isempty(base_func)
     hold(ax,'on');
-    plot(x_data,base_func(x_data),'-r');
+    plot(ax,x_data,base_func(x_data),'-r');
     hold(ax,'off');
 end
 
-title(ax,name);
+ylabel(ax,'');
 xlabel(ax,'');
 ax.XTickMode='auto';
 ax.XTickLabelMode='auto';
 ax.XLimitMethod="tickaligned";
 
-ylabel(ax,y_label);
 ax.YLimitMethod="tight";
 
 if show_legend
@@ -99,4 +105,34 @@ try
 catch err
     y_lim = [nan,nan];
 end
+end
+
+function [t_all,t_kr,t_krw,t_krg,ax_pc,ax_krw_x,ax_krw_y,ax_krw_z,ax_krg_x,ax_krg_y,ax_krg_z] = nested_tiles()
+params = {'TileSpacing','tight','Padding','tight'};
+t_all = tiledlayout(1,3,params{:});
+
+
+t_pc = tiledlayout(t_all,1,1,params{:});
+t_pc.Layout.Tile = 1;
+ax_pc = nexttile(t_pc);
+
+t_kr = tiledlayout(t_all,1,2,params{:});
+t_kr.Layout.Tile = 2;
+t_kr.Layout.TileSpan = [1,2];
+
+
+t_krw = tiledlayout(t_kr,3,1,params{:});
+t_krw.Layout.Tile = 1;
+
+ax_krw_x = nexttile(t_krw,1);
+ax_krw_y = nexttile(t_krw,2);
+ax_krw_z = nexttile(t_krw,3);
+
+
+t_krg = tiledlayout(t_kr,3,1,params{:});
+t_krg.Layout.Tile = 2;
+
+ax_krg_x = nexttile(t_krg,1);
+ax_krg_y = nexttile(t_krg,2);
+ax_krg_z = nexttile(t_krg,3);
 end
