@@ -9,9 +9,10 @@ end
 
 [t_all,t_kr,t_krw,t_krg,ax_pc,ax_krw_x,ax_krw_y,ax_krw_z,ax_krg_x,ax_krg_y,ax_krg_z] = nested_tiles();
 
+
 leverett_j_upscaled = params.cap_pressure.inv_lj(...
-    strata_trapped.capillary_pressure(mask,:),...
-    rock.poro(mask),strata_trapped.permeability(mask,:));
+    strata_trapped.capillary_pressure,...
+    rock.poro(mask),strata_trapped.permeability);
 
 [~, ax_pc] =  stat_plot(ax_pc,'Leverett J-function','',strata_trapped.saturation,...
     @(sw)params.cap_pressure.leverett_j.func(sw), leverett_j_upscaled,true);
@@ -42,7 +43,7 @@ arguments
     params
     scale = "log"
 end
-sub_data = @(data,mask,direction) squeeze(data(mask,direction,:));
+sub_data = @(data,mask,direction) squeeze(data(:,direction,:));
 
 stat_plot(ax_kr(1,1),'','',strata_trapped.saturation,@(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,mask,1));
 yscale(ax_kr(1,1),scale);
