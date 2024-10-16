@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.3](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.6.2...v0.6.3) (2024-10-16)
+
+
+### Documentation
+
+* :memo: Add link to `StrataTrapper-models` ([24e55d6](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/24e55d64b9443e30b34b83358cdfbd2b38eff4bd))
+
 ## [0.6.2](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.6.1...v0.6.2) (2024-08-19)
 
 
