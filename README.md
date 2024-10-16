@@ -20,6 +20,8 @@ It can also generate heterogeneous fine-scale models with specific correlation l
 
 Another tool is the **reduced-physics model** [CO2GraVISim](https://github.com/ajobutler/CO2GraVISim).
 
+In [`StrataTrapper-models`](https://github.com/ImperialCollegeLondon/StrataTrapper-models) repository, we publish field-scale models upscaled with StrataTrapper.
+
 ## Structure
 
 Top-level scripts and functions are in the repository root, and the rest is in [`src/`](src) folder.
