@@ -1,8 +1,6 @@
-# Field scale model generation and upscaling [toolkit](https://github.com/ImperialCollegeLondon/StrataTrapper)
+# Field scale model generation and upscaling toolkit
 
-![build](https://github.com/ImperialCollegeLondon/StrataTrapper/actions/workflows/matlab-ci.yml/badge.svg?branch=dev)
-
-![StrataTrapper logo](./img/StrataTrapper.jpg)
+Repository: [github.com/ImperialCollegeLondon/StrataTrapper](https://github.com/ImperialCollegeLondon/StrataTrapper)
 
 * [The StrataTrapper codes](#the-stratatrapper-codes)
 * [Structure](#structure)
@@ -10,6 +8,10 @@
 * [Versions](#versions)
 * [Contributing](#contributing)
 * [References](#references)
+
+![StrataTrapper logo](./img/StrataTrapper.jpg)
+
+![build](https://github.com/ImperialCollegeLondon/StrataTrapper/actions/workflows/matlab-ci.yml/badge.svg?branch=dev)
 
 ## The StrataTrapper codes
 
