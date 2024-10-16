@@ -34,7 +34,7 @@ for index_saturation = 1:length(saturations)
     max_iterations = calc_endpoint*1000 + ~calc_endpoint*2;
 
     for iteration_num=1:max_iterations
-        [pc_mid_tot, sw_mid, pc_mid, invaded_mat_mid, converged] = mip_iteration(...
+        [pc_mid_tot, sw_mid, pc_mid, sub_sw, converged] = mip_iteration(...
             sw_target, dr, entry_pressures, porosities, permeabilities, pc_mid, ...
             Nz_sub, Nx_sub, Ny_sub,...
             params.cap_pressure,...
@@ -49,10 +49,8 @@ for index_saturation = 1:length(saturations)
     sw_upscaled(index_saturation) = sw_mid;
     pc_upscaled(index_saturation) = pc_mid_tot;
 
-    sw = invaded_mat_mid .* sw_mid + ~invaded_mat_mid .* 1;
-
-    kg_mat_local = params.krg.func(1-sw);
-    kw_mat_local = params.krw.func(sw);
+    kg_mat_local = params.krg.func(1-sub_sw);
+    kw_mat_local = params.krw.func(sub_sw);
 
     kg_mat_local = kg_mat_local.*permeabilities;
     kw_mat_local = kw_mat_local.*permeabilities;
@@ -83,7 +81,7 @@ krg         = interp1(sw_upscaled,        krg', saturations, "linear","extrap")'
 
 end
 
-function [pc_mid_tot, sw_mid, pc_mid, invaded_mat_mid, converged] = mip_iteration(...
+function [pc_mid_tot, sw_mid, pc_mid, sub_sw, converged] = mip_iteration(...
     sw_target, dr, entry_pressures, porosities, permeabilities, pc_mid,...
     Nz_sub, Nx_sub, Ny_sub, ...
     cap_pressure,...
@@ -96,11 +94,11 @@ sub_volume = volume./double(Nz_sub*Nx_sub*Ny_sub);
 pore_volumes = porosities .* sub_volume;
 pore_volume = sum(pore_volumes,'all');
 
-sub_sw_mid = invaded_mat_mid .* cap_pressure.inv(pc_mid,porosities,permeabilities) + ~invaded_mat_mid .* 1;
-sub_sw_mid(~isfinite(sub_sw_mid)) = 1;
-sw_mid = sum(sub_sw_mid.*pore_volumes,'all')/pore_volume;
+sub_sw = invaded_mat_mid .* cap_pressure.inv(pc_mid,porosities,permeabilities) + ~invaded_mat_mid .* 1;
+sub_sw(~isfinite(sub_sw)) = 1;
+sw_mid = sum(sub_sw.*pore_volumes,'all')/pore_volume;
 
-pc_mid_tot = sum((1-sub_sw_mid).*pore_volumes.*pc_mid,"all")/(pore_volume*(1-sw_mid));
+pc_mid_tot = sum((1-sub_sw).*pore_volumes.*pc_mid,"all")/(pore_volume*(1-sw_mid));
 
 if sw_mid >=1
     pc_mid_tot = pc_mid;

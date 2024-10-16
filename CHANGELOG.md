@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.6.3](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.6.2...v0.6.3) (2024-10-16)
+
+
+### Documentation
+
+* :memo: Add link to `StrataTrapper-models` ([24e55d6](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/24e55d64b9443e30b34b83358cdfbd2b38eff4bd))
+
+## [0.6.2](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.6.1...v0.6.2) (2024-08-19)
+
+
+### Bug Fixes
+
+* :adhesive_bandage: waitbar initialization ([ad0c2af](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/ad0c2af657d6f1670516967809ac7f3517f7479c))
+* :bug: `mask`-narrowed post-processing ([81b247b](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/81b247b244776ea4acf0b183711be93022a222bf))
+* :bug: relative permeability upscaling ([b2b15f7](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/b2b15f7e5e55f23c2eb88382f2889b67ab8ecb7b))
+
 ## [0.6.1](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.6.0...v0.6.1) (2024-08-13)
 
 

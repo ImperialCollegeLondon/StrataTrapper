@@ -50,9 +50,9 @@ parfor (cell_index = 1:cells_num, num_par_workers)
     end
 end
 
-krw(:,:,saturations<=params.sw_resid) = 0;
+krw(mask,:,saturations<=params.sw_resid) = 0;
 krg(krg<0) = 0;
-krg(:,:,saturations>=1)=0;
+krg(mask,:,saturations>=1)=0;
 
 strata_trapped = struct(...
     'permeability', perm_upscaled, ...
@@ -78,7 +78,7 @@ if nargin == 2
     start_time = tic();
 
     last_reported_state = state;
-    last_reported_time = start_time;
+    last_reported_time = 0;
     return;
 end
 

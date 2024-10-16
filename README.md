@@ -1,8 +1,6 @@
-# Field scale model generation and upscaling [toolkit](https://github.com/ImperialCollegeLondon/StrataTrapper)
+# Field scale model generation and upscaling toolkit
 
-![build](https://github.com/ImperialCollegeLondon/StrataTrapper/actions/workflows/matlab-ci.yml/badge.svg?branch=dev)
-
-![StrataTrapper logo](./img/StrataTrapper.jpg)
+Repository: [github.com/ImperialCollegeLondon/StrataTrapper](https://github.com/ImperialCollegeLondon/StrataTrapper)
 
 * [The StrataTrapper codes](#the-stratatrapper-codes)
 * [Structure](#structure)
@@ -11,12 +9,18 @@
 * [Contributing](#contributing)
 * [References](#references)
 
+![StrataTrapper logo](./img/StrataTrapper.jpg)
+
+![build](https://github.com/ImperialCollegeLondon/StrataTrapper/actions/workflows/matlab-ci.yml/badge.svg?branch=dev)
+
 ## The StrataTrapper codes
 
 This is the StrataTrapper **upscaling toolkit**.
 It can also generate heterogeneous fine-scale models with specific correlation lengths to re-upscale given coarse-scale two-phase flow models.
 
 Another tool is the **reduced-physics model** [CO2GraVISim](https://github.com/ajobutler/CO2GraVISim).
+
+In [`StrataTrapper-models`](https://github.com/ImperialCollegeLondon/StrataTrapper-models) repository, we publish field-scale models upscaled with StrataTrapper.
 
 ## Structure
 
