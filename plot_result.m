@@ -22,7 +22,7 @@ ax_pc.YScale='log';
 curves_plot([ax_krw_x,ax_krw_y,ax_krw_z;ax_krg_x,ax_krg_y,ax_krg_z], mask, strata_trapped, params, kr_scale);
 
 xlabel(t_all,'Wetting phase saturation',FontSize=14);
-ylabel(t_kr,'Relative permeability',FontSize=14);
+title(t_kr,'Relative permeability',FontSize=14);
 title(t_krw,'Water',FontSize=14);
 title(t_krg,'Gas',FontSize=14);
 
