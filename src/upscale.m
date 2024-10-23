@@ -37,9 +37,7 @@ for index_saturation = 1:length(saturations)
         [pc_mid_tot, sw_mid, pc_mid, sub_sw, converged] = mip_iteration(...
             sw_target, dr, entry_pressures, porosities, permeabilities, pc_mid, ...
             Nz_sub, Nx_sub, Ny_sub,...
-            params.cap_pressure,...
-            options.sat_tol ...
-            );
+            params, options);
 
         if converged
             break;
@@ -84,17 +82,17 @@ end
 function [pc_mid_tot, sw_mid, pc_mid, sub_sw, converged] = mip_iteration(...
     sw_target, dr, entry_pressures, porosities, permeabilities, pc_mid,...
     Nz_sub, Nx_sub, Ny_sub, ...
-    cap_pressure,...
-    tol_sw)
+    params, options)
 
-invaded_mat_mid = calc_percolation(pc_mid, entry_pressures);
+invaded_mat_mid = calc_percolation(pc_mid, entry_pressures,...
+    options.hydrostatic_correction, dr(3), params.rho_water, params.rho_gas);
 
 volume = prod(dr);
 sub_volume = volume./double(Nz_sub*Nx_sub*Ny_sub);
 pore_volumes = porosities .* sub_volume;
 pore_volume = sum(pore_volumes,'all');
 
-sub_sw = invaded_mat_mid .* cap_pressure.inv(pc_mid,porosities,permeabilities) + ~invaded_mat_mid .* 1;
+sub_sw = invaded_mat_mid .* params.cap_pressure.inv(pc_mid,porosities,permeabilities) + ~invaded_mat_mid .* 1;
 sub_sw(~isfinite(sub_sw)) = 1;
 sw_mid = sum(sub_sw.*pore_volumes,'all')/pore_volume;
 
@@ -106,12 +104,12 @@ end
 
 sw_err = sw_target - sw_mid;
 err = abs(sw_err);
-converged = err <= tol_sw;
+converged = err <= options.sat_tol;
 if converged
     return;
 end
 
-deriv = cap_pressure.deriv(sw_mid, mean(porosities,'all'), mean(permeabilities,'all'));
+deriv = params.cap_pressure.deriv(sw_mid, mean(porosities,'all'), mean(permeabilities,'all'));
 
 dpc = sw_err*deriv;
 
