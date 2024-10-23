@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.6.3...v0.7.0) (2024-10-23)
+
+
+### Features
+
+* :sparkles: Hydrostatic correction for MIP ([7dd9c37](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/7dd9c37e811bc843f63a06374cef35a054e21a8b)), closes [#57](https://github.com/ImperialCollegeLondon/StrataTrapper/issues/57)
+
 ## [0.6.3](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.6.2...v0.6.3) (2024-10-16)
 
 
