@@ -23,12 +23,10 @@ downscale_demo(params, downscale_params);
 
 mask = rand(grid.cells.num,1) < 0.001; % process only a fraction of cells
 
-enable_waitbar = true;
-num_par_workers = Inf; % use all parallel workers from the pool
+sub_rock = downscale_all(grid,rock,mask,downscale_params,num_par_workers=Inf);
 
-sub_rock = downscale_all(grid,rock,mask,downscale_params,num_par_workers);
-
-strata_trapped = strata_trapper(grid, sub_rock, mask, params, options, enable_waitbar, num_par_workers);
+strata_trapped = strata_trapper(grid, sub_rock, mask, params, options, ...
+enable_waitbar=true, num_par_workers=Inf);
 
 %% Visualize saturation functions
 
