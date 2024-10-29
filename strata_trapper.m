@@ -9,16 +9,18 @@ arguments
     args.num_par_workers (1,1) uint32  = Inf;
 end
 
-perm_upscaled = zeros(grid.cells.num, 3);
+cells_num = min(length(mask),grid.cells.num);
+cell_idxs = 1:cells_num;
+mask = mask(cell_idxs);
+subset_len = sum(mask);
+
+perm_upscaled = zeros(subset_len, 3);
 
 saturations = linspace(params.sw_resid,1,options.sat_num_points);
 
-cap_pres_upscaled = nan(grid.cells.num,length(saturations));
-krw = nan(grid.cells.num,3,length(saturations));
-krg = nan(grid.cells.num,3,length(saturations));
-
-cells_num = min(length(mask),grid.cells.num);
-mask = mask(1:cells_num);
+cap_pres_upscaled = nan(subset_len,length(saturations));
+krw = nan(subset_len,3,length(saturations));
+krg = nan(subset_len,3,length(saturations));
 
 wb_queue = parallel.pool.DataQueue;
 if args.enable_waitbar
@@ -26,13 +28,11 @@ if args.enable_waitbar
     afterEach(wb_queue,@parforWaitbar);
 end
 
-DR = [grid.DX,grid.DY,grid.DZ];
+DR = [grid.DX(mask),grid.DY(mask),grid.DZ(mask)];
 
-parfor (cell_index = 1:cells_num, args.num_par_workers)
-    if ~mask(cell_index)
-        continue;
-    end
+sub_rock = sub_rock(mask);
 
+parfor (cell_index = 1:subset_len,  args.num_par_workers)
     sub_porosity = sub_rock(cell_index).poro;
     sub_permeability = sub_rock(cell_index).perm;
 
@@ -50,16 +50,17 @@ parfor (cell_index = 1:cells_num, args.num_par_workers)
     end
 end
 
-krw(mask,:,saturations<=params.sw_resid) = 0;
+krw(:,:,saturations<=params.sw_resid) = 0;
 krg(krg<0) = 0;
-krg(mask,:,saturations>=1)=0;
+krg(:,:,saturations>=1)=0;
 
 strata_trapped = struct(...
     'permeability', perm_upscaled, ...
     'saturation', saturations,...
     'capillary_pressure', cap_pres_upscaled, ...
     'rel_perm_wat', krw, ...
-    'rel_perm_gas', krg ...
+    'rel_perm_gas', krg, ...
+    'idx', cell_idxs(mask) ...
     );
 
 if args.enable_waitbar

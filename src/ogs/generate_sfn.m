@@ -1,6 +1,6 @@
-function [file_name] = generate_sfn(mask, saturations, pres_upscaled, krw, krg,prefix,inc_ext)
+function [file_name] = generate_sfn(idx, saturations, pres_upscaled, krw, krg,prefix,inc_ext)
 arguments
-    mask           (:,1)   logical
+    idx            (1,:)   double
     saturations    (1,:) double
     pres_upscaled  (:,:) double
     krw            (:,3,:) double
@@ -14,18 +14,14 @@ file_id = fopen(file_name,'w','native','UTF-8');
 
 
 for direction=1:3
-    write_tables_for_direction(mask,file_id,krw, krg,saturations,pres_upscaled,direction);
+    write_tables_for_direction(idx,file_id,krw, krg,saturations,pres_upscaled,direction);
 end
 fclose(file_id);
 end
 
-function write_tables_for_direction(mask,file_id, krw, krg,saturations,pres_upscaled,direction)
-for cell_index = 1:length(mask)
-    if ~mask(cell_index)
-        continue;
-    end
-
-    table_num = cell_index + length(mask) * (direction-1);
+function write_tables_for_direction(idx,file_id, krw, krg,saturations,pres_upscaled,direction)
+for cell_index = 1:length(idx)
+    table_num = cell_index + length(idx) * (direction-1);
 
     fprintf(file_id,'CHARACTERISTIC_CURVES sfn_%u\n',table_num);
     fprintf(file_id,'%s\n%s\n',...
