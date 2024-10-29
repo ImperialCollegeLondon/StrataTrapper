@@ -30,7 +30,7 @@ enable_waitbar=true, num_par_workers=Inf);
 
 %% Visualize saturation functions
 
-plot_result(rock, mask, strata_trapped, params);
+plot_result(rock, strata_trapped, params);
 
 %% OGS inputs generation
 
