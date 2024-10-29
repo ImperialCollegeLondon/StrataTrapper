@@ -50,8 +50,8 @@ for index_saturation = 1:length(saturations)
     kg_mat_local = params.krg.func(1-sub_sw);
     kw_mat_local = params.krw.func(sub_sw);
 
-    kg_mat_local = kg_mat_local.*permeabilities;
-    kw_mat_local = kw_mat_local.*permeabilities;
+    kg_mat_local = kg_mat_local.*(porosities~=0).*permeabilities;
+    kw_mat_local = kw_mat_local.*(porosities~=0).*permeabilities;
 
     [krg(:,index_saturation), krw(:,index_saturation)] = calc_phase_permeabilities(dr_sub, perm_upscaled, kg_mat_local, kw_mat_local);
 end
