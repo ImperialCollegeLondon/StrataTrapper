@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - dev
+      - main
   workflow_dispatch:
 
 permissions:
@@ -20,4 +20,4 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
           release-type: simple
-          target-branch: dev
+          target-branch: main
