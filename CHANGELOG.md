@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.7.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.6.3...v0.7.0) (2024-10-29)
+
+
+### Features
+
+* :children_crossing: compressed `strata_trapper` outputs ([08654cc](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/08654cc9a091177c0cdf0208516d89351c15c1b0))
+* :children_crossing: New summary plot layout ([e73f0f0](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/e73f0f0a2deac073cacce7cd0da8b0d16bf56f15))
+* :children_crossing: workspace autosave on exit ([207bfd0](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/207bfd05260338812875124002c33f9ce6886eb4))
+* :sparkles: compute Leverett J-function with `CapPressure` class ([312d54d](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/312d54df83a079c8ec7352e38f0f7753962866f6))
+* :sparkles: Hydrostatic correction for MIP ([7dd9c37](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/7dd9c37e811bc843f63a06374cef35a054e21a8b)), closes [#57](https://github.com/ImperialCollegeLondon/StrataTrapper/issues/57)
+
+
+### Bug Fixes
+
+* :bug: `upscale`: account for zero-porocity sub-volumes ([7389e95](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/7389e957f7b316a25208dfb8e61f954422640a39))
+* :bug: MIP with gravity: missing gas density case ([f8728d2](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/f8728d2c470ae082b1dd1eb276cccb4f44c38119))
+
+
+### Documentation
+
+* :memo: more status badges in README ([ebe5ac7](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/ebe5ac7419a4e5d02bd481e742af7eb4e247d181))
+
 ## [0.6.3](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.6.2...v0.6.3) (2024-10-16)
 
 
