@@ -1,6 +1,5 @@
 name: MATLAB CI checks
 on:
-  push:
   pull_request:
     branches: [ "main", "dev" ]
   workflow_dispatch:
