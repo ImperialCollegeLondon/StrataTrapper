@@ -12,7 +12,7 @@ classdef CapPressure
             if nargin==0
                 return;
             end
-            
+
             obj.contact_angle = contact_angle;
             obj.surface_tension = surface_tension;
             obj.leverett_j = leverett_j;
@@ -38,18 +38,28 @@ classdef CapPressure
             arguments
                 obj (1,1) CapPressure
                 pc  (1,1) double
-                poro double {mustBePositive}
+                poro double {mustBeNonnegative}
+                perm double {mustBeNonnegative}
+            end
+
+            lj = obj.inv_lj(pc,poro,perm);
+            lj = min(lj,obj.leverett_j.data(1,2));
+            lj = max(lj,obj.leverett_j.data(end,2));
+
+            sw = obj.leverett_j.inv(lj);
+        end
+
+        function lj = inv_lj(obj,pc,poro,perm)
+            arguments
+                obj (1,1) CapPressure
+                pc  double
+                poro double {mustBeNonnegative}
                 perm double {mustBeNonnegative}
             end
 
             perm = obj.transform_perm(poro,perm);
 
             lj = pc ./ obj.mult .* sqrt(perm./poro);
-
-            lj = min(lj,obj.leverett_j.data(1,2));
-            lj = max(lj,obj.leverett_j.data(end,2));
-
-            sw = obj.leverett_j.inv(lj);
         end
 
         function dpc_dsw = deriv(obj,sw,poro,perm)

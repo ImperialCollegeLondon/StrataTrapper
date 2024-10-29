@@ -1,6 +1,18 @@
-function [invasion,num_iter] = calc_percolation(p_boundary,p_entry)
+function [invasion,num_iter] = calc_percolation(p_boundary,p_entry, ...
+    include_gravity, Lz, rho_water, rho_gas)
+
+h_ref = Lz*0.5;
+
+Nz = size(p_entry,3);
+h(1,1,1:Nz) = linspace(Lz/Nz/2,Lz - Lz/Nz/2,Nz);
+
+hydrostatic_correction = 0;
+if ~ismissing(rho_gas)
+    hydrostatic_correction = include_gravity * std_gravity() * (rho_water - rho_gas) * (h - h_ref);
+end
+
 invasion = false(size(p_entry));
-invadable = p_entry < p_boundary;
+invadable = (p_entry + hydrostatic_correction) < p_boundary;
 idx_invadable = find(invadable)';
 [I,J,K] = ind2sub(size(invadable),idx_invadable);
 is_invading = true;

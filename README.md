@@ -2,6 +2,12 @@
 
 Repository: [github.com/ImperialCollegeLondon/StrataTrapper](https://github.com/ImperialCollegeLondon/StrataTrapper)
 
+![GitHub Tag](https://img.shields.io/github/v/tag/ImperialCollegeLondon/StrataTrapper?sort=semver&style=flat&label=version)
+![GitHub Release Date](https://img.shields.io/github/release-date/ImperialCollegeLondon/StrataTrapper?display_date=published_at&style=flat&label=dated)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+![build](https://github.com/ImperialCollegeLondon/StrataTrapper/actions/workflows/matlab-ci.yml/badge.svg)
+
 * [The StrataTrapper codes](#the-stratatrapper-codes)
 * [Structure](#structure)
 * [Running](#running)
@@ -10,8 +16,6 @@ Repository: [github.com/ImperialCollegeLondon/StrataTrapper](https://github.com/
 * [References](#references)
 
 ![StrataTrapper logo](./img/StrataTrapper.jpg)
-
-![build](https://github.com/ImperialCollegeLondon/StrataTrapper/actions/workflows/matlab-ci.yml/badge.svg?branch=dev)
 
 ## The StrataTrapper codes
 
