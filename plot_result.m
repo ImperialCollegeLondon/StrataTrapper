@@ -1,4 +1,4 @@
-function plot_result(rock, strata_trapped, params, font_size, kr_scale)
+function fig = plot_result(rock, strata_trapped, params, font_size, kr_scale)
 arguments
     rock
     strata_trapped
@@ -7,7 +7,7 @@ arguments
     kr_scale = "log"
 end
 
-[t_all,t_kr,t_krw,t_krg,ax_pc,ax_krw_x,ax_krw_y,ax_krw_z,ax_krg_x,ax_krg_y,ax_krg_z] = nested_tiles();
+[fig,t_all,t_kr,t_krw,t_krg,ax_pc,ax_krw_x,ax_krw_y,ax_krw_z,ax_krg_x,ax_krg_y,ax_krg_z] = nested_tiles();
 
 
 leverett_j_upscaled = params.cap_pressure.inv_lj(...
@@ -107,9 +107,10 @@ catch err
 end
 end
 
-function [t_all,t_kr,t_krw,t_krg,ax_pc,ax_krw_x,ax_krw_y,ax_krw_z,ax_krg_x,ax_krg_y,ax_krg_z] = nested_tiles()
+function [fig,t_all,t_kr,t_krw,t_krg,ax_pc,ax_krw_x,ax_krw_y,ax_krw_z,ax_krg_x,ax_krg_y,ax_krg_z] = nested_tiles()
 params = {'TileSpacing','tight','Padding','tight'};
-t_all = tiledlayout(1,3,params{:});
+fig = figure;
+t_all = tiledlayout(fig,1,3,params{:});
 
 
 t_pc = tiledlayout(t_all,1,1,params{:});
