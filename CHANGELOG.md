@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.7.0...v0.8.0) (2024-11-05)
+
+
+### Features
+
+* :sparkles: figure handle for `plot_summary` ([5eaf6a7](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/5eaf6a79a518d81baf3f335aed594ae49953782b))
+
 ## [0.7.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.6.3...v0.7.0) (2024-10-29)
 
 
