@@ -1,10 +1,10 @@
-function fig = plot_result(rock, strata_trapped, params, font_size, kr_scale)
+function fig = plot_result(rock, strata_trapped, params, args)
 arguments
     rock
     strata_trapped
     params
-    font_size = 14
-    kr_scale = "log"
+    args.font_size = 14
+    args.kr_scale = "log"
 end
 
 [fig,t_all,t_kr,t_krw,t_krg,ax_pc,ax_krw_x,ax_krw_y,ax_krw_z,ax_krg_x,ax_krg_y,ax_krg_z] = nested_tiles();
