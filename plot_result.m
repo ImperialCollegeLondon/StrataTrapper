@@ -1,14 +1,17 @@
-function fig = plot_result(rock, strata_trapped, params, font_size, kr_scale)
+function fig = plot_result(rock, strata_trapped, params, args)
 arguments
     rock
     strata_trapped
     params
-    font_size = 14
-    kr_scale = "log"
+    args.font_size = 14
+    args.kr_scale = "log"
+    args.parent = figure;
 end
 
-[fig,t_all,t_kr,t_krw,t_krg,ax_pc,ax_krw_x,ax_krw_y,ax_krw_z,ax_krg_x,ax_krg_y,ax_krg_z] = nested_tiles();
+fig = args.parent;
+clf(fig);
 
+[t_all,t_kr,t_krw,t_krg,ax_pc,ax_krw_x,ax_krw_y,ax_krw_z,ax_krg_x,ax_krg_y,ax_krg_z] = nested_tiles(fig);
 
 leverett_j_upscaled = params.cap_pressure.inv_lj(...
     strata_trapped.capillary_pressure,...
@@ -19,12 +22,12 @@ leverett_j_upscaled = params.cap_pressure.inv_lj(...
 title(ax_pc,'Leverett J-function');
 ylabel(ax_pc,'[-]');
 ax_pc.YScale='log';
-curves_plot([ax_krw_x,ax_krw_y,ax_krw_z;ax_krg_x,ax_krg_y,ax_krg_z], strata_trapped, params, kr_scale);
+curves_plot([ax_krw_x,ax_krw_y,ax_krw_z;ax_krg_x,ax_krg_y,ax_krg_z], strata_trapped, params, args.kr_scale);
 
-xlabel(t_all,'Wetting phase saturation',FontSize=font_size);
-title(t_kr,'Relative permeability',FontSize=font_size);
-title(t_krw,'Water',FontSize=font_size);
-title(t_krg,'Gas',FontSize=font_size);
+xlabel(t_all,'Wetting phase saturation',FontSize=args.font_size);
+title(t_kr,'Relative permeability',FontSize=args.font_size);
+title(t_krw,'Water',FontSize=args.font_size);
+title(t_krg,'Gas',FontSize=args.font_size);
 
 subtitle(ax_krw_x,'x','Interpreter','latex');
 subtitle(ax_krw_y,'y','Interpreter','latex');
@@ -107,9 +110,8 @@ catch err
 end
 end
 
-function [fig,t_all,t_kr,t_krw,t_krg,ax_pc,ax_krw_x,ax_krw_y,ax_krw_z,ax_krg_x,ax_krg_y,ax_krg_z] = nested_tiles()
+function [t_all,t_kr,t_krw,t_krg,ax_pc,ax_krw_x,ax_krw_y,ax_krw_z,ax_krg_x,ax_krg_y,ax_krg_z] = nested_tiles(fig)
 params = {'TileSpacing','tight','Padding','tight'};
-fig = figure;
 t_all = tiledlayout(fig,1,3,params{:});
 
 
