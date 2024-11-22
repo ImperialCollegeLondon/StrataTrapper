@@ -36,7 +36,7 @@ figure(fig); % draw the summary instantly
 %% OGS inputs generation
 
 % run in background
-export_fut = parfeval(backgroundPool,@ogs_export,0,grid,mask,strata_trapped);
+export_fut = parfeval(backgroundPool,@ogs_export,0,grid,strata_trapped);
 
 %% helpers
 
