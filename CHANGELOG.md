@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.9.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.8.0...v0.9.0) (2024-12-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* **plot:** :children_crossing: `plot_result`: make optional args name-value'd
+
+### Features
+
+* **plot:** :children_crossing: optionally plot summary at a given parent ([5d3b25d](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/5d3b25d987cb0af3cbe71e70027cbca54027cedf))
+
+
+### Bug Fixes
+
+* **export:** :bug: call to `ogs_export` in `demo` ([afc0e61](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/afc0e61a47d45201ee33d3634f3e3cb93c56d7bf))
+* **export:** :children_crossing: `ogs_export`: update input args to auto-create directories ([fca0ec4](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/fca0ec491b6a6583e0f138034d1bcf7ed38ddde6))
+* **plot:** :children_crossing: `plot_result`: make optional args name-value'd ([a239899](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/a2398999527b9a6ba9dff698dd7a64354fdc75b9))
+
+
+### Miscellaneous Chores
+
+* :page_facing_up: license Apache 2.0 -&gt; BSD 3-Clause ([e2fd197](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/e2fd19714a32521367dfa674fd57d44d3d92616c))
+
 ## [0.8.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.7.0...v0.8.0) (2024-11-05)
 
 
