@@ -1,17 +1,17 @@
-function strata_trapped = strata_trapper(grid, sub_rock, mask, params, options, args)
+function strata_trapped = strata_trapper(grid, sub_rock, params, options, args)
 arguments
     grid            (1,1) struct
     sub_rock        (1,:) struct
-    mask            (:,1) logical
     params          (1,1) Params
     options         (1,1) Options = Options();
     args.enable_waitbar  (1,1) logical = false;
     args.num_par_workers (1,1) uint32  = Inf;
+    args.mask            (:,1) logical = true(grid.cells.num,1);
 end
 
-cells_num = min(length(mask),grid.cells.num);
+cells_num = min(length(args.mask),grid.cells.num);
 cell_idxs = 1:cells_num;
-mask = mask(cell_idxs);
+mask = args.mask(cell_idxs);
 subset_len = sum(mask);
 
 perm_upscaled = zeros(subset_len, 3);
