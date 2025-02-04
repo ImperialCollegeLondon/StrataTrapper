@@ -1,9 +1,9 @@
-function strata_trapped = strata_trapper(grid, sub_rock, params, options, args)
+function strata_trapped = strata_trapper(grid, sub_rock, params, args)
 arguments
     grid            (1,1) struct
     sub_rock        (1,:) struct
     params          (1,1) Params
-    options         (1,1) Options = Options();
+    args.options         (1,1) Options = Options();
     args.enable_waitbar  (1,1) logical = false;
     args.num_par_workers (1,1) uint32  = Inf;
     args.mask            (:,1) logical = true(grid.cells.num,1);
@@ -15,8 +15,9 @@ mask = args.mask(cell_idxs);
 subset_len = sum(mask);
 
 perm_upscaled = zeros(subset_len, 3);
+poro_upscaled = zeros(subset_len,1);
 
-saturations = linspace(params.sw_resid,1,options.sat_num_points);
+saturations = linspace(params.sw_resid,1,args.options.sat_num_points);
 
 cap_pres_upscaled = nan(subset_len,length(saturations));
 krw = nan(subset_len,3,length(saturations));
@@ -37,9 +38,10 @@ parfor (cell_index = 1:subset_len,  args.num_par_workers)
     sub_permeability = sub_rock(cell_index).perm;
 
     [perm_upscaled_cell, pc_upscaled, krw_cell, krg_cell] = upscale(...
-        DR(cell_index,:), saturations, params, options, sub_porosity, sub_permeability);
+        DR(cell_index,:), saturations, params, args.options, sub_porosity, sub_permeability);
 
     perm_upscaled(cell_index,:) = perm_upscaled_cell;
+    poro_upscaled(cell_index) = sum(sub_porosity,'all')./numel(sub_porosity);
     cap_pres_upscaled(cell_index,:) = pc_upscaled;
 
     krw(cell_index,:,:) = krw_cell;
@@ -60,7 +62,10 @@ strata_trapped = struct(...
     'capillary_pressure', cap_pres_upscaled, ...
     'rel_perm_wat', krw, ...
     'rel_perm_gas', krg, ...
-    'idx', cell_idxs(mask) ...
+    'idx', cell_idxs(mask), ...
+    'porosity',poro_upscaled, ...
+    'params', params, ...
+    'options', args.options ...
     );
 
 if args.enable_waitbar
