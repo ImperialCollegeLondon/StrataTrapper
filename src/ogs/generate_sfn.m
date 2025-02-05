@@ -65,6 +65,6 @@ end
 data = [sat;kr;pc];
 
 fprintf(file_id,'%s\n',table_name);
-fprintf(file_id,'%f\t%f\t%f\n',data);
+fprintf(file_id,'%e\t%e\t%e\n',data);
 fprintf(file_id,'%s\n','/');
 end
