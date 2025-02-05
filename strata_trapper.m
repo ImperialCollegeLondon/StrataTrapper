@@ -33,6 +33,7 @@ DR = [grid.DX(mask),grid.DY(mask),grid.DZ(mask)];
 
 sub_rock = sub_rock(mask);
 
+% for cell_index = 1:subset_len
 parfor (cell_index = 1:subset_len,  args.num_par_workers)
     sub_porosity = sub_rock(cell_index).poro;
     sub_permeability = sub_rock(cell_index).perm;
