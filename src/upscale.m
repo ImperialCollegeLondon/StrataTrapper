@@ -32,9 +32,9 @@ for index_saturation = 1:length(saturations)
 
     calc_endpoint = index_saturation == 1 || index_saturation == length(saturations);
     max_iterations = calc_endpoint*1000 + ~calc_endpoint*2;
-
+    err_prev = Inf;
     for iteration_num=1:max_iterations
-        [pc_mid_tot, sw_mid, pc_mid, sub_sw, converged] = mip_iteration(...
+        [pc_mid_tot, sw_mid, pc_mid, sub_sw, converged, err] = mip_iteration(...
             sw_target, dr, entry_pressures, porosities, permeabilities, pc_mid, ...
             Nz_sub, Nx_sub, Ny_sub,...
             params, options);
@@ -42,6 +42,11 @@ for index_saturation = 1:length(saturations)
         if converged
             break;
         end
+
+        if abs(err - err_prev) <= eps
+            break;
+        end
+        err_prev = err;
     end
 
     sw_upscaled(index_saturation) = sw_mid;
@@ -79,7 +84,7 @@ krg         = interp1(sw_upscaled,        krg', saturations, "linear","extrap")'
 
 end
 
-function [pc_mid_tot, sw_mid, pc_mid, sub_sw, converged] = mip_iteration(...
+function [pc_mid_tot, sw_mid, pc_mid, sub_sw, converged, err] = mip_iteration(...
     sw_target, dr, entry_pressures, porosities, permeabilities, pc_mid,...
     Nz_sub, Nx_sub, Ny_sub, ...
     params, options)
