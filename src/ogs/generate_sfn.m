@@ -1,4 +1,4 @@
-function [file_name] = generate_sfn(idx, saturations, pres_upscaled, krw, krg,prefix,inc_ext)
+function generate_sfn(idx, saturations, pres_upscaled, krw, krg,prefix,inc_ext)
 arguments
     idx            (1,:)   double
     saturations    (1,:) double
@@ -6,17 +6,18 @@ arguments
     krw            (:,3,:) double
     krg            (:,3,:) double
     prefix char
-    inc_ext char = '.inc'
+    inc_ext char = '.data'
 end
-file_name = [prefix,'sfn',inc_ext];
 
-file_id = fopen(file_name,'w','native','UTF-8');
+dir_label = ['x','y','z'];
 
-
-for direction=1:3
+parfor direction=1:3
+    file_name = [prefix,'chc',dir_label(direction),inc_ext];
+    file_id = fopen(file_name,'w','native','UTF-8');
     write_tables_for_direction(idx,file_id,krw, krg,saturations,pres_upscaled,direction);
+    fclose(file_id);
 end
-fclose(file_id);
+
 end
 
 function write_tables_for_direction(idx,file_id, krw, krg,saturations,pres_upscaled,direction)
