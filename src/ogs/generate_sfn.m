@@ -13,7 +13,7 @@ dir_label = ['x','y','z'];
 
 parfor direction=1:3
     file_name = [prefix,'chc',dir_label(direction),inc_ext];
-    file_id = fopen(file_name,'w','native','UTF-8');
+    file_id = fopen(file_name,'wt','native','UTF-8');
     write_tables_for_direction(idx,file_id,krw, krg,saturations,pres_upscaled,direction);
     fclose(file_id);
 end
