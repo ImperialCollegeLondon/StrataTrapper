@@ -8,7 +8,9 @@ mkdir(output_folder);
 
 output_prefix = append(output_folder,'/');
 
-write_mappings(output_prefix,strata_trapped.grid,strata_trapped.permeability ./ milli ./ darcy(),strata_trapped.idx);
+write_mappings(output_prefix,strata_trapped.grid,strata_trapped.idx);
+
+write_perm(output_prefix,strata_trapped.grid,strata_trapped.permeability ./ milli ./ darcy(),strata_trapped.idx);
 
 generate_sfn(...
     strata_trapped.idx, ...
