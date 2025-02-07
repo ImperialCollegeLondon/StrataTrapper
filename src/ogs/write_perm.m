@@ -1,4 +1,5 @@
 function write_perm(prefix,G,perm,idx)
+perm = perm / milli / darcy;
 perm_mapping = zeros(G.cells.num,3);
 perm_mapping(G.cells.indexMap(idx),:) = perm;
 keywords = ["PERMX","PERMY","PERMZ"];
