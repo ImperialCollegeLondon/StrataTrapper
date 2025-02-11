@@ -31,7 +31,7 @@ for index_saturation = 1:length(saturations)
     sw_mid = sw_target;
 
     calc_endpoint = index_saturation == 1 || index_saturation == length(saturations);
-    max_iterations = calc_endpoint*1000 + ~calc_endpoint*2;
+    max_iterations = calc_endpoint*1000 + ~calc_endpoint*10;
     err_prev = Inf;
     for iteration_num=1:max_iterations
         [pc_mid_tot, sw_mid, pc_mid, sub_sw, converged, err] = mip_iteration(...
@@ -61,7 +61,7 @@ for index_saturation = 1:length(saturations)
     [krg(:,index_saturation), krw(:,index_saturation)] = calc_phase_permeabilities(dr_sub, perm_upscaled, kg_mat_local, kw_mat_local);
 end
 
-sw_upscaled(end) = 1;
+% sw_upscaled(end) = 1;
 [sw_upscaled,unique_idx] = unique(sw_upscaled);
 pc_upscaled = pc_upscaled(unique_idx);
 krg = krg(:,unique_idx);
@@ -78,9 +78,11 @@ if ~allfinite(pc_upscaled)
     disp(pc_upscaled);
 end
 
-pc_upscaled = interp1(sw_upscaled, pc_upscaled, saturations, "linear","extrap");
-krw         = interp1(sw_upscaled,        krw', saturations, "linear","extrap")';
-krg         = interp1(sw_upscaled,        krg', saturations, "linear","extrap")';
+pc_upscaled = exp(interp1(sw_upscaled, log(pc_upscaled), saturations, "linear","extrap"));
+krw         = exp(interp1(sw_upscaled,        log(krw'), saturations, "linear","extrap")');
+krw(:,1) = 0; krw(:,end) = 1;
+krg         = exp(interp1(sw_upscaled,        log(krg'), saturations, "linear","extrap")');
+krg(:,1) = 1; krg(isnan(krg))=0;
 
 end
 
