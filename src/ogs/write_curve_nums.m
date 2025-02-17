@@ -1,6 +1,8 @@
 function write_curve_nums(file_name,keyword,curve_mapping, fallback_curve_num, offset)
 line_ending = "\n";
 
+%% FIXME: use fopen + fprintf to write data
+% fopen(file_name,'wb','native','UTF-8');
 writelines(keyword,file_name,LineEnding=line_ending,WriteMode='overwrite');
 
 mapping_to_write = curve_mapping;
