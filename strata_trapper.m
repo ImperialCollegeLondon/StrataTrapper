@@ -6,7 +6,7 @@ arguments
     args.options         (1,1) Options = Options();
     args.enable_waitbar  (1,1) logical = false;
     args.num_par_workers (1,1) uint32  = Inf;
-    args.mask            (:,1) logical = true(grid.cells.num,1);
+    args.mask            (:,1) {mustBeOfClass(args.mask,"logical")} = true(grid.cells.num,1);
 end
 
 cells_num = min(length(args.mask),grid.cells.num);
