@@ -45,6 +45,10 @@ parfor (cell_index = 1:subset_len,  args.num_par_workers)
     poro_upscaled(cell_index) = sum(sub_porosity,'all')./numel(sub_porosity);
     cap_pres_upscaled(cell_index,:) = pc_upscaled;
 
+    for i = 1:3
+        krg_cell(i,:) = monotonize(saturations, krg_cell(i,:), -1);
+    end
+
     krw(cell_index,:,:) = krw_cell;
     krg(cell_index,:,:) = krg_cell;
 
