@@ -163,7 +163,7 @@ Kx_mD = perm_upscaled_mD(1);
 Ky_mD = perm_upscaled_mD(2);
 Kz_mD = perm_upscaled_mD(3);
 
-K_phase_upscaled([1,4]) = K_phase_upscaled([1,4]) ./ Kx_mD; % FIXME: avoid dividing two small numbers
+K_phase_upscaled([1,4]) = K_phase_upscaled([1,4]) ./ Kx_mD; % NOTE: avoid dividing two small numbers
 K_phase_upscaled([2,5]) = K_phase_upscaled([2,5]) ./ Ky_mD;
 K_phase_upscaled([3,6]) = K_phase_upscaled([3,6]) ./ Kz_mD;
 
