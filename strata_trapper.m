@@ -93,10 +93,9 @@ else
     perf.num_workers = min(max(args.num_par_workers,0),gcp().NumWorkers);
 end
 perf.num_sub = num_sub;
-perf.multi_MHz = perf.num_coarse * args.options.sat_num_points * sum(perf.num_sub.^3) / perf.elapsed *10^(-6);
-perf.single_MHz = perf.multi_MHz / perf.num_workers;
+perf.num_sat = args.options.sat_num_points;
 
-strata_trapped.perf = perf;
+strata_trapped.perf = compute_performance(perf);
 
 if args.enable_waitbar
     parforWaitbar(0,0,'ready');
