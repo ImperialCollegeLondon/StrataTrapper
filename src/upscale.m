@@ -26,7 +26,7 @@ krw = zeros(3,length(sw_upscaled));
 
 entry_pressures = params.cap_pressure.func(1,porosities,permeabilities);
 pc_max = params.cap_pressure.func(params.sw_resid,porosities,permeabilities);
-pc_points = linspace(max(pc_max(:)),min(entry_pressures(:)),length(saturations));
+pc_points = linspace(max(pc_max(isfinite(pc_max))),min(entry_pressures(:)),length(saturations));
 
 for index_saturation = 1:length(saturations)
 
@@ -69,7 +69,7 @@ end
 % NOTE: we expect only small negative values as computational errors
 krw(:) = max(krw(:),0);
 krg(:) = max(krg(:),0);
-pc_upscaled = max(pc_upscaled,0);
+pc_upscaled = max(pc_upscaled,min(entry_pressures(:)));
 
 % add potentially missing endpoints
 sw_extra = [params.sw_resid,1];
