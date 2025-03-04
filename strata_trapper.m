@@ -8,6 +8,7 @@ arguments
     args.num_par_workers (1,1) uint32  = Inf;
     args.mask            (:,1) {mustBeOfClass(args.mask,"logical")} = true(grid.cells.num,1);
 end
+timer_start = tic;
 
 cells_num = min(length(args.mask),grid.cells.num);
 cell_idxs = 1:cells_num;
@@ -33,6 +34,8 @@ DR = [grid.DX(mask),grid.DY(mask),grid.DZ(mask)];
 
 sub_rock = sub_rock(mask);
 
+num_sub = zeros(subset_len,1);
+
 % for cell_index = 1:subset_len
 parfor (cell_index = 1:subset_len,  args.num_par_workers)
     sub_porosity = sub_rock(cell_index).poro;
@@ -55,6 +58,8 @@ parfor (cell_index = 1:subset_len,  args.num_par_workers)
     if args.enable_waitbar
         send(wb_queue,cell_index);
     end
+
+    num_sub(cell_index) = numel(sub_porosity);
 end
 
 krw(:,:,saturations<=params.sw_resid) = 0;
@@ -73,6 +78,21 @@ strata_trapped = struct(...
     'options', args.options, ...
     'grid', grid ...
     );
+
+timer_stop = toc(timer_start);
+
+perf.elapsed = timer_stop;
+perf.num_coarse = subset_len;
+if isempty(gcp)
+    perf.num_workers = 1;
+else
+    perf.num_workers = min(max(args.num_par_workers,0),gcp().NumWorkers);
+end
+perf.num_sub = sum(num_sub);
+perf.multi = perf.num_coarse * args.options.sat_num_points * perf.num_sub^3 / perf.elapsed;
+perf.single = perf.multi / perf.num_workers;
+
+strata_trapped.perf = perf;
 
 if args.enable_waitbar
     parforWaitbar(0,0,'ready');
