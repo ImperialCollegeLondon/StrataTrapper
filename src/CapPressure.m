@@ -35,6 +35,7 @@ classdef CapPressure
             poresize_mult(poro == 0) = 0;
 
             pc = obj.mult * obj.leverett_j.func(sw) * sqrt(poresize_mult);
+            pc(poro == 0) = Inf;
         end
 
         function sw = inv(obj,pc,poro,perm)
