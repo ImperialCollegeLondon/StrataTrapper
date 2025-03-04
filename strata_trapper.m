@@ -40,7 +40,7 @@ options = args.options;
 enable_waitbar = args.enable_waitbar;
 
 % for cell_index = 1:subset_len
-par_opts =  parforOptions(gcp,"RangePartitionMethod","fixed","SubrangeSize",2,'MaxNumWorkers',args.num_par_workers);
+par_opts =  parforOptions(gcp,"RangePartitionMethod","fixed","SubrangeSize",10,'MaxNumWorkers',args.num_par_workers);
 parfor (cell_index = 1:subset_len,  par_opts)
     sub_porosity = sub_rock(cell_index).poro;
     sub_permeability = sub_rock(cell_index).perm;
@@ -104,7 +104,7 @@ end
 end
 
 function parforWaitbar(~,max_iterations,~)
-persistent state wb final_state start_time last_reported_state last_reported_time
+persistent state wb final_state start_time last_reported_state last_reported_time history_t history_s rep_count
 
 if nargin == 2
     state = 0;
@@ -114,6 +114,9 @@ if nargin == 2
 
     last_reported_state = state;
     last_reported_time = 0;
+    history_t = zeros(60,1);
+    history_s = zeros(60,1);
+    rep_count = 0;
     return;
 end
 
@@ -141,8 +144,20 @@ end
 last_reported_state = state;
 last_reported_time = elapsed;
 
-pace_integral = elapsed/state;
-eta_estimate = (final_state - state) * pace_integral;
+% weighted regression estimate with 10-second memory
+dt = 60;
+rep_count = rep_count+1;
+ind = mod(rep_count,60)+1;
+history_t(ind) = last_reported_time;
+history_s(ind) = last_reported_state;
+w = exp((history_t - history_t(ind))./dt);
+pace_num = (history_t - history_t(ind))' * (w .* (history_s - history_s(ind)));
+pace_denom = (history_t - history_t(ind))' * (w .* (history_t - history_t(ind)));
+pace = pace_num/pace_denom;
+eta_estimate = (final_state - state) / pace;
+
+% pace_integral = elapsed/state;
+% eta_estimate = (final_state - state) * pace_integral;
 eta = duration(seconds(eta_estimate),'Format','hh:mm:ss');
 elapsed_str = duration(seconds(elapsed),'Format','hh:mm:ss');
 message = sprintf('%u/%u cells upscaled\n passed: %s | ETA: %s',state,final_state,elapsed_str,eta);
