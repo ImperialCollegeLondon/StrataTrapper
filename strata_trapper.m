@@ -36,13 +36,16 @@ sub_rock = sub_rock(mask);
 
 num_sub = zeros(subset_len,1);
 
+options = args.options;
+enable_waitbar = args.enable_waitbar;
+
 % for cell_index = 1:subset_len
 parfor (cell_index = 1:subset_len,  args.num_par_workers)
     sub_porosity = sub_rock(cell_index).poro;
     sub_permeability = sub_rock(cell_index).perm;
 
     [perm_upscaled_cell, pc_upscaled, krw_cell, krg_cell] = upscale(...
-        DR(cell_index,:), saturations, params, args.options, sub_porosity, sub_permeability);
+        DR(cell_index,:), saturations, params, options, sub_porosity, sub_permeability);
 
     perm_upscaled(cell_index,:) = perm_upscaled_cell;
     poro_upscaled(cell_index) = sum(sub_porosity,'all')./numel(sub_porosity);
@@ -52,10 +55,10 @@ parfor (cell_index = 1:subset_len,  args.num_par_workers)
         krg_cell(i,:) = monotonize(saturations, krg_cell(i,:), -1);
     end
 
-    krw(cell_index,:,:) = krw_cell;
+    krw(cell_index,:,:) = krw_cell; %#ok<PFOUS>
     krg(cell_index,:,:) = krg_cell;
 
-    if args.enable_waitbar
+    if enable_waitbar
         send(wb_queue,cell_index);
     end
 
