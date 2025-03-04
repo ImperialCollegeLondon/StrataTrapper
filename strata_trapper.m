@@ -40,7 +40,8 @@ options = args.options;
 enable_waitbar = args.enable_waitbar;
 
 % for cell_index = 1:subset_len
-parfor (cell_index = 1:subset_len,  args.num_par_workers)
+par_opts =  parforOptions(gcp,"RangePartitionMethod","fixed","SubrangeSize",2,'MaxNumWorkers',args.num_par_workers);
+parfor (cell_index = 1:subset_len,  par_opts)
     sub_porosity = sub_rock(cell_index).poro;
     sub_permeability = sub_rock(cell_index).perm;
 
@@ -91,9 +92,9 @@ if isempty(gcp)
 else
     perf.num_workers = min(max(args.num_par_workers,0),gcp().NumWorkers);
 end
-perf.num_sub = sum(num_sub);
-perf.multi = perf.num_coarse * args.options.sat_num_points * perf.num_sub^3 / perf.elapsed;
-perf.single = perf.multi / perf.num_workers;
+perf.num_sub = num_sub;
+perf.multi_MHz = perf.num_coarse * args.options.sat_num_points * sum(perf.num_sub.^3) / perf.elapsed *10^(-6);
+perf.single_MHz = perf.multi_MHz / perf.num_workers;
 
 strata_trapped.perf = perf;
 
