@@ -40,7 +40,7 @@ options = args.options;
 enable_waitbar = args.enable_waitbar;
 
 % for cell_index = 1:subset_len
-par_opts =  parforOptions(gcp,"RangePartitionMethod","fixed","SubrangeSize",10,'MaxNumWorkers',args.num_par_workers);
+par_opts =  parforOptions(gcp,"RangePartitionMethod","fixed","SubrangeSize",2,'MaxNumWorkers',args.num_par_workers);
 parfor (cell_index = 1:subset_len,  par_opts)
     sub_porosity = sub_rock(cell_index).poro;
     sub_permeability = sub_rock(cell_index).perm;
