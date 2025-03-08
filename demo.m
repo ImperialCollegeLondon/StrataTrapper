@@ -25,8 +25,11 @@ mask = rand(grid.cells.num,1) < 0.001; % process only a fraction of cells
 
 sub_rock = downscale_all(grid,rock,mask,downscale_params,num_par_workers=Inf);
 
-strata_trapped = strata_trapper(grid, sub_rock, mask, params, options, ...
-enable_waitbar=true, num_par_workers=Inf);
+strata_trapped = strata_trapper(grid, sub_rock, params, ...
+    mask=mask, options=Options(), ...
+    enable_waitbar=false,...
+    parfor_arg=0 ... sequential computation for CI checks
+    );
 
 %% Visualize saturation functions
 
