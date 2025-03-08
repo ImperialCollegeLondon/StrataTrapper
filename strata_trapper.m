@@ -5,14 +5,23 @@ arguments
     params          (1,1) Params
     args.options         (1,1) Options = Options();
     args.enable_waitbar  (1,1) logical = false;
-    args.num_par_workers (1,1) uint32  = Inf;
     args.mask            (:,1) {mustBeOfClass(args.mask,"logical")} = true(grid.cells.num,1);
+    args.parfor_arg = parforOptions(gcp('nocreate'),...
+                            "RangePartitionMethod","fixed",...
+                            "SubrangeSize",1,...
+                            'MaxNumWorkers',Inf);
 end
 
 cells_num = min(length(args.mask),grid.cells.num);
 cell_idxs = 1:cells_num;
 mask = args.mask(cell_idxs);
 subset_len = sum(mask);
+
+wb_queue = parallel.pool.DataQueue;
+if args.enable_waitbar
+    parforWaitbar(0,sum(mask));
+    afterEach(wb_queue,@parforWaitbar);
+end
 
 perm_upscaled = zeros(subset_len, 3);
 poro_upscaled = zeros(subset_len,1);
@@ -23,12 +32,6 @@ cap_pres_upscaled = nan(subset_len,length(saturations));
 krw = nan(subset_len,3,length(saturations));
 krg = nan(subset_len,3,length(saturations));
 
-wb_queue = parallel.pool.DataQueue;
-if args.enable_waitbar
-    parforWaitbar(0,sum(mask));
-    afterEach(wb_queue,@parforWaitbar);
-end
-
 DR = [grid.DX(mask),grid.DY(mask),grid.DZ(mask)];
 
 sub_rock = sub_rock(mask);
@@ -37,7 +40,7 @@ enable_waitbar = args.enable_waitbar;
 num_sub = zeros(subset_len,1);
 elapsed = zeros(subset_len,1);
 
-parfor (cell_index = 1:subset_len,  args.num_par_workers)
+parfor (cell_index = 1:subset_len, args.parfor_arg)
     sub_porosity = sub_rock(cell_index).poro;
     sub_permeability = sub_rock(cell_index).perm;
 
@@ -85,11 +88,19 @@ strata_trapped = struct(...
     );
 
 perf.num_coarse = subset_len;
-if isempty(gcp)
-    perf.num_workers = 1;
+
+if canUseParallelPool && ~isempty(gcp('nocreate'))
+    num_pool_workers = gcp('nocreate').NumWorkers;
+    if isnumeric(args.parfor_arg)
+        max_num_workers = args.parfor_arg;
+    else
+        max_num_workers = args.parfor_arg.MaxNumWorkers;
+    end
+    perf.num_workers = max(min(num_pool_workers,max_num_workers),1);
 else
-    perf.num_workers = min(max(args.num_par_workers,0),gcp().NumWorkers);
+    perf.num_workers = 1;
 end
+
 perf.num_sub = num_sub;
 perf.elapsed = elapsed;
 perf.num_sat = args.options.sat_num_points;
