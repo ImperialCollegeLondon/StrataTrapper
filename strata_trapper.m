@@ -34,10 +34,14 @@ DR = [grid.DX(mask),grid.DY(mask),grid.DZ(mask)];
 sub_rock = sub_rock(mask);
 options = args.options;
 enable_waitbar = args.enable_waitbar;
+num_sub = zeros(subset_len,1);
+elapsed = zeros(subset_len,1);
 
 parfor (cell_index = 1:subset_len,  args.num_par_workers)
     sub_porosity = sub_rock(cell_index).poro;
     sub_permeability = sub_rock(cell_index).perm;
+
+    timer_start = tic;
 
     [perm_upscaled_cell, pc_upscaled, krw_cell, krg_cell] = upscale(...
         DR(cell_index,:), saturations, params, options, sub_porosity, sub_permeability);
@@ -48,9 +52,16 @@ parfor (cell_index = 1:subset_len,  args.num_par_workers)
 
     krw(cell_index,:,:) = krw_cell; %#ok<PFOUS>
     krg(cell_index,:,:) = krg_cell;
+
+    timer_stop = toc(timer_start);
+    elapsed(cell_index) = timer_stop;
+
     perm_upscaled(cell_index,:) = perm_upscaled_cell;
     poro_upscaled(cell_index) = sum(sub_porosity,'all')./numel(sub_porosity);
     cap_pres_upscaled(cell_index,:) = pc_upscaled;
+
+    num_sub(cell_index) = numel(sub_porosity);
+
     if enable_waitbar
         send(wb_queue,cell_index);
     end
@@ -72,6 +83,18 @@ strata_trapped = struct(...
     'options', args.options, ...
     'grid', grid ...
     );
+
+perf.num_coarse = subset_len;
+if isempty(gcp)
+    perf.num_workers = 1;
+else
+    perf.num_workers = min(max(args.num_par_workers,0),gcp().NumWorkers);
+end
+perf.num_sub = num_sub;
+perf.elapsed = elapsed;
+perf.num_sat = args.options.sat_num_points;
+
+strata_trapped.perf = compute_performance(perf,1);
 
 if args.enable_waitbar
     parforWaitbar(0,0,'ready');
