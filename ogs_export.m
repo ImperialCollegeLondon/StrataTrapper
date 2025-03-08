@@ -1,6 +1,5 @@
-function [] = ogs_export(G, strata_trapped, output_folder)
+function [] = ogs_export(strata_trapped, output_folder)
 arguments
-    G              (1,1) struct
     strata_trapped (1,1) struct
     output_folder  char   = 'out'
 end
