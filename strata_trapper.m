@@ -1,23 +1,23 @@
-function strata_trapped = strata_trapper(grid, sub_rock, mask, params, options, args)
+function strata_trapped = strata_trapper(grid, sub_rock, params, args)
 arguments
     grid            (1,1) struct
     sub_rock        (1,:) struct
-    mask            (:,1) logical
     params          (1,1) Params
-    options         (1,1) Options = Options();
+    args.options         (1,1) Options = Options();
     args.enable_waitbar  (1,1) logical = false;
     args.num_par_workers (1,1) uint32  = Inf;
+    args.mask            (:,1) {mustBeOfClass(args.mask,"logical")} = true(grid.cells.num,1);
 end
 
-cells_num = min(length(mask),grid.cells.num);
+cells_num = min(length(args.mask),grid.cells.num);
 cell_idxs = 1:cells_num;
-mask = mask(cell_idxs);
+mask = args.mask(cell_idxs);
 subset_len = sum(mask);
 
 perm_upscaled = zeros(subset_len, 3);
 poro_upscaled = zeros(subset_len,1);
 
-saturations = linspace(params.sw_resid,1,options.sat_num_points);
+saturations = linspace(params.sw_resid,1,args.options.sat_num_points);
 
 cap_pres_upscaled = nan(subset_len,length(saturations));
 krw = nan(subset_len,3,length(saturations));
@@ -32,6 +32,8 @@ end
 DR = [grid.DX(mask),grid.DY(mask),grid.DZ(mask)];
 
 sub_rock = sub_rock(mask);
+options = args.options;
+enable_waitbar = args.enable_waitbar;
 
 parfor (cell_index = 1:subset_len,  args.num_par_workers)
     sub_porosity = sub_rock(cell_index).poro;
@@ -47,7 +49,7 @@ parfor (cell_index = 1:subset_len,  args.num_par_workers)
     krw(cell_index,:,:) = krw_cell;
     krg(cell_index,:,:) = krg_cell;
 
-    if args.enable_waitbar
+    if enable_waitbar
         send(wb_queue,cell_index);
     end
 end
