@@ -25,19 +25,21 @@ krg = zeros(3,length(sw_upscaled));
 krw = zeros(3,length(sw_upscaled));
 
 entry_pressures = params.cap_pressure.func(1,porosities,permeabilities);
+pc_max = params.cap_pressure.func(params.sw_resid,porosities,permeabilities);
+pc_points = linspace(max(pc_max(isfinite(pc_max))),min(entry_pressures(:)),length(saturations));
 
 for index_saturation = 1:length(saturations)
 
     sw_target = saturations(index_saturation);
 
-    pc_mid = params.cap_pressure.func(sw_target, mean(porosities,'all'), mean(permeabilities,'all'));
+    pc_mid = pc_points(index_saturation);
     sw_mid = sw_target;
 
     calc_endpoint = index_saturation == 1 || index_saturation == length(saturations);
-    max_iterations = calc_endpoint*1000 + ~calc_endpoint*2;
-
+    max_iterations = calc_endpoint*1000 + ~calc_endpoint*100;
+    err_prev = Inf;
     for iteration_num=1:max_iterations
-        [pc_mid_tot, sw_mid, pc_mid, sub_sw, converged] = mip_iteration(...
+        [pc_mid_tot, sw_mid, pc_mid, sub_sw, converged, err] = mip_iteration(...
             sw_target, dr, entry_pressures, porosities, permeabilities, pc_mid, ...
             Nz_sub, Nx_sub, Ny_sub,...
             params, options);
@@ -45,6 +47,11 @@ for index_saturation = 1:length(saturations)
         if converged
             break;
         end
+
+        if abs(err - err_prev) <= eps
+            break;
+        end
+        err_prev = err;
     end
 
     sw_upscaled(index_saturation) = sw_mid;
@@ -82,7 +89,7 @@ krg         = interp1(sw_upscaled,        krg', saturations, "linear","extrap")'
 
 end
 
-function [pc_mid_tot, sw_mid, pc_mid, sub_sw, converged] = mip_iteration(...
+function [pc_mid_tot, sw_mid, pc_mid, sub_sw, converged, err] = mip_iteration(...
     sw_target, dr, entry_pressures, porosities, permeabilities, pc_mid,...
     Nz_sub, Nx_sub, Ny_sub, ...
     params, options)
@@ -120,7 +127,10 @@ pc_mid = pc_mid + dpc * 0.8;
 if ~isfinite(pc_mid)
     error('')
 end
-pc_mid = max(pc_mid,min(entry_pressures,[],'all'));
+if pc_mid < min(entry_pressures(:))
+    pc_mid = min(entry_pressures(:));
+end
+
 end
 
 function [krg, krw] = calc_relative_permeabilities(dr_sub, perm_upscaled_mD, Kg_sub_mD, Kw_sub_mD)
