@@ -9,7 +9,10 @@ downscale_dims = size(porosities);
 
 dr_sub = dr ./ downscale_dims;
 
-perm_upscaled = upscale_permeability(permeabilities, dr_sub(1),dr_sub(2),dr_sub(3));
+permeabilities_mD = permeabilities./milli./darcy;
+
+perm_upscaled_mD = upscale_permeability(permeabilities_mD, dr_sub(1),dr_sub(2),dr_sub(3));
+perm_upscaled = perm_upscaled_mD.*milli.*darcy;
 
 sw_upscaled = saturations;
 pc_upscaled = zeros(size(saturations));
@@ -47,13 +50,13 @@ for index_saturation = 1:length(saturations)
     sw_upscaled(index_saturation) = sw_mid;
     pc_upscaled(index_saturation) = pc_mid_tot;
 
-    kg_mat_local = params.krg.func(1-sub_sw);
-    kw_mat_local = params.krw.func(sub_sw);
+    Kg_sub_mD = params.krg.func(1-sub_sw);
+    Kw_sub_mD = params.krw.func(sub_sw);
 
-    kg_mat_local = kg_mat_local.*(porosities~=0).*permeabilities;
-    kw_mat_local = kw_mat_local.*(porosities~=0).*permeabilities;
+    Kg_sub_mD = Kg_sub_mD.*(porosities~=0).*permeabilities_mD;
+    Kw_sub_mD = Kw_sub_mD.*(porosities~=0).*permeabilities_mD;
 
-    [krg(:,index_saturation), krw(:,index_saturation)] = calc_phase_permeabilities(dr_sub, perm_upscaled, kg_mat_local, kw_mat_local);
+    [krg(:,index_saturation), krw(:,index_saturation)] = calc_relative_permeabilities(dr_sub, perm_upscaled_mD, Kg_sub_mD, Kw_sub_mD);
 end
 
 sw_upscaled(end) = 1;
@@ -120,22 +123,22 @@ end
 pc_mid = max(pc_mid,min(entry_pressures,[],'all'));
 end
 
-function [krg, krw] = calc_phase_permeabilities(dr_sub, perm_upscaled, kg_mat, kw_mat)
+function [krg, krw] = calc_relative_permeabilities(dr_sub, perm_upscaled_mD, Kg_sub_mD, Kw_sub_mD)
 
-Kx = perm_upscaled(1);
-Ky = perm_upscaled(2);
-Kz = perm_upscaled(3);
+K_phase_upscaled = zeros(1,6);
 
-Kalli = zeros(1,6);
+K_phase_upscaled(1:3) = upscale_permeability(Kg_sub_mD, dr_sub(1), dr_sub(2), dr_sub(3));
+K_phase_upscaled(4:6) = upscale_permeability(Kw_sub_mD, dr_sub(1), dr_sub(2), dr_sub(3));
 
-Kalli(1:3) = upscale_permeability(kg_mat, dr_sub(1), dr_sub(2), dr_sub(3));
-Kalli(4:6) = upscale_permeability(kw_mat, dr_sub(1), dr_sub(2), dr_sub(3));
+Kx_mD = perm_upscaled_mD(1);
+Ky_mD = perm_upscaled_mD(2);
+Kz_mD = perm_upscaled_mD(3);
 
-Kalli([1,4]) = Kalli([1,4]) ./ Kx;
-Kalli([2,5]) = Kalli([2,5]) ./ Ky;
-Kalli([3,6]) = Kalli([3,6]) ./ Kz;
+K_phase_upscaled([1,4]) = K_phase_upscaled([1,4]) ./ Kx_mD; % NOTE: avoid dividing two small numbers
+K_phase_upscaled([2,5]) = K_phase_upscaled([2,5]) ./ Ky_mD;
+K_phase_upscaled([3,6]) = K_phase_upscaled([3,6]) ./ Kz_mD;
 
-krg = Kalli(1:3)';
-krw = Kalli(4:6)';
+krg = K_phase_upscaled(1:3)';
+krw = K_phase_upscaled(4:6)';
 
 end
