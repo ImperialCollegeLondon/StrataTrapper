@@ -3,11 +3,16 @@ arguments
     strata_trapped
     args.font_size = 14
     args.kr_scale = "log"
-    args.parent = figure;
+    args.parent = struct([]);
+    args.visible char = 'on';
 end
 
-fig = args.parent;
-clf(fig);
+if isempty(args.parent)
+    fig = figure('Visible',args.visible);
+else
+    fig = args.parent;
+    clf(fig);
+end
 
 [t_all,t_kr,t_krw,t_krg,ax_pc,ax_krw_x,ax_krw_y,ax_krw_z,ax_krg_x,ax_krg_y,ax_krg_z] = nested_tiles(fig);
 
