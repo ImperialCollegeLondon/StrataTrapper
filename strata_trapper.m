@@ -42,13 +42,15 @@ parfor (cell_index = 1:subset_len,  args.num_par_workers)
     [perm_upscaled_cell, pc_upscaled, krw_cell, krg_cell] = upscale(...
         DR(cell_index,:), saturations, params, options, sub_porosity, sub_permeability);
 
+    for i = 1:3
+        krg_cell(i,:) = monotonize(saturations, krg_cell(i,:), -1);
+    end
+
+    krw(cell_index,:,:) = krw_cell; %#ok<PFOUS>
+    krg(cell_index,:,:) = krg_cell;
     perm_upscaled(cell_index,:) = perm_upscaled_cell;
     poro_upscaled(cell_index) = sum(sub_porosity,'all')./numel(sub_porosity);
     cap_pres_upscaled(cell_index,:) = pc_upscaled;
-
-    krw(cell_index,:,:) = krw_cell;
-    krg(cell_index,:,:) = krg_cell;
-
     if enable_waitbar
         send(wb_queue,cell_index);
     end
