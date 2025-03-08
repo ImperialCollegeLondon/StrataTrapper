@@ -66,7 +66,26 @@ for index_saturation = 1:length(saturations)
     [krg(:,index_saturation), krw(:,index_saturation)] = calc_relative_permeabilities(dr_sub, perm_upscaled_mD, Kg_sub_mD, Kw_sub_mD);
 end
 
-sw_upscaled(end) = 1;
+% NOTE: we expect only small negative values as computational errors
+krw(:) = max(krw(:),0);
+krg(:) = max(krg(:),0);
+pc_upscaled = max(pc_upscaled,min(entry_pressures(:)));
+
+% add potentially missing endpoints
+sw_extra = [params.sw_resid,1];
+
+[~,unique_idx] = unique(sw_upscaled);
+pc_upscaled_extra = exp(interp1(sw_upscaled(unique_idx), log(pc_upscaled(unique_idx)), sw_extra, "linear","extrap"));
+pc_upscaled = [pc_upscaled,pc_upscaled_extra];
+
+sw_upscaled(end+1) = sw_extra(1);
+krw(:,end+1) = 0;
+krg(:,end+1) = max(params.krg.data(:,2));
+
+sw_upscaled(end+1) = sw_extra(2);
+krw(:,end+1) = max(params.krw.data(:,2));
+krg(:,end+1) = 0;
+
 [sw_upscaled,unique_idx] = unique(sw_upscaled);
 pc_upscaled = pc_upscaled(unique_idx);
 krg = krg(:,unique_idx);
@@ -83,9 +102,9 @@ if ~allfinite(pc_upscaled)
     disp(pc_upscaled);
 end
 
-pc_upscaled = interp1(sw_upscaled, pc_upscaled, saturations, "linear","extrap");
-krw         = interp1(sw_upscaled,        krw', saturations, "linear","extrap")';
-krg         = interp1(sw_upscaled,        krg', saturations, "linear","extrap")';
+pc_upscaled = exp(interp1(sw_upscaled, log(pc_upscaled), saturations, "linear","extrap"));
+krw         = interp1(sw_upscaled, krw', saturations, "linear","extrap")';
+krg         = interp1(sw_upscaled, krg', saturations, "linear","extrap")';
 
 end
 
