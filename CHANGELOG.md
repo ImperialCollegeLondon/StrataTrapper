@@ -1,5 +1,37 @@
 # Changelog
 
+## [0.10.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.9.0...v0.10.0) (2025-03-09)
+
+
+### Features
+
+* :children_crossing: `strata_trapper`: named optional arguments ([3ca7ebb](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/3ca7ebb4ac5db91d66aa24997bccc73eb2bc90e3))
+* :children_crossing: `strata_trapper`: put inputs to output ([6c43ab7](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/6c43ab7487bd14429f3500b259966e0243f93d77))
+* :children_crossing: compute solver performance ([bd6aad0](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/bd6aad0a8ccbcd5c00849f0ee6aff5761f2d724c))
+* :children_crossing: more flexible parallel options ([dfb4ba2](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/dfb4ba2d6c8e115f17f3615b2e9e661b4e634c0d))
+* :sparkles: function for struct hashing ([381b3e2](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/381b3e2f31e3bd2ef1fdfe4a00e4fd3288230392))
+* **export:** :children_crossing: J-Leverett export function ([911a441](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/911a441caaee316bab15e71a1793d9a5dece3f57))
+* **export:** :sparkles: separate function for permeability export ([403459a](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/403459a37dc983c7359cd4e74feebd07a4b28750))
+* **plot:** visibility option for `plot_result` figure ([5e85ab9](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/5e85ab9ad8b5e9a89c67c2890c4566476b0d2778))
+
+
+### Bug Fixes
+
+* :bug: fix interpolation of Pc and kr ([f2a3969](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/f2a39692b4073e863dc118818bec6fa37ff62aab))
+* :bug: fix numerical errors in gas permeability ([0a7533a](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/0a7533a34200c564a3adc921a2d4a91d367e1d69))
+* :bug: Improve MIP stability ([784ef9e](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/784ef9e1a52ac804dfc9af574b2ba4648db0c238))
+* :bug: more stable cap. pressure calculations ([a082bd1](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/a082bd13be1a9e745df29e62dc66f6ebf8c48f44))
+* :bug: upscale permeabilities in milli-darcy ([e97a25d](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/e97a25dd5b71097b457b07edb0f5abb7cc2d0eba))
+* :children_crossing: make `demo` suitable for test ([74cf275](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/74cf275afbac9a8686bce6afc5bc24a3761454f6))
+* :children_crossing: more stable TableFunction behaviour ([f21a025](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/f21a02502fcd8a5fc7f53350c4c7644c73a5481f))
+* **export:** export curves to 3 separate files (x,y,z) ([21f05e8](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/21f05e851ae716d22b3f010505346e771356e402))
+* **matlab:** :fire: delete `finish.m` ([5616ea0](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/5616ea0c0ad737ceae6d0d567cf5ca2de1f63dfb))
+
+
+### Continuous Integration
+
+* **matlab:** :construction_worker: enable tests in CI ([d05d1e2](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/d05d1e2267cdce4848ed0199fd1e5434121be3a8))
+
 ## [0.9.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.8.0...v0.9.0) (2024-12-09)
 
 
