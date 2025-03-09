@@ -26,12 +26,16 @@ classdef CapPressure
                 obj (1,1) CapPressure
                 sw  (1,1) double
                 poro double {mustBeNonnegative}
-                perm double {mustBePositive}
+                perm double {mustBeNonnegative}
             end
 
             perm = obj.transform_perm(poro,perm);
 
-            pc = obj.mult * obj.leverett_j.func(sw) * sqrt(poro./perm);
+            poresize_mult = poro./perm;
+            poresize_mult(poro == 0) = 0;
+
+            pc = obj.mult * obj.leverett_j.func(sw) * sqrt(poresize_mult);
+            pc(poro == 0) = Inf;
         end
 
         function sw = inv(obj,pc,poro,perm)
@@ -43,8 +47,8 @@ classdef CapPressure
             end
 
             lj = obj.inv_lj(pc,poro,perm);
-            lj = min(lj,obj.leverett_j.data(1,2));
             lj = max(lj,obj.leverett_j.data(end,2));
+            lj = min(lj,obj.leverett_j.data(1,2));
 
             sw = obj.leverett_j.inv(lj);
         end
@@ -59,7 +63,10 @@ classdef CapPressure
 
             perm = obj.transform_perm(poro,perm);
 
-            lj = pc ./ obj.mult .* sqrt(perm./poro);
+            poresize_mult = perm./ poro;
+            poresize_mult(poro == 0) = +Inf;
+
+            lj = pc ./ obj.mult .* sqrt(poresize_mult);
         end
 
         function dpc_dsw = deriv(obj,sw,poro,perm)
@@ -72,7 +79,10 @@ classdef CapPressure
 
             perm = obj.transform_perm(poro,perm);
 
-            dpc_dsw = obj.mult * obj.leverett_j.deriv(sw) * sqrt(poro./perm);
+            poresize_mult = poro./perm;
+            poresize_mult(poro == 0) = 0;
+
+            dpc_dsw = obj.mult * obj.leverett_j.deriv(sw) * sqrt(poresize_mult);
         end
 
         function perm = transform_perm(obj,poro,perm)

@@ -1,10 +1,9 @@
-function [sub_rock] = downscale_all(grid,rock,mask,params,args)
+function [sub_rock] = downscale_all(grid,rock,mask,params)
     arguments
         grid
         rock
         mask
         params
-        args.num_par_workers (1,1) uint32  = Inf;
     end
 
 coarse_idx = 1:length(mask);
@@ -14,7 +13,7 @@ DR = [grid.DX,grid.DY,grid.DZ];
 perm = rock.perm;
 poro = rock.poro;
 
-parfor (cell_index = coarse_idx, args.num_par_workers)
+for cell_index = coarse_idx
     if ~mask(cell_index)
         continue;
     end

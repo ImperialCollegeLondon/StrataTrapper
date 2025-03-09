@@ -8,5 +8,5 @@ plan("check") = CodeIssuesTask;
 
 plan("test") = TestTask;
 
-plan.DefaultTasks = ["check"];
+plan.DefaultTasks = ["check","test"];
 end
