@@ -13,4 +13,6 @@ jobs:
         with:
           release: R2024a
           cache: true
+          products: >
+            Statistics_and_Machine_Learning_Toolbox
       - uses: matlab-actions/run-build@v2

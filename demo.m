@@ -1,19 +1,17 @@
 %% StrataTrapper demonstration
 
-if isempty(gcp('nocreate'))
-    parpool(); % start default parpool (optional)
-end
+% parpool(); % start default parpool (optional)
 
+startup;
 %% Inputs
 
 params  = gen_params (); % input rock-fluid parameters
-options = Options();     % StrataTrapper options
 
 downscale_params = gen_downscale_params();
 
 %% Downscaling demo
-
-downscale_demo(params, downscale_params);
+visible = 'off'; % alternatively: 'on'
+fig_downscale = downscale_demo(params, downscale_params,visible);
 
 %% Grid & rock properties
 
@@ -21,31 +19,34 @@ downscale_demo(params, downscale_params);
 
 %% Run StrataTrapper
 
-mask = rand(grid.cells.num,1) < 0.001; % process only a fraction of cells
+mask = true(ceil(grid.cells.num* 0.001),1); % process only a fraction of cells
 
-sub_rock = downscale_all(grid,rock,mask,downscale_params,num_par_workers=Inf);
+sub_rock = downscale_all(grid,rock,mask,downscale_params);
 
-strata_trapped = strata_trapper(grid, sub_rock, mask, params, options, ...
-enable_waitbar=true, num_par_workers=Inf);
+strata_trapped = strata_trapper(grid, sub_rock, params, ...
+    mask=mask, options=Options(), ...
+    enable_waitbar=false,...
+    parfor_arg=0 ... sequential computation for CI checks
+    );
 
 %% Visualize saturation functions
 
-fig = plot_result(rock, strata_trapped, params);
-figure(fig); % draw the summary instantly
+fig = plot_result(strata_trapped,visible=visible);
 
 %% OGS inputs generation
 
-% run in background
-export_fut = parfeval(backgroundPool,@ogs_export,0,grid,strata_trapped);
+ogs_export(strata_trapped);
+
+% export_fut = parfeval(backgroundPool,@ogs_export,0,strata_trapped); % or run in background
 
 %% helpers
 
-function downscale_demo(params,downscale_params)
+function fig = downscale_demo(params,downscale_params,visible)
 
 [sub_porosity, sub_permeability] = downscale(...
     0.1, 100*milli*darcy * [1,1,0.5], [400,400,0.1].*meter(),downscale_params);
 
-fig = figure;
+fig = figure('Visible',visible);
 tiles = tiledlayout(fig,'flow',TileSpacing='tight',Padding='tight');
 
     function slice_plot(ax,data,title_str,units_str)
