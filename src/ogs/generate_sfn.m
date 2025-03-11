@@ -1,39 +1,44 @@
-function generate_sfn(idx, saturations, pres_upscaled, krw, krg,prefix,inc_ext)
+function generate_sfn(strata_trapped,prefix,inc_ext,offset)
 arguments
-    idx            (1,:)   double
-    saturations    (1,:) double
-    pres_upscaled  (:,:) double
-    krw            (:,3,:) double
-    krg            (:,3,:) double
+    strata_trapped
     prefix char
-    inc_ext char = '.data'
+    inc_ext char
+    offset (1,1) uint32
 end
+
+leverett_j = strata_trapped.params.cap_pressure.inv_lj(...
+    strata_trapped.capillary_pressure,...
+    strata_trapped.porosity,...
+    strata_trapped.permeability);
 
 dir_label = ['x','y','z'];
 
-parfor direction=1:3
+for direction=1:3
     file_name = [prefix,'chc',dir_label(direction),inc_ext];
     file_id = fopen(file_name,'wb','native','UTF-8');
-    write_tables_for_direction(idx,file_id,krw, krg,saturations,pres_upscaled,direction);
+    write_tables_for_direction(strata_trapped.idx,file_id,...
+        strata_trapped.rel_perm_wat, strata_trapped.rel_perm_gas,...
+        strata_trapped.saturation,leverett_j,...
+        direction,offset);
     fclose(file_id);
 end
 
 end
 
-function write_tables_for_direction(idx,file_id, krw, krg,saturations,pres_upscaled,direction)
+function write_tables_for_direction(idx,file_id, krw, krg,saturations,leverett_j,direction,offset)
 for cell_index = 1:length(idx)
-    table_num = cell_index + length(idx) * (direction-1);
+    table_num = cell_index + length(idx) * (direction-1) + offset;
 
     fprintf(file_id,'CHARACTERISTIC_CURVES sfn_%u\n',table_num);
     fprintf(file_id,'%s\n%s\n',...
         'TABLE swfn_table',...
-        'PRESSURE_UNITS Bar');
+        'PRESSURE_UNITS None');
 
     sw = saturations;
     write_sfn_table(file_id,"SWFN",...
         sw, ...
         squeeze(krw(cell_index,direction,:)), ...
-        pres_upscaled(cell_index,:));
+        leverett_j(cell_index,:));
 
     fprintf(file_id,'%s\n%s\n%s\n',...
         'END',...
