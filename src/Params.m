@@ -19,5 +19,16 @@ classdef Params
             obj.rho_gas   = rho_gas;
             obj.rho_water = rho_water;
         end
+
+        function export_ogs(params,sw,file_path)
+            chc_file = fopen(file_path,'wb','native','UTF-8');
+            fprintf(chc_file,'%s %f %s\n\n','JLEV_GW', params.cap_pressure.surface_tension / (dyne / 0.01 /meter) * cos(params.cap_pressure.contact_angle),'XY dynes/cm');
+            write_sat_jlev(1,chc_file,...
+                params.krw.func(sw),...
+                params.krg.func(1-sw),...
+                sw,...
+                params.cap_pressure.leverett_j.func(sw));
+            fclose(chc_file);
+        end
     end
 end
