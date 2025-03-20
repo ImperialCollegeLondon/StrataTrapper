@@ -97,7 +97,7 @@ if show_legend
         legends{end+1} = 'Intrinsic curve';
     end
 
-    legend(ax,legends,'Location','northoutside','BackgroundAlpha',0.5);
+    legend(ax,legends,'Location','northoutside');
 end
 
 try
