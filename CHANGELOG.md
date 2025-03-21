@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.11.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.10.0...v0.11.0) (2025-03-21)
+
+
+### Features
+
+* :children_crossing: add arguments to `demo` ([c5907d9](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/c5907d96421fc9e686ca9a63a450b9d81b21a264))
+
+
+### Bug Fixes
+
+* **plot:** :children_crossing: remove legend transparency ([d4ef60e](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/d4ef60e5d6eee3b093fc96b9503ae114837ebfa2))
+* **plot:** :children_crossing: set `YScale` directly ([c0d3c33](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/c0d3c33fe1b32636affb14606228d5028aa6857b))
+
 ## [0.10.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.9.0...v0.10.0) (2025-03-09)
 
 
