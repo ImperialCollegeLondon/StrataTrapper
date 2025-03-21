@@ -1,8 +1,22 @@
-%% StrataTrapper demonstration
+function demo(args)
+arguments
+    args.parfor_arg = Inf;
+    args.show_figures = true;
+    args.show_progress = true;
+end
+
+if args.show_figures
+     visible = 'on';
+else
+    visible = 'off';
+end
+
+    %% StrataTrapper demonstration
 
 % parpool(); % start default parpool (optional)
 
 startup;
+
 %% Inputs
 
 params  = gen_params (); % input rock-fluid parameters
@@ -10,7 +24,8 @@ params  = gen_params (); % input rock-fluid parameters
 downscale_params = gen_downscale_params();
 
 %% Downscaling demo
-visible = 'off'; % alternatively: 'on'
+
+
 fig_downscale = downscale_demo(params, downscale_params,visible);
 
 %% Grid & rock properties
@@ -25,8 +40,8 @@ sub_rock = downscale_all(grid,rock,mask,downscale_params);
 
 strata_trapped = strata_trapper(grid, sub_rock, params, ...
     mask=mask, options=Options(), ...
-    enable_waitbar=false,...
-    parfor_arg=0 ... sequential computation for CI checks
+    enable_waitbar=args.show_progress,...
+    parfor_arg=args.parfor_arg ...
     );
 
 %% Visualize saturation functions
@@ -38,6 +53,7 @@ fig = plot_result(strata_trapped,visible=visible);
 ogs_export(strata_trapped);
 
 % export_fut = parfeval(backgroundPool,@ogs_export,0,strata_trapped); % or run in background
+end
 
 %% helpers
 
