@@ -52,19 +52,19 @@ end
 sub_data = @(data,direction) squeeze(data(:,direction,:));
 
 stat_plot(ax_kr(1,1),'','',strata_trapped.saturation,@(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,1));
-yscale(ax_kr(1,1),scale);
+ax_kr(1,1).YScale = scale;
 stat_plot(ax_kr(2,1),'','',strata_trapped.saturation,@(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,1));
-yscale(ax_kr(2,1),scale);
+ax_kr(2,1).YScale = scale;
 
 stat_plot(ax_kr(1,2),'','',strata_trapped.saturation,@(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,2));
-yscale(ax_kr(1,2),scale);
+ax_kr(1,2).YScale = scale;
 stat_plot(ax_kr(2,2),'','',strata_trapped.saturation,@(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,2));
-yscale(ax_kr(2,2),scale);
+ax_kr(2,2).YScale = scale;
 
 stat_plot(ax_kr(1,3),'','',strata_trapped.saturation,@(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,3));
-yscale(ax_kr(1,3),scale);
+ax_kr(1,3).YScale = scale;
 stat_plot(ax_kr(2,3),'','',strata_trapped.saturation,@(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,3));
-yscale(ax_kr(2,3),scale);
+ax_kr(2,3).YScale = scale;
 end
 
 
@@ -102,7 +102,7 @@ if show_legend
         legends{end+1} = 'Intrinsic curve';
     end
 
-    legend(ax,legends,'Location','northoutside','BackgroundAlpha',0.5);
+    legend(ax,legends,'Location','northoutside');
 end
 
 try
