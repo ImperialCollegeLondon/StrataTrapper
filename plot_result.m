@@ -21,7 +21,7 @@ leverett_j_upscaled = strata_trapped.params.cap_pressure.inv_lj(...
     strata_trapped.porosity,...
     strata_trapped.permeability);
 
-[~, ax_pc] =  stat_plot(ax_pc,'Leverett J-function','',strata_trapped.saturation,...
+[~, ax_pc] =  stat_plot(ax_pc,strata_trapped.saturation,...
     @(sw)strata_trapped.params.cap_pressure.leverett_j.func(sw), leverett_j_upscaled,true);
 title(ax_pc,'Leverett J-function');
 ylabel(ax_pc,'[-]');
@@ -51,28 +51,26 @@ arguments
 end
 sub_data = @(data,direction) squeeze(data(:,direction,:));
 
-stat_plot(ax_kr(1,1),'','',strata_trapped.saturation,@(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,1));
+stat_plot(ax_kr(1,1),strata_trapped.saturation,@(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,1));
 ax_kr(1,1).YScale = scale;
-stat_plot(ax_kr(2,1),'','',strata_trapped.saturation,@(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,1));
+stat_plot(ax_kr(2,1),strata_trapped.saturation,@(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,1));
 ax_kr(2,1).YScale = scale;
 
-stat_plot(ax_kr(1,2),'','',strata_trapped.saturation,@(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,2));
+stat_plot(ax_kr(1,2),strata_trapped.saturation,@(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,2));
 ax_kr(1,2).YScale = scale;
-stat_plot(ax_kr(2,2),'','',strata_trapped.saturation,@(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,2));
+stat_plot(ax_kr(2,2),strata_trapped.saturation,@(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,2));
 ax_kr(2,2).YScale = scale;
 
-stat_plot(ax_kr(1,3),'','',strata_trapped.saturation,@(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,3));
+stat_plot(ax_kr(1,3),strata_trapped.saturation,@(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,3));
 ax_kr(1,3).YScale = scale;
-stat_plot(ax_kr(2,3),'','',strata_trapped.saturation,@(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,3));
+stat_plot(ax_kr(2,3),strata_trapped.saturation,@(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,3));
 ax_kr(2,3).YScale = scale;
 end
 
 
-function [y_lim, ax] = stat_plot(ax, name, y_label, x_data, base_func, data,show_legend,color)
+function [y_lim, ax] = stat_plot(ax, x_data, base_func, data,show_legend,color)
 arguments
     ax
-    name char
-    y_label char
     x_data (1,:) double
     base_func
     data   (:,:) double
