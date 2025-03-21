@@ -1,10 +1,10 @@
-function write_mappings(prefix,G,idx)
+function write_mappings(prefix,G,idx,offset)
 curve_mapping = cell_to_curve(G, idx);
 
 keywords = ["KRNUMX","KRNUMY","KRNUMZ","SATNUM"];
 
 num_cells = length(idx);
-num_offset = [0,num_cells,num_cells*2,0];
+num_offset = [0,num_cells,num_cells*2,0]+offset;
 
 for keyword_num = 1:length(keywords)
     keyword = keywords(keyword_num);
