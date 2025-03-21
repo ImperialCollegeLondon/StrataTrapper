@@ -25,8 +25,7 @@ downscale_params = gen_downscale_params();
 
 %% Downscaling demo
 
-
-fig_downscale = downscale_demo(params, downscale_params,visible);
+downscale_demo(params, downscale_params,visible);
 
 %% Grid & rock properties
 
@@ -46,7 +45,7 @@ strata_trapped = strata_trapper(grid, sub_rock, params, ...
 
 %% Visualize saturation functions
 
-fig = plot_result(strata_trapped,visible=visible);
+plot_result(strata_trapped,visible=visible);
 
 %% OGS inputs generation
 
