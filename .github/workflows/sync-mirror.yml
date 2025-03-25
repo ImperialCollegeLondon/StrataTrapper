@@ -1,0 +1,24 @@
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  mirror_repo:
+    if: github.repository == 'djmaxus/matlab-repo-init'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: webfactory/ssh-agent@v0.9.1
+        with:
+          ssh-private-key: ${{ secrets.MATLAB_TEMPLATE_MIRROR_SSH_PRIVATE_KEY }}
+      - name: Push changes to ImperialCollegeLondon/matlab-repo-init
+        run: |
+          # Clone and check out this repo
+          git clone --mirror git@github.com:djmaxus/matlab-repo-init.git
+          cd matlab-repo-init.git
+
+          # Add repo in Imperial's org as remote
+          git remote add icl git@github.com:ImperialCollegeLondon/matlab-repo-init.git
+
+          # Push all branches, overwriting if necessary
+          git push --force --tags icl main

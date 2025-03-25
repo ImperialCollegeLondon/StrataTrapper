@@ -1,19 +1,9 @@
 {
-    "markdown.extension.toc.unorderedList.marker": "*",
-    "markdown.extension.tableFormatter.normalizeIndentation": true,
-    "markdown.extension.toc.levels": "2..6",
-    "cSpell.words": [
-        "Krevor",
-        "upscaling"
-    ],
-    "cSpell.enabledFiletypes": [
-        "markdown"
-    ],
-    "cSpell.language": "en-GB",
     "conventionalCommits.scopes": [
-        "release-please",
-        "plot",
+        "ci",
+        "git",
         "matlab",
-        "export"
-    ]
+        "github",
+        "doc"
+    ],
 }

@@ -1,0 +1,14 @@
+{
+    "version": "0.2",
+    "language": "en",
+    // words - list of words to be always considered correct
+    "words": [
+        "Simulink",
+        "ruleset",
+        "Rulesets"
+    ],
+    // flagWords - list of words to be always considered incorrect
+    "flagWords": [],
+    // files to ignore
+    "ignorePaths": ["CHANGELOG.md"]
+}

@@ -1,0 +1,18 @@
+on:
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  buildtool:
+    strategy:
+      matrix:
+        release: [R2023b, R2024b]
+    name: MATLAB checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: matlab-actions/setup-matlab@v2
+        with:
+          release: ${{ matrix.release }}
+          cache: true
+      - uses: matlab-actions/run-build@v2

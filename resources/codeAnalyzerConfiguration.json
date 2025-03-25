@@ -1,0 +1,12 @@
+{
+    "schemaVersion": "1.0.0",
+    "guidelineVersion": "1.0.0",
+    "baseConfiguration": "factory",
+    "checks": {
+        "LLMNC": {
+            "severity": "warning",
+            "limit": 100,
+            "enabled": true
+        }
+    }
+}

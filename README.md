@@ -1,91 +1,75 @@
-# Field scale model generation and upscaling toolkit
+# [Template Repository](https://github.com/djmaxus/matlab-repo-init) for Open-Source MATLAB
 
-Repository: [github.com/ImperialCollegeLondon/StrataTrapper](https://github.com/ImperialCollegeLondon/StrataTrapper)
-
-![build](https://github.com/ImperialCollegeLondon/StrataTrapper/actions/workflows/matlab-ci.yml/badge.svg)
-![GitHub Tag](https://img.shields.io/github/v/tag/ImperialCollegeLondon/StrataTrapper?sort=semver&style=flat&label=version)
-![GitHub Release Date](https://img.shields.io/github/release-date/ImperialCollegeLondon/StrataTrapper?display_date=published_at&style=flat&label=dated)
+![CI](https://github.com/djmaxus/matlab-repo-init/actions/workflows/ci.yml/badge.svg?branch=main)
+[![View matlab-repo-init on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://uk.mathworks.com/matlabcentral/fileexchange/171364-matlab-repo-init)
 [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
-* [The StrataTrapper codes](#the-stratatrapper-codes)
-* [Structure](#structure)
-* [Running](#running)
-* [Versions](#versions)
-* [Contributing](#contributing)
-* [References](#references)
+Quickstart your public MATLAB repository. Batteries included 🔋
 
-![StrataTrapper logo](./img/StrataTrapper.jpg)
+<!-- markdownlint-disable MD033 -->
+<img src="doc/logo.png" width=280 alt="logo">
+<!-- markdownlint-enable MD033 -->
 
-## The StrataTrapper codes
+## How to use
 
-This is the StrataTrapper **upscaling toolkit**.
-It can also generate heterogeneous fine-scale models with specific correlation lengths
-to re-upscale given coarse-scale two-phase flow models.
+First, click [Use this template][github-use-template]
+to make your own repository from this template.
+Clone your new repository.
 
-Another tool is the **reduced-physics model** [CO2GraVISim](https://github.com/ajobutler/CO2GraVISim).
+Then locally:
 
-In [`StrataTrapper-models`](https://github.com/ImperialCollegeLondon/StrataTrapper-models)
-repository, we publish field-scale models upscaled with StrataTrapper.
+1. **Run [`init`](./init.m)** function for cleanup
+2. **Upload your own MATLAB code**
+3. Change anything else to you liking
+4. Commit changes [appropriately][conventional-commits] along the way
 
-## Structure
+Then, in _Settings — **Actions** — General_ of your repository:
 
-Top-level scripts and functions are in the repository root,
-and the rest is in [`src/`](src) folder.
+1. [x] _Allow all actions and reusable workflows_
+2. [x] _Allow GitHub Actions to create and approve pull requests_
 
-[`demo.m`](demo.m) script is an implementation of the running guideline below.\
-Feel free to play with it and use as an example for your own scripts.
+You can also import a pre-built [**ruleset**](.github/rules/main.json) to protect
+`main` branch from accidental unwanted hard-to-recover changes.\
+In _Settings — Rules — Rulesets_ of your repository:
 
-## Running
+1. Click _New ruleset — Import a ruleset_
+2. Upload [`.github/rules/main.json`](.github/rules/main.json)
+3. Modify if needed and save
 
-1. Run [`startup.m`](startup.m) to setup MATLAB Path.
-   1. Optional: start a parallel pool to run computations there.
-2. Read or generate target coarse grid dimensions
-and input fine-scale porosity and permeability for each coarse block.
-3. Setup input rock-fluid properties and algorithm options represented by
-  [`Params`](src/Params.m) and [`Options`](src/Options.m) classes.
-4. Create logical `mask` to filter out impermeable cells
-and/or define an arbitrary subset of cells to process.
-5. Run [`strata_trapper`](strata_trapper.m) function
-with arbitrary number of parallel workers
-optionally enabling a UI progress bar.
-6. Visualise outputs with [`plot_result`](plot_result.m) function
-7. Export the outputs to [PFLOTRAN-OGS](https://docs.opengosim.com/)-compatible
-text files using [`ogs_export`](ogs_export.m) function.
+Then push the local changes and carry on with the development
+of your freshly established public MATLAB project!
 
-Tips:
+Please go to repository's [Wiki][wiki] (when it's ready)
+for more detailed user manual.
 
-* Usually, MATLAB runs `startup.m` scripts automatically
-if they are in a startup folder.
-* The heaviest part of the algorithm is essentially parallel with no synchronisation.
-So, using several parallel workers usually results
-in a proportional performance boost.
+Do not hesitate to ask [me](https://djmaxus.github.io/)
+for assistance and technical support.\
+And everyone is welcome to open
+[issues](https://github.com/djmaxus/matlab-repo-init/issues)
+to request a feature, enhance the documentation, or report a bug.
 
-## Versions
+## Features
 
-The original version of the toolkit is [v0.1.0](https://github.com/ImperialCollegeLondon/StrataTrapper/tree/v0.1.0).\
-It has its own structure and some unique functionality,\
-so it may worth attention as much as later versions.
-
-[CHANGELOG.md](CHANGELOG.md) describes the version history and key changes.
-
-Other versions can be accessed via
-[tags](https://github.com/ImperialCollegeLondon/StrataTrapper/tags) and
-[releases](https://github.com/ImperialCollegeLondon/StrataTrapper/releases)
-sections of the repository.
-
-## Contributing
-
-Everyone is welcome to open
-[issues](https://github.com/ImperialCollegeLondon/StrataTrapper/issues) and
-[pull requests](https://github.com/ImperialCollegeLondon/StrataTrapper/pulls).
+- Automated Path initialization on [`startup`](startup.m)
+- [Utility functions](util/) for analyzing legacy MATLAB scripts
+- [`.gitignore`](.gitignore) for MATLAB/Simulink/Octave
+- [MATLAB code checks](.github/workflows/matlab.yml)
+on pull requests and pushes to `main` branch
+- Automated [releases](.github/workflows/release-please.yml)
+based on Conventional Commits
+- [Dependabot](.github/dependabot.yml) for GitHub Actions
+- [`README`](README.md) [deployment](.github/workflows/webpage.yml) at [`<user>.github.io/<repo>`](https://djmaxus.github.io/matlab-repo-init)
+- [BSD 3-Clause](LICENSE) open-source license
 
 ## References
 
-The StrataTrapper algorithm as well as motivation
-and theory behind it are in the paper:
+- [Creating a Repository From a Template](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template)
+- [Overview of MATLAB Build Tool](https://mathworks.com/help/matlab/matlab_prog/overview-of-matlab-build-tool.html)
+- [User-defined `startup` script for MATLAB](https://mathworks.com/help/matlab/ref/startup.html)
+- [`.gitignore` generator](https://gitignore.io)
+- [Choosing an Open Source License](https://choosealicense.com/)
+- [Conventional Commits][conventional-commits]
 
-> Samuel J. Jackson, Samuel Krevor\
-> **Small-Scale Capillary Heterogeneity**
-> **Linked to Rapid Plume Migration During CO2 Storage**\
-> *Geophysical Research Letters* | 2020\
-> <https://doi.org/10.1029/2020GL088616>
+[github-use-template]: https://github.com/new?template_name=matlab-repo-init&template_owner=djmaxus
+[conventional-commits]: https://www.conventionalcommits.org
+[wiki]: https://github.com/djmaxus/matlab-repo-init/wiki

@@ -1,0 +1,11 @@
+.github/** -linguist-vendored -linguist-generated -linguist-documentation linguist-detectable
+.vscode/** -linguist-vendored -linguist-generated -linguist-documentation linguist-detectable
+
+*.json linguist-detectable
+
+.gitignore -linguist-vendored -linguist-generated -linguist-documentation linguist-detectable
+LICENSE -linguist-vendored -linguist-generated -linguist-documentation linguist-detectable
+README.md -linguist-vendored -linguist-generated -linguist-documentation linguist-detectable
+
+main.m -linguist-detectable
+src/** -linguist-detectable
