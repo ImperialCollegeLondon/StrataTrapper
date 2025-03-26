@@ -17,11 +17,7 @@ cell_idxs = 1:cells_num;
 mask = args.mask(cell_idxs);
 subset_len = sum(mask);
 
-wb_queue = parallel.pool.DataQueue;
-if args.enable_waitbar
-    parforWaitbar(0,sum(mask));
-    afterEach(wb_queue,@parforWaitbar);
-end
+par_wb = ParWaitBar(sum(mask) * args.enable_waitbar);
 
 perm_upscaled = zeros(subset_len, 3);
 poro_upscaled = zeros(subset_len,1);
@@ -36,7 +32,6 @@ DR = [grid.DX(mask),grid.DY(mask),grid.DZ(mask)];
 
 sub_rock = sub_rock(mask);
 options = args.options;
-enable_waitbar = args.enable_waitbar;
 num_sub = zeros(subset_len,1);
 elapsed = zeros(subset_len,1);
 
@@ -65,9 +60,7 @@ parfor (cell_index = 1:subset_len, args.parfor_arg)
 
     num_sub(cell_index) = numel(sub_porosity);
 
-    if enable_waitbar
-        send(wb_queue,cell_index);
-    end
+    par_wb.update(); %#ok<PFBNS>
 end
 
 krw(:,:,saturations<=params.sw_resid) = 0;
@@ -107,54 +100,5 @@ perf.num_sat = args.options.sat_num_points;
 
 strata_trapped.perf = compute_performance(perf,1);
 
-if args.enable_waitbar
-    parforWaitbar(0,0,'ready');
-end
-
-end
-
-function parforWaitbar(~,max_iterations,~)
-persistent state wb final_state start_time last_reported_state last_reported_time
-
-if nargin == 2
-    state = 0;
-    final_state = max_iterations;
-    wb = waitbar(state,sprintf('%u cells to upscale', final_state),'Name','StrataTrapper');
-    start_time = tic();
-
-    last_reported_state = state;
-    last_reported_time = 0;
-    return;
-end
-
-if ~isvalid(wb)
-    return;
-end
-
-if nargin == 3
-    elapsed = duration(seconds(toc(start_time)),'Format','hh:mm:ss');
-    message = sprintf('%u cells upscaled\n in %s',final_state,elapsed);
-    waitbar(1,wb,message);
-    return;
-end
-
-state = state + 1;
-elapsed = toc(start_time);
-
-time_to_report = (elapsed - last_reported_time) > 1;
-state_to_report = (state - last_reported_state) > final_state * 0.01;
-
-if ~(time_to_report || state_to_report)
-    return;
-end
-
-last_reported_state = state;
-last_reported_time = elapsed;
-
-pace_integral = elapsed/state;
-eta_estimate = (final_state - state) * pace_integral;
-eta = duration(seconds(eta_estimate),'Format','hh:mm:ss');
-elapsed_str = duration(seconds(elapsed),'Format','hh:mm:ss');
-message = sprintf('%u/%u cells upscaled\n passed: %s | ETA: %s',state,final_state,elapsed_str,eta);
-waitbar(state/final_state,wb,message);
+par_wb.finish();
 end
