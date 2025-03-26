@@ -25,8 +25,7 @@ downscale_params = gen_downscale_params();
 
 %% Downscaling demo
 
-
-fig_downscale = downscale_demo(params, downscale_params,visible);
+downscale_demo(params, downscale_params,visible);
 
 %% Grid & rock properties
 
@@ -34,19 +33,18 @@ fig_downscale = downscale_demo(params, downscale_params,visible);
 
 %% Run StrataTrapper
 
-mask = true(ceil(grid.cells.num* 0.001),1); % process only a fraction of cells
+mask = true(ceil(grid.cells.num* 0.1),1); % process only a fraction of cells
 
 sub_rock = downscale_all(grid,rock,mask,downscale_params);
 
 strata_trapped = strata_trapper(grid, sub_rock, params, ...
     mask=mask, options=Options(), ...
-    enable_waitbar=args.show_progress,...
-    parfor_arg=args.parfor_arg ...
+    enable_waitbar=args.show_progress...
     );
 
 %% Visualize saturation functions
 
-fig = plot_result(strata_trapped,visible=visible);
+plot_result(strata_trapped,visible=visible);
 
 %% OGS inputs generation
 

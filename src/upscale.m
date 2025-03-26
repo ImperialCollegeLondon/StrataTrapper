@@ -63,7 +63,8 @@ for index_saturation = 1:length(saturations)
     Kg_sub_mD = Kg_sub_mD.*(porosities~=0).*permeabilities_mD;
     Kw_sub_mD = Kw_sub_mD.*(porosities~=0).*permeabilities_mD;
 
-    [krg(:,index_saturation), krw(:,index_saturation)] = calc_relative_permeabilities(dr_sub, perm_upscaled_mD, Kg_sub_mD, Kw_sub_mD);
+    [krg(:,index_saturation), krw(:,index_saturation)] = calc_relative_permeabilities( ...
+        dr_sub, perm_upscaled_mD, Kg_sub_mD, Kw_sub_mD);
 end
 
 % NOTE: we expect only small negative values as computational errors
@@ -75,7 +76,8 @@ pc_upscaled = max(pc_upscaled,min(entry_pressures(:)));
 sw_extra = [params.sw_resid,1];
 
 [~,unique_idx] = unique(sw_upscaled);
-pc_upscaled_extra = exp(interp1(sw_upscaled(unique_idx), log(pc_upscaled(unique_idx)), sw_extra, "linear","extrap"));
+pc_upscaled_extra = exp(interp1( ...
+    sw_upscaled(unique_idx), log(pc_upscaled(unique_idx)), sw_extra, "linear","extrap"));
 pc_upscaled = [pc_upscaled,pc_upscaled_extra];
 
 sw_upscaled(end+1) = sw_extra(1);
@@ -121,7 +123,8 @@ sub_volume = volume./double(Nz_sub*Nx_sub*Ny_sub);
 pore_volumes = porosities .* sub_volume;
 pore_volume = sum(pore_volumes,'all');
 
-sub_sw = invaded_mat_mid .* params.cap_pressure.inv(pc_mid,porosities,permeabilities) + ~invaded_mat_mid .* 1;
+sub_sw = invaded_mat_mid .* params.cap_pressure.inv(pc_mid,porosities,permeabilities) ...
+    + ~invaded_mat_mid .* 1;
 sub_sw(~isfinite(sub_sw)) = 1;
 sw_mid = sum(sub_sw.*pore_volumes,'all')/pore_volume;
 
