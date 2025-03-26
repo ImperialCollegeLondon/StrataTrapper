@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.11.2](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.11.1...v0.11.2) (2025-03-26)
+
+
+### Bug Fixes
+
+* code analyzer warnings ([4890f33](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/4890f3348be9c144e3ae145ca781e66157f5b569))
+* line change revert in demo.m ([dc333be](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/dc333be82b498ed51483f972931e4b794ab6e5d8))
+* revert mask change in demo.m ([dc6fcab](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/dc6fcab0524e502cf83dd962df4cd6bcbd8980ab))
+
 ## [0.11.1](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.11.0...v0.11.1) (2025-03-26)
 
 
