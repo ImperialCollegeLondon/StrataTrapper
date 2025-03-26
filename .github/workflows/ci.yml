@@ -16,3 +16,6 @@ jobs:
     matlab: # heavy MATLAB checks
         needs: lints
         uses: ./.github/workflows/matlab.yml
+    webpage-build:
+        needs: lints
+        uses: ./.github/workflows/webpage-build.yml
