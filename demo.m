@@ -33,7 +33,7 @@ downscale_demo(params, downscale_params,visible);
 
 %% Run StrataTrapper
 
-mask = true(ceil(grid.cells.num* 0.1),1); % process only a fraction of cells
+mask = true(ceil(grid.cells.num* 1e-3),1); % process only a fraction of cells
 
 sub_rock = downscale_all(grid,rock,mask,downscale_params);
 
