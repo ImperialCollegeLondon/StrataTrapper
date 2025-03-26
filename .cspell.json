@@ -1,13 +1,17 @@
 {
     "version": "0.2",
-    "language": "en",
+    "language": "en,en-GB",
     "words": [
-        "buildfile",
-        "buildplan",
-        "localfunctions"
+        "Krevor",
+        "PFLOTRAN"
     ],
     "flagWords": [],
     "ignorePaths": [
         "CHANGELOG.md"
+    ],
+    "ignoreWords": [
+        "buildfile",
+        "buildplan",
+        "localfunctions"
     ]
 }
