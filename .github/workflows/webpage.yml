@@ -3,8 +3,6 @@ name: Repository webpage
 on:
   release:
       types: [released]
-  pull_request:
-    branches: ["main"]
   workflow_dispatch:
 
 permissions:
@@ -16,18 +14,9 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/configure-pages@v5
-      - uses: actions/jekyll-build-pages@v1
-        with:
-          source: ./
-          destination: ./_site
-      - uses: actions/upload-pages-artifact@v3
+    uses: ./.github/workflows/webpage-build.yml
 
   deploy:
-    if: ${{ github.event_name != 'pull_request' }}
     permissions:
       pages: write
       id-token: write
