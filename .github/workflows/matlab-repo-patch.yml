@@ -1,6 +1,7 @@
+name: matlab-repo-patch
+
 on:
     workflow_dispatch:
-
 
 permissions:
     contents: write

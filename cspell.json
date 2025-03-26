@@ -1,0 +1,13 @@
+{
+    "version": "0.2",
+    "language": "en",
+    "words": [
+        "buildfile",
+        "buildplan",
+        "localfunctions"
+    ],
+    "flagWords": [],
+    "ignorePaths": [
+        "CHANGELOG.md"
+    ]
+}
