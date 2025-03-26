@@ -2,7 +2,7 @@
 
 Repository: [github.com/ImperialCollegeLondon/StrataTrapper](https://github.com/ImperialCollegeLondon/StrataTrapper)
 
-![build](https://github.com/ImperialCollegeLondon/StrataTrapper/actions/workflows/matlab-ci.yml/badge.svg)
+![build](https://github.com/ImperialCollegeLondon/StrataTrapper/actions/workflows/ci.yml/badge.svg?branch=main)
 ![GitHub Tag](https://img.shields.io/github/v/tag/ImperialCollegeLondon/StrataTrapper?sort=semver&style=flat&label=version)
 ![GitHub Release Date](https://img.shields.io/github/release-date/ImperialCollegeLondon/StrataTrapper?display_date=published_at&style=flat&label=dated)
 [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
