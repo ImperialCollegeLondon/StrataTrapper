@@ -21,7 +21,8 @@ sub_porosity = max(sub_porosity,0);
 %% calculate fine-scale permeability
 
 sub_permeability_log = log(sub_perm_x);
-sub_permeability_log = gen_corr_field(dr,subscale_dims,downscale_params.corr_lens,@(N)sub_permeability_log);
+sub_permeability_log = gen_corr_field(dr,subscale_dims,downscale_params.corr_lens, ...
+    @(N)sub_permeability_log);
 perm_x = perm_coarse(1);
 sub_permeability_log = normalize(sub_permeability_log,log(perm_x));
 sub_perm_x = exp(sub_permeability_log);

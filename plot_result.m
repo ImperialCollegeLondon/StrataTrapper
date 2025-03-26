@@ -14,19 +14,21 @@ else
     clf(fig);
 end
 
-[t_all,t_kr,t_krw,t_krg,ax_pc,ax_krw_x,ax_krw_y,ax_krw_z,ax_krg_x,ax_krg_y,ax_krg_z] = nested_tiles(fig);
+[t_all,t_kr,t_krw,t_krg,ax_pc,ax_krw_x,ax_krw_y,ax_krw_z,ax_krg_x,ax_krg_y,ax_krg_z] ...
+    = nested_tiles(fig);
 
 leverett_j_upscaled = strata_trapped.params.cap_pressure.inv_lj(...
     strata_trapped.capillary_pressure,...
     strata_trapped.porosity,...
     strata_trapped.permeability);
 
-[~, ax_pc] =  stat_plot(ax_pc,'Leverett J-function','',strata_trapped.saturation,...
+[~, ax_pc] =  stat_plot(ax_pc,strata_trapped.saturation,...
     @(sw)strata_trapped.params.cap_pressure.leverett_j.func(sw), leverett_j_upscaled,true);
 title(ax_pc,'Leverett J-function');
 ylabel(ax_pc,'[-]');
 ax_pc.YScale='log';
-curves_plot([ax_krw_x,ax_krw_y,ax_krw_z;ax_krg_x,ax_krg_y,ax_krg_z], strata_trapped, strata_trapped.params, args.kr_scale);
+curves_plot([ax_krw_x,ax_krw_y,ax_krw_z;ax_krg_x,ax_krg_y,ax_krg_z], ...
+    strata_trapped, strata_trapped.params, args.kr_scale);
 
 xlabel(t_all,'Wetting phase saturation',FontSize=args.font_size);
 title(t_kr,'Relative permeability',FontSize=args.font_size);
@@ -51,28 +53,32 @@ arguments
 end
 sub_data = @(data,direction) squeeze(data(:,direction,:));
 
-stat_plot(ax_kr(1,1),'','',strata_trapped.saturation,@(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,1));
+stat_plot(ax_kr(1,1),strata_trapped.saturation,...
+    @(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,1));
 ax_kr(1,1).YScale = scale;
-stat_plot(ax_kr(2,1),'','',strata_trapped.saturation,@(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,1));
+stat_plot(ax_kr(2,1),strata_trapped.saturation,...
+    @(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,1));
 ax_kr(2,1).YScale = scale;
 
-stat_plot(ax_kr(1,2),'','',strata_trapped.saturation,@(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,2));
+stat_plot(ax_kr(1,2),strata_trapped.saturation,...
+    @(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,2));
 ax_kr(1,2).YScale = scale;
-stat_plot(ax_kr(2,2),'','',strata_trapped.saturation,@(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,2));
+stat_plot(ax_kr(2,2),strata_trapped.saturation,...
+    @(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,2));
 ax_kr(2,2).YScale = scale;
 
-stat_plot(ax_kr(1,3),'','',strata_trapped.saturation,@(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,3));
+stat_plot(ax_kr(1,3),strata_trapped.saturation,...
+    @(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,3));
 ax_kr(1,3).YScale = scale;
-stat_plot(ax_kr(2,3),'','',strata_trapped.saturation,@(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,3));
+stat_plot(ax_kr(2,3),strata_trapped.saturation, ...
+    @(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,3));
 ax_kr(2,3).YScale = scale;
 end
 
 
-function [y_lim, ax] = stat_plot(ax, name, y_label, x_data, base_func, data,show_legend,color)
+function [y_lim, ax] = stat_plot(ax, x_data, base_func, data,show_legend,color)
 arguments
     ax
-    name char
-    y_label char
     x_data (1,:) double
     base_func
     data   (:,:) double
@@ -114,7 +120,8 @@ catch err
 end
 end
 
-function [t_all,t_kr,t_krw,t_krg,ax_pc,ax_krw_x,ax_krw_y,ax_krw_z,ax_krg_x,ax_krg_y,ax_krg_z] = nested_tiles(fig)
+function [t_all,t_kr,t_krw,t_krg,ax_pc,ax_krw_x,ax_krw_y,ax_krw_z,ax_krg_x,ax_krg_y,ax_krg_z] ...
+    = nested_tiles(fig)
 params = {'TileSpacing','tight','Padding','tight'};
 t_all = tiledlayout(fig,1,3,params{:});
 
