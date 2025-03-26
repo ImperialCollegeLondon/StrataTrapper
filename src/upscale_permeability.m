@@ -19,18 +19,17 @@ x=x0+2;
 y=y0+2;
 z=z0+2;
 
-L_sub = [Lx,Ly,Lz];
-V_sub = prod(L_sub);
+L_sub = [Lx, Ly, Lz];
 L = L_sub.*[x0,y0,z0];
-V = prod(L);
 Nr_ext = [x,y,z];
 
 cond = zeros(x*y*z,3);
 
 dirs=1:3;
+mult_common = 1 / prod([x0,y0,z0]);
 
 for dir=dirs
-    area_to_dist = V_sub/L_sub(dir)^2;
+    area_to_dist = 1./L_sub(dir).^2;
     perm_dir = zeros(x,y,z);
     perm_dir(2:end-1,2:end-1,2:end-1) = permeabilities(:,:,:,dir);
     cond(:,dir) = perm_dir(:) .* area_to_dist ./ Muw;
@@ -136,9 +135,7 @@ for dir = dirs(mask)
 
     Pin = X1(end);
 
-    dist_to_area = L(dir)^2 / V;
-
-    Kabs(dir) = Q * Muw * dist_to_area / (Pin-Pout);
+    Kabs(dir) = Q * Muw / (Pin-Pout) * L(dir).^2 * mult_common;
 
     if isnan(Kabs(dir))
         warning('unexpected NaN detected');
