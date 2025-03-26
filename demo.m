@@ -1,4 +1,4 @@
-function demo(args)
+function [strata_trapped, sub_rock] = demo(args)
 arguments
     args.parfor_arg = Inf;
     args.show_figures = true;
@@ -36,9 +36,9 @@ downscale_demo(params, downscale_params,visible);
 mask = true(ceil(grid.cells.num* 1e-3),1); % process only a fraction of cells
 
 sub_rock = downscale_all(grid,rock,mask,downscale_params);
-
+options = Options().save_mip_step(true);
 strata_trapped = strata_trapper(grid, sub_rock, params, ...
-    mask=mask, options=Options(), ...
+    mask=mask, options=options, ...
     enable_waitbar=args.show_progress,...
     parfor_arg=args.parfor_arg...
     );
