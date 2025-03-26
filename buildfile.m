@@ -10,7 +10,7 @@ if isMATLABReleaseOlderThan("R2023b")
     return;
 end
 
-plan("check") = matlab.buildtool.tasks.CodeIssuesTask;
+plan("check") = matlab.buildtool.tasks.CodeIssuesTask(WarningThreshold=0);
 plan("test") = matlab.buildtool.tasks.TestTask;
 plan.DefaultTasks = ["check","test"];
 
