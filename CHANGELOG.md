@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.1](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.11.0...v0.11.1) (2025-03-26)
+
+
+### Bug Fixes
+
+* 🐛 numerical stability of `upscale_permeability` ([8e255be](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/8e255bee6cda73fa4e7a4e4d04fd43b07ecdfb77))
+
 ## [0.11.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.10.0...v0.11.0) (2025-03-21)
 
 
