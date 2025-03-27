@@ -11,26 +11,37 @@ classdef ParWaitBar < handle
         last_reported_state
         last_reported_time
         elapsed
+        stop_handle
     end
 
     methods
-        function [self, update_queue] = ParWaitBar(max_iterations)
+        function [self, update_queue, par_for_stop] = ParWaitBar(max_iterations)
             self.final_state = max_iterations;
             update_queue = parallel.pool.DataQueue;
-            
+
             if self.final_state == 0
                 return;
             end
-            
+
             self.state = 0;
-            
+
             self.wb = waitbar(self.state, sprintf('%u cells to upscale', self.final_state), ...
                 'Name', 'StrataTrapper');
             self.start_time = tic();
 
             self.last_reported_state = self.state;
             self.last_reported_time = 0;
+           
+            self.stop_handle = ParForStop();
 
+            self.stop_button = uicontrol('Style', 'pushbutton', ...
+                'String', 'stop', ...
+                'Parent', self.wb, ... 
+                'Units','normalized',...
+                'Position', [0.4, 0.1 , 0.2, 0.2], ... 
+                'Callback', @(~, ~) send(self.stop_handle.signal, []));
+            
+            par_for_stop = self.stop_handle;
             afterEach(update_queue,@(~) self.update());
         end
 
@@ -61,7 +72,11 @@ classdef ParWaitBar < handle
             elapsed_str = duration(seconds(self.elapsed), 'Format', 'hh:mm:ss');
             message = sprintf('%u/%u cells upscaled\n passed: %s | ETA: %s', ...
                 self.state, self.final_state, elapsed_str, eta);
-           
+
+            if self.stop_handle.value
+                send(self.stop_handle.signal,[]);
+            end
+
             if ~isvalid(self.wb)
                 return;
             end
@@ -86,10 +101,10 @@ classdef ParWaitBar < handle
     end
 end
 
-    % stop_button = uicontrol('Style', 'pushbutton', 'String', 'Stop', ...
-    %     'Parent', wb, ... % Set the button's parent to the waitbar figure
-    %     'Position', [10, 10, 50, 20], ... % Restore the previous position
-    %     'Callback', @(~, ~) send(stop_signal, true)); % Send stop signal
+% stop_button = uicontrol('Style', 'pushbutton', 'String', 'Stop', ...
+%     'Parent', wb, ... % Set the button's parent to the waitbar figure
+%     'Position', [10, 10, 50, 20], ... % Restore the previous position
+%     'Callback', @(~, ~) send(stop_signal, true)); % Send stop signal
 
 % stop_signal = parallel.pool.DataQueue;
 % stop_flag = StopFlag(); % Use a handle class for the stop flag
