@@ -14,11 +14,14 @@ classdef ParWaitBar < handle
     end
 
     methods
-        function [self] = ParWaitBar(max_iterations)
+        function [self, update_queue] = ParWaitBar(max_iterations)
             self.final_state = max_iterations;
+            update_queue = parallel.pool.DataQueue;
+            
             if self.final_state == 0
                 return;
             end
+            
             self.state = 0;
             
             self.wb = waitbar(self.state, sprintf('%u cells to upscale', self.final_state), ...
@@ -27,6 +30,8 @@ classdef ParWaitBar < handle
 
             self.last_reported_state = self.state;
             self.last_reported_time = 0;
+
+            afterEach(update_queue,@(~) self.update());
         end
 
         function flag = enabled(self)
