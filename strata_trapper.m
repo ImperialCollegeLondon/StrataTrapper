@@ -17,7 +17,7 @@ cell_idxs = 1:cells_num;
 mask = args.mask(cell_idxs);
 subset_len = sum(mask);
 
-par_wb = ParWaitBar(sum(mask) * args.enable_waitbar);
+[par_wb, update_queue] = ParWaitBar(sum(mask) * args.enable_waitbar);
 
 perm_upscaled = zeros(subset_len, 3);
 poro_upscaled = zeros(subset_len,1);
@@ -35,6 +35,7 @@ options = args.options;
 num_sub = zeros(subset_len,1);
 elapsed = zeros(subset_len,1);
 
+% for cell_index = 1:subset_len
 parfor (cell_index = 1:subset_len, args.parfor_arg)
     sub_porosity = sub_rock(cell_index).poro;
     sub_permeability = sub_rock(cell_index).perm;
@@ -60,7 +61,7 @@ parfor (cell_index = 1:subset_len, args.parfor_arg)
 
     num_sub(cell_index) = numel(sub_porosity);
 
-    par_wb.update(); %#ok<PFBNS>
+    send(update_queue,[]);
 end
 
 krw(:,:,saturations<=params.sw_resid) = 0;
