@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.3](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.11.2...v0.11.3) (2025-03-27)
+
+
+### Bug Fixes
+
+* 🐛 `ParWaitBar`: support thread-based pools ([3d6b2cf](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/3d6b2cf7563aa22b137c9a127dbb1403f53e48e0))
+
 ## [0.11.2](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.11.1...v0.11.2) (2025-03-26)
 
 
