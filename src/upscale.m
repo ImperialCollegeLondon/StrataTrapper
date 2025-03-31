@@ -1,4 +1,4 @@
-function [perm_upscaled, pc_upscaled, krw, krg] = upscale(...
+function [perm_upscaled, pc_upscaled, krw, krg, mip] = upscale(...
     dr, saturations, params, options, porosities, permeabilities)
 
 if max(porosities,[],'all') <= 0
@@ -27,6 +27,8 @@ krw = zeros(3,length(sw_upscaled));
 entry_pressures = params.cap_pressure.func(1,porosities,permeabilities);
 pc_max = params.cap_pressure.func(params.sw_resid,porosities,permeabilities);
 pc_points = linspace(max(pc_max(isfinite(pc_max))),min(entry_pressures(:)),length(saturations));
+
+mip(1:length(saturations)) = struct('sw',nan,'sub_sw',[]);
 
 for index_saturation = 1:length(saturations)
 
@@ -65,6 +67,11 @@ for index_saturation = 1:length(saturations)
 
     [krg(:,index_saturation), krw(:,index_saturation)] = calc_relative_permeabilities( ...
         dr_sub, perm_upscaled_mD, Kg_sub_mD, Kw_sub_mD);
+
+    if options.m_save_mip_step
+        mip(index_saturation).sw = sw_mid;
+        mip(index_saturation).sub_sw = sub_sw;
+    end
 end
 
 % NOTE: we expect only small negative values as computational errors
@@ -128,6 +135,7 @@ sub_sw = invaded_mat_mid .* params.cap_pressure.inv(pc_mid,porosities,permeabili
 sub_sw(~isfinite(sub_sw)) = 1;
 sw_mid = sum(sub_sw.*pore_volumes,'all')/pore_volume;
 
+% FIXME: Pc should converge as well as Sw
 pc_mid_tot = sum((1-sub_sw).*pore_volumes.*pc_mid,"all")/(pore_volume*(1-sw_mid));
 
 if sw_mid >=1
