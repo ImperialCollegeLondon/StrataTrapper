@@ -115,7 +115,7 @@ try
     [yu,yl,ym] = ax.Children(:).YData;
     ydata = [yu,yl,ym];
     y_lim = [min(ydata),max(ydata)];
-catch err
+catch
     y_lim = [nan,nan];
 end
 end
