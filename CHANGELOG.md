@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.4](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.11.3...v0.11.4) (2025-04-11)
+
+
+### Bug Fixes
+
+* **plot:** 🚨 remove unused variable ([cfd4540](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/cfd454046bc63c60caec4e844f1e1bcf313d9b4a))
+
 ## [0.11.3](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.11.2...v0.11.3) (2025-03-27)
 
 
