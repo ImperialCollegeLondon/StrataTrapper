@@ -16,4 +16,5 @@ jobs:
           cache: true
           products: >
             Statistics_and_Machine_Learning_Toolbox
+            Parallel_Computing_Toolbox
       - uses: matlab-actions/run-build@v2
