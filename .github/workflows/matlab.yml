@@ -1,9 +1,9 @@
-name: MATLAB
 on:
   workflow_call:
   workflow_dispatch:
+
 jobs:
-  matlab:
+  buildtool:
     strategy:
       matrix:
         release: [R2023a, R2024b]

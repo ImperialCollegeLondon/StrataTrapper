@@ -4,9 +4,12 @@ on:
   release:
       types: [released]
   workflow_dispatch:
+  workflow_call:
 
 permissions:
   contents: read
+  pages: write
+  id-token: write
 
 concurrency:
   group: "pages"
@@ -16,10 +19,7 @@ jobs:
   build:
     uses: ./.github/workflows/webpage-build.yml
 
-  deploy:
-    permissions:
-      pages: write
-      id-token: write
+  deploy:   
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
