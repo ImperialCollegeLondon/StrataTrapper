@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.11.4...v0.12.0) (2025-04-25)
+
+
+### Features
+
+* **options:** ✨ save sub-saturations from MIP step ([a9c26ac](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/a9c26ac86c6338833ca8ee324d950cb5c515fe4a))
+
 ## [0.11.4](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.11.3...v0.11.4) (2025-04-11)
 
 
