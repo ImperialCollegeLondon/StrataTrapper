@@ -8,6 +8,7 @@
         "plot",
         "matlab",
         "export",
-        "matlab-repo-init"
+        "matlab-repo-init",
+        "options"
     ]
 }
