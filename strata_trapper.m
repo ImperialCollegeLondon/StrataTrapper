@@ -35,6 +35,12 @@ options = args.options;
 num_sub = zeros(subset_len,1);
 elapsed = zeros(subset_len,1);
 
+if options.m_save_mip_step
+    mip(1:subset_len,1:numel(saturations)) = struct('sw',nan,'sub_sw',[]);
+else
+    mip = struct([]);
+end
+
 % for cell_index = 1:subset_len
 parfor (cell_index = 1:subset_len, args.parfor_arg)
     sub_porosity = sub_rock(cell_index).poro;
@@ -42,8 +48,12 @@ parfor (cell_index = 1:subset_len, args.parfor_arg)
 
     timer_start = tic;
 
-    [perm_upscaled_cell, pc_upscaled, krw_cell, krg_cell] = upscale(...
+    [perm_upscaled_cell, pc_upscaled, krw_cell, krg_cell, mip_cell] = upscale(...
         DR(cell_index,:), saturations, params, options, sub_porosity, sub_permeability);
+
+    if options.m_save_mip_step
+        mip(cell_index,:) = mip_cell;
+    end
 
     for i = 1:3
         krg_cell(i,:) = monotonize(saturations, krg_cell(i,:), -1);
@@ -78,7 +88,8 @@ strata_trapped = struct(...
     'porosity',poro_upscaled, ...
     'params', params, ...
     'options', args.options, ...
-    'grid', grid ...
+    'grid', grid, ...
+    'mip', mip ...
     );
 
 perf.num_coarse = subset_len;
