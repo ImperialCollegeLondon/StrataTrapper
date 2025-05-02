@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.1](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.12.0...v0.12.1) (2025-05-02)
+
+
+### Bug Fixes
+
+* ♻️ move demo helpers into demo script ([5e79f39](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/5e79f39dcb0f34ef26e3ec97dd8af21617e20a6b))
+
 ## [0.12.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.11.4...v0.12.0) (2025-04-25)
 
 
