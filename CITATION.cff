@@ -1,0 +1,20 @@
+# https://github.com/citation-file-format/citation-file-format
+cff-version: 1.2.0
+title: "StrataTrapper upscaling toolkit"
+message: "If you use this software, please cite it using these metadata."
+authors:
+  - family-names: Elizarev
+    given-names: Maksim
+    alias: djmaxus
+    orcid: "https://orcid.org/0000-0002-5279-2877"
+    website: "https://djmaxus.dev"
+  - family-names: Jackson
+    given-names: "Samuel J"
+  - family-names: An
+    given-names: Senyou
+  - family-names: Wenck
+    given-names: Nele
+  - family-names: Muggeridge
+    given-names: Ann
+  - family-names: Krevor
+    given-names: Samuel
