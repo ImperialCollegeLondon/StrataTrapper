@@ -29,16 +29,16 @@ contact:
   - *djmaxus
   - *skrevor
 keywords:
-  - matlab
-  - co2
+  - MATLAB
+  - CO2
   - upscaling
-  - carbon-dioxide
+  - carbon dioxide
   - heterogeneity
-  - reservoir-simulation
-  - porous-media-flow
+  - reservoir simulation
+  - porous media flow
   - pflotran
-  - capillary-pressure
-  - co2-storage
+  - capillary pressure
+  - CO2 storage
 license: BSD-3-Clause
 repository-code: "https://github.com/ImperialCollegeLondon/StrataTrapper"
 type: software
