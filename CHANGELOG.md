@@ -1,5 +1,134 @@
 # Changelog
 
+## [0.10.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.13.0...v0.10.0) (2025-05-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* **plot:** :children_crossing: `plot_result`: make optional args name-value'd
+* :sparkles: anisotropic permeability downscaling
+* :sparkles: anisotropic permeability upscaling
+* :children_crossing: Separate downscaling from upscaling
+
+### Features
+
+* :children_crossing: `strata_trapper`: named optional arguments ([2df3683](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/2df368367f4c34bdf7ba7c1e7aba0027f7d5a1f9))
+* :children_crossing: `strata_trapper`: put inputs to output ([73e484c](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/73e484c64d7644296e057d9230c9fd14de80ef41))
+* :children_crossing: add arguments to `demo` ([f6abe18](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/f6abe18d966ff93224ddb30639f6df71b0ca63c4))
+* :children_crossing: compressed `strata_trapper` outputs ([08654cc](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/08654cc9a091177c0cdf0208516d89351c15c1b0))
+* :children_crossing: compute solver performance ([2600e8c](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/2600e8c55954e79a74a6842bda812d9d3a5d45b9))
+* :children_crossing: more flexible parallel options ([1faf350](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/1faf350cc1a23ab3df33ceb8adf83cce5e8ab1ca))
+* :children_crossing: New summary plot layout ([e73f0f0](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/e73f0f0a2deac073cacce7cd0da8b0d16bf56f15))
+* :children_crossing: workspace autosave on exit ([207bfd0](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/207bfd05260338812875124002c33f9ce6886eb4))
+* :sparkles: `CapPressure` class ([b0e51f1](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/b0e51f1acc1fa1b0dc773b27ab0bfe5686baca55))
+* :sparkles: `downscale` w.r.t. given coarse values ([dd2ab3f](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/dd2ab3fa23f64901f4686cb9b1ce42101554a6d7))
+* :sparkles: add centi multiplier ([22214f8](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/22214f8dccdec628d3be166f9a1353c0975d6f16))
+* :sparkles: add dyne as force unit ([4cd975c](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/4cd975cef83fdf665740440e31150e95fe3bf061))
+* :sparkles: Add utilities to analyse MATLAB structs and workspaces ([6bd0f1a](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/6bd0f1add2d0b405cd00ff6e80a11435382ea894))
+* :sparkles: anisotropic permeability downscaling ([604bfe3](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/604bfe394d33ed1e57926e46963ed5419b8aec2e))
+* :sparkles: anisotropic permeability upscaling ([91bc3e1](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/91bc3e14ec048561af156f9730132d1181a34796))
+* :sparkles: capillary pressure under anisotropic permeability ([0f420c9](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/0f420c9524df9c2762605def7c860fe2152065d7))
+* :sparkles: compute Leverett J-function with `CapPressure` class ([312d54d](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/312d54df83a079c8ec7352e38f0f7753962866f6))
+* :sparkles: figure handle for `plot_summary` ([5eaf6a7](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/5eaf6a79a518d81baf3f335aed594ae49953782b))
+* :sparkles: function for struct hashing ([e33b4b9](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/e33b4b938c92d63a9347e4c7c579829b51782afa))
+* :sparkles: Hydrostatic correction for MIP ([7dd9c37](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/7dd9c37e811bc843f63a06374cef35a054e21a8b)), closes [#57](https://github.com/ImperialCollegeLondon/StrataTrapper/issues/57)
+* :sparkles: Implement StrataTrapper parameters as class ([c6dc14c](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/c6dc14c57bb950fba52b3b6323f2f890ad93cdee))
+* :sparkles: make `options` a class with validated properties ([a02bf4a](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/a02bf4ae7a3e1959ddc206ac74c893fd4dfbb22c))
+* :sparkles: Prepare new version with demonstration ([6168bad](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/6168bad57faf5e5e824f64820b51ac37443248d8))
+* :sparkles: Relative permeability via new `TableFunction` class ([cfed173](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/cfed173222906bf0e37f9c0f8c24f814d57dbeed))
+* :sparkles: update structure and values of input data ([fb58904](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/fb58904412bbdaac1656da10e0699fe615c124f8))
+* :sparkles: updated model of saturation functions ([1b34d5c](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/1b34d5c257fd6c4b8a4033d2ff134ce128c6f238))
+* :sparkles: variable number of parallel workers ([ac7ce89](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/ac7ce89d6b51c46ef38aa96a8c6975c361c34ee9))
+* 📝 add minimal citation file ([c9cbbfd](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/c9cbbfdfa97cbc82ad58b6d079d686c9decba7a4))
+* **export:** :children_crossing: J-Leverett export function ([c024863](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/c0248639439c43bf494de0ae0829757bf8041af4))
+* **export:** :sparkles: separate function for permeability export ([047f573](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/047f5730b125f2de04d6ee0f07e4bae2d7735044))
+* **options:** ✨ save sub-saturations from MIP step ([a9c26ac](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/a9c26ac86c6338833ca8ee324d950cb5c515fe4a))
+* **plot:** :children_crossing: optionally plot summary at a given parent ([a36129c](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/a36129c6cf35df79bac3607c9514a3a8c30cb422))
+* **plot:** visibility option for `plot_result` figure ([0d11eca](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/0d11ecad24388e1f234000cb3cd20a955ec69621))
+
+
+### Bug Fixes
+
+* :adhesive_bandage: `demo.m`: existing parpool case ([0b0ff1a](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/0b0ff1ae4b1d997bdc571276a6d92fc0e98d206e))
+* :adhesive_bandage: `strata_trapper`: initialize output arrays with NaN ([0f13d2c](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/0f13d2c76a25153c9639baf5bc585a8acdc14c13))
+* :adhesive_bandage: `upscale` calculate downscale dimensions inside ([de68c8b](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/de68c8b9edd69ef3a4f6d86177552ae2482bd7d1))
+* :adhesive_bandage: `upscale`: interpolate upscaled curves inside ([45bd142](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/45bd1429e2b198ffdef92ca358cfbcb5c979c1e6))
+* :adhesive_bandage: default `output_prefix` for `ogs_export` ([aa4c1c0](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/aa4c1c0baeb29fb14a3e180c250fa2e79b4959ed))
+* :adhesive_bandage: gas rel. perm. at Sw=1 ([8e7c771](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/8e7c771407ebecea56de63d66b362e628e8c8777))
+* :adhesive_bandage: iterative MIP: relax saturation tolerance ([9f0bd39](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/9f0bd39a0102cff5952ec57b92c1d9acb77306aa))
+* :adhesive_bandage: target saturations sampling ([a89d21b](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/a89d21b47545e5775035d2599e5480905e46eaf0))
+* :adhesive_bandage: truncate computation mask ([7acc040](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/7acc040f9334c43aced56ef41cc1f21c8552bec1))
+* :adhesive_bandage: waitbar initialization ([ad0c2af](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/ad0c2af657d6f1670516967809ac7f3517f7479c))
+* :bug: `calc_percolation`: proper search window + performance ([bc053e4](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/bc053e49460d16be78626e2de32e655b095b217b))
+* :bug: `mask`-narrowed post-processing ([81b247b](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/81b247b244776ea4acf0b183711be93022a222bf))
+* :bug: `rsgen3D` internal meshing ([b98c3c5](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/b98c3c5f94c8ae2fa709f1b1505b43dc07f08664))
+* :bug: `upscale`: account for zero-porocity sub-volumes ([7389e95](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/7389e957f7b316a25208dfb8e61f954422640a39))
+* :bug: connectivity for permeability computation ([7e2d900](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/7e2d9002fed96eb89a5f6699bec80be75fc8badc))
+* :bug: create waitbar data queue unconditionally ([7d30513](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/7d305130cb1a08d8b337f6a4664a7d584ff27321))
+* :bug: fix interpolation of Pc and kr ([f012c2b](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/f012c2b5439aefeabb46032eb23d010de641f177))
+* :bug: fix negative gas rel. perms. as computational artifacts ([cc52d1e](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/cc52d1e9be7d97dc246bbd315806631a6f4cb203))
+* :bug: fix numerical errors in gas permeability ([801c6b1](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/801c6b169a33d57f02531e001f0d12702b2389fd))
+* :bug: Improve MIP stability ([db3ce78](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/db3ce786da12d400d7160f555c14ea4fa6be8205))
+* :bug: MIP with gravity: missing gas density case ([f8728d2](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/f8728d2c470ae082b1dd1eb276cccb4f44c38119))
+* :bug: misprint in function argument name ([dcd727d](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/dcd727db1e13ad07adfd6017bd379f0d8f687ad1))
+* :bug: more stable cap. pressure calculations ([b030098](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/b0300981f0f4c74140185538d34cc8610fc80e51))
+* :bug: permeability upscaling ([8815ca6](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/8815ca6c9d1e5adc5290ce547d1e3b1d3f9db553))
+* :bug: permeability upscaling ([fb4598d](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/fb4598d8e9925dac0fb0a5e8f988e259f3831ec2))
+* :bug: relative permeability upscaling ([b2b15f7](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/b2b15f7e5e55f23c2eb88382f2889b67ab8ecb7b))
+* :bug: upscale permeabilities in milli-darcy ([4d316f9](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/4d316f9d1e86618ed3e3e86fec3f2e75bc464463))
+* :bug: zero gas permeabilities ([d1b29bf](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/d1b29bf2f6885d1362b8d1feb39ea491e1c1cc3f))
+* :children_crossing: Compute entry pressures during upscaling ([b088eaf](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/b088eaf2ebfca50e2b9ec187ad6df56774823214))
+* :children_crossing: make `demo` suitable for test ([20a4038](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/20a4038964df843f536dd83562c0fc34ce459f38))
+* :children_crossing: more stable TableFunction behaviour ([7f9f837](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/7f9f837d6e87d388f9f47b37e5a77cd41510fc60))
+* :children_crossing: Separate downscaling from upscaling ([b551c73](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/b551c73d0ff2f6d4af0c1c1c50bc15eb17552234))
+* :children_crossing: state-based waibar update condition ([c884f8d](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/c884f8d1ae1bbaeef399259b48cdb0179590133f))
+* :fire: do not generate porosity file with `ogs_export` ([fa9c7b4](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/fa9c7b40e50e5544f7b53ddb0fcead649a5ced3a))
+* :fire: speculative `krg` post-processing ([dbaf9f9](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/dbaf9f94de0e38a02e78b192c67dd7bbeefccf40))
+* :sparkles: update demo script ([77ff7e4](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/77ff7e4fff65c355f4f7ecd1087ce3b49f3f5cb1))
+* :zap: `mip_iteration` Newton step relaxation ([07f0b16](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/07f0b16e420251f4424b575a3df4773ac1a6a96a))
+* :zap: inexact intermediate saturations ([d76594e](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/d76594eebbc4a6902d53a1d5a8ba87131b2dbe88))
+* :zap: move curves post-processing to `downscale_upscale` ([14fa27d](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/14fa27dfb5352bebb845ccec5a4917fed1358573))
+* ♻️ move demo helpers into demo script ([5e79f39](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/5e79f39dcb0f34ef26e3ec97dd8af21617e20a6b))
+* 🐛 `ParWaitBar`: support thread-based pools ([3d6b2cf](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/3d6b2cf7563aa22b137c9a127dbb1403f53e48e0))
+* 🐛 numerical stability of `upscale_permeability` ([8e255be](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/8e255bee6cda73fa4e7a4e4d04fd43b07ecdfb77))
+* code analyzer warnings ([4890f33](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/4890f3348be9c144e3ae145ca781e66157f5b569))
+* **export:** :bug: call to `ogs_export` in `demo` ([5d21ec4](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/5d21ec4527670ca91a25607015b4bccffe42d278))
+* **export:** :children_crossing: `ogs_export`: update input args to auto-create directories ([43e5efe](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/43e5efe8423d72fc5c33445e4e50926fedc05ee5))
+* **export:** export curves to 3 separate files (x,y,z) ([b98f79d](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/b98f79d6f4aed2d8555ba4f920b1b5e8aa880e15))
+* line change revert in demo.m ([dc333be](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/dc333be82b498ed51483f972931e4b794ab6e5d8))
+* **matlab:** :fire: delete `finish.m` ([d2b86d4](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/d2b86d4d8db728171c3e9114646ebfbce4a8e7e5))
+* **plot:** :children_crossing: `plot_result`: make optional args name-value'd ([4ef23d0](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/4ef23d068efc0a2a3c6c02819cb9375823242488))
+* **plot:** :children_crossing: remove legend transparency ([05f1b95](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/05f1b95b04cf926cccc81edfa440e0f63f264972))
+* **plot:** :children_crossing: set `YScale` directly ([23ea110](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/23ea110a4b468294ca6dd1562020e182d491d522))
+* **plot:** 🚨 remove unused variable ([cfd4540](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/cfd454046bc63c60caec4e844f1e1bcf313d9b4a))
+* revert mask change in demo.m ([dc6fcab](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/dc6fcab0524e502cf83dd962df4cd6bcbd8980ab))
+
+
+### Performance Improvements
+
+* :zap: Optimize and format connectivity functions ([0b5e86f](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/0b5e86f3ba72c1934b5edab36d16586c74525e5a))
+
+
+### Documentation
+
+* :memo: Add link to `StrataTrapper-models` ([24e55d6](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/24e55d64b9443e30b34b83358cdfbd2b38eff4bd))
+* :memo: Add link to CO2GraVISim ([51b7a7a](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/51b7a7a7fddf5a0d1a0cc4c9c50372ab5b3497d1))
+* :memo: CI status badge in README ([d2772df](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/d2772df2e78baf6ad5668cb9844783bece354a41))
+* :memo: more status badges in README ([ebe5ac7](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/ebe5ac7419a4e5d02bd481e742af7eb4e247d181))
+* :memo: update `demo` script ([e9a07b5](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/e9a07b54d7e18b82b7e31cb16b9127b4aa5b28a7))
+* :memo: Update `README.md` ([7219f1a](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/7219f1a4e4effcb64d8359039df54e8c0046d6b5))
+* :memo: Update README ([a18fc58](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/a18fc58432d9ef603c8d75a32ae8e39d8a59d92a))
+
+
+### Miscellaneous Chores
+
+* :page_facing_up: license Apache 2.0 -&gt; BSD 3-Clause ([b5f734d](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/b5f734d1166e327e32f570ea354682f0fb9552ff))
+
+
+### Continuous Integration
+
+* **matlab:** :construction_worker: enable tests in CI ([8e4f56a](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/8e4f56a0b8039098617930520ccfada10853a341))
+
 ## [0.13.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.12.1...v0.13.0) (2025-05-16)
 
 
