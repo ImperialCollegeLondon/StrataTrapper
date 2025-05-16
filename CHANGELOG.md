@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.12.1...v0.13.0) (2025-05-16)
+
+
+### Features
+
+* 📝 add minimal citation file ([c9cbbfd](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/c9cbbfdfa97cbc82ad58b6d079d686c9decba7a4))
+
 ## [0.12.1](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.12.0...v0.12.1) (2025-05-02)
 
 
