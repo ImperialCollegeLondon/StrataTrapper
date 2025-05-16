@@ -10,5 +10,10 @@
         "export",
         "matlab-repo-init",
         "options"
-    ]
+    ],
+    "yaml.schemas": {
+        "https://raw.githubusercontent.com/citation-file-format/citation-file-format/main/schema.json": [
+            "CITATION.cff"
+        ]
+    }
 }
