@@ -1,3 +1,5 @@
+name: Linkspector
+
 on:
   schedule:
     - cron: 0 0 * * 1   # midnight every Monday
@@ -6,6 +8,8 @@ on:
 
 jobs:
   check-links:
+    permissions:
+      contents: read
     name: Linkspector
     runs-on: ubuntu-latest
     steps:
@@ -15,3 +19,6 @@ jobs:
         with:
           github_token: ${{ secrets.github_token }}
           reporter: github-check
+          level: info
+          show_stats: true
+          fail_level: error
