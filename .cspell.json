@@ -15,7 +15,8 @@
     ],
     "flagWords": [],
     "ignorePaths": [
-        "CHANGELOG.md"
+        "CHANGELOG.md",
+        "*.m"
     ],
     "ignoreWords": [
         "buildfile",
