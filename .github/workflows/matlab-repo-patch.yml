@@ -13,4 +13,4 @@ jobs:
         - uses: actions/checkout@v4
           with:
             token: ${{ secrets.MATLAB_REPO_INIT_PATCH }}
-        - uses: djmaxus/matlab-repo-init/.github/actions/patch@v0.15.1
+        - uses: djmaxus/matlab-repo-init/.github/actions/patch@v0.17.1
