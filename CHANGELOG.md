@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.14.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.13.0...v0.14.0) (2025-05-19)
+
+
+### Features
+
+* **export:** 🚸 `function export_ogs(Params)` ([589c415](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/589c415b59c303a8310b30748c06b830cde516a1))
+* **export:** 🚸 `write_mappings`: add `offset` argument ([68ba084](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/68ba08448b4249b2971f0d03a4bdd46fb521a86d))
+
+
+### Bug Fixes
+
+* **export:** `write_curve_num` -&gt; `write_keyword` ([3ed1d8d](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/3ed1d8db8b6098ec280b1cd97716fd735c8c3901))
+* **export:** 🚸 `generate_sfn` syntax and behavior ([67e9f55](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/67e9f557cc4175a686ac946fab01ab1ed816660e))
+* **export:** 🚸 `ogs_export` functionality ([6eb3402](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/6eb3402b18cf2321c6e41c2c5a5dbecee39345d9))
+* **matlab:** 🚸 add root to path on `startup` ([6e32ee9](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/6e32ee93580a5cfc1269c41ffab869deeaf39c66))
+
 ## [0.13.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.12.1...v0.13.0) (2025-05-16)
 
 
