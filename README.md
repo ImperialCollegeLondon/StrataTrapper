@@ -46,12 +46,12 @@ and input fine-scale porosity and permeability for each coarse block.
   [`Params`](src/Params.m) and [`Options`](src/Options.m) classes.
 4. Create logical `mask` to filter out impermeable cells
 and/or define an arbitrary subset of cells to process.
-5. Run [`strata_trapper`](strata_trapper.m) function
+5. Run [`strata_trapper`](src/strata_trapper.m) function
 with arbitrary number of parallel workers
 optionally enabling a UI progress bar.
-6. Visualise outputs with [`plot_result`](plot_result.m) function
+6. Visualise outputs with [`plot_result`](src/plot_result.m) function
 7. Export the outputs to [PFLOTRAN-OGS](https://docs.opengosim.com/)-compatible
-text files using [`ogs_export`](ogs_export.m) function.
+text files using [`ogs_export`](src/ogs/ogs_export.m) function.
 
 Tips:
 
