@@ -120,17 +120,11 @@ for dir = dirs(mask)
     B(pos_eq_R) = Pout * cond_dir_Rx2;
     B(end) = Q;
 
-    condest_a = condest(A);
-
-    if condest_a==Inf
+    X1=A\B;
+        
+    if ~all(isfinite(X1))
         Kabs(dir) = 0;
         continue;
-    end
-
-    if 1/condest_a < eps
-        X1 = lsqminnorm(A,B);
-    else
-        X1=A\B;
     end
 
     Pin = X1(end);
