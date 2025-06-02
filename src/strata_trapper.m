@@ -7,9 +7,11 @@ arguments
     args.enable_waitbar  (1,1) logical = false;
     args.mask            (:,1) {mustBeOfClass(args.mask,"logical")} = true(grid.cells.num,1);
     args.parfor_arg = parforOptions(gcp('nocreate'),...
-                            "RangePartitionMethod","fixed",...
-                            "SubrangeSize",1,...
-                            'MaxNumWorkers',Inf);
+        "RangePartitionMethod","fixed",...
+        "SubrangeSize",1,...
+        'MaxNumWorkers',Inf);
+    % disable misleading linear solver warnings from `upscale_permeability`
+    args.disable_linsol_warnings (1,1) logical = true; 
 end
 
 cells_num = min(length(args.mask),grid.cells.num);
@@ -41,8 +43,12 @@ else
     mip = struct([]);
 end
 
+disable_linsol_warnings = args.disable_linsol_warnings;
+
 % for cell_index = 1:subset_len
 parfor (cell_index = 1:subset_len, args.parfor_arg)
+    original_warning_states = warnings_off(disable_linsol_warnings);
+
     sub_porosity = sub_rock(cell_index).poro;
     sub_permeability = sub_rock(cell_index).perm;
 
@@ -72,6 +78,8 @@ parfor (cell_index = 1:subset_len, args.parfor_arg)
     num_sub(cell_index) = numel(sub_porosity);
 
     send(update_queue,[]);
+
+    warnings_on(original_warning_states);
 end
 
 krw(:,:,saturations<=params.sw_resid) = 0;
@@ -113,4 +121,27 @@ perf.num_sat = args.options.sat_num_points;
 strata_trapped.perf = compute_performance(perf,1);
 
 par_wb.finish();
+
+end
+
+function original_warning_states = warnings_off(disable_linsol_warnings)
+
+original_warning_states(1) = warning("query",'MATLAB:nearlySingularMatrix');
+original_warning_states(2) = warning("query",'MATLAB:singularMatrix');
+
+if ~disable_linsol_warnings
+    return;
+end
+
+for warning_state=original_warning_states
+    if strcmp(warning_state.state,'on')
+        warning("off",warning_state.identifier);
+    end
+end
+end
+
+function warnings_on(original_warning_states)
+for warning_state=original_warning_states
+    warning(warning_state);
+end
 end
