@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.15.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.14.0...v0.15.0) (2025-06-02)
+
+
+### Features
+
+* 🚸 optionally disable misleading warnings ([e81151e](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/e81151ee4052ba3f2cabae0692b34c7c18f62478))
+
+
+### Bug Fixes
+
+* ⚡️ replace expensive `condest` ([6fcfb3f](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/6fcfb3fdd814bfe6dfda481f6bea66cfacd8fb12))
+
 ## [0.14.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.13.0...v0.14.0) (2025-05-19)
 
 
