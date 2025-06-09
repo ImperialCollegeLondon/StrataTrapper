@@ -11,42 +11,40 @@ if ~ismissing(rho_gas)
     hydrostatic_correction = include_gravity * std_gravity() * (rho_water - rho_gas) * (h - h_ref);
 end
 
-invasion = false(size(p_entry));
 invadable = (p_entry + hydrostatic_correction) < p_boundary;
-idx_invadable = find(invadable)';
-[I,J,K] = ind2sub(size(invadable),idx_invadable);
+is_boundary = false(size(p_entry));
+is_boundary(  1,  :,  :) = true;
+is_boundary(end,  :,  :) = true;
+is_boundary(  :,  1,  :) = true;
+is_boundary(  :,end,  :) = true;
+is_boundary(  :,  :,  1) = true;
+is_boundary(  :,  :,end) = true;
+invasion = invadable & is_boundary;
+
 is_invading = true;
 num_iter = 0;
 while is_invading
-    [invasion, is_invading] = calc_percolation_iter(invasion,[I;J;K]);
-    not_checked = find(invadable & ~invasion)';
-    [I,J,K] = ind2sub(size(invadable),not_checked);
     num_iter = num_iter+1;
-end
+    not_checked = find(invadable(:) & ~invasion(:))';
+    [I,J,K] = ind2sub(size(invadable),not_checked);
+    [invasion, is_invading] = calc_percolation_iter(invasion,I,J,K);
 end
 
-function [invasion,has_changed] = calc_percolation_iter(invasion,Idx)
+end
+
+function [invasion,has_changed] = calc_percolation_iter(invasion,I,J,K)
 [Nx,Ny,Nz] = size(invasion);
 has_changed = false;
-for idx = Idx
-    i = idx(1);
-    j = idx(2);
-    k = idx(3);
+for idx = 1:numel(I)
+    i = I(idx);
+    j = J(idx);
+    k = K(idx);
 
-    is_boundary = i==1 || i==Nx || j==1 || j==Ny || k==1 || k==Nz;
+    is_connected = find_invaded_nearby(invasion, i,j,k, Nx,Ny,Nz);
 
-    is_connected = is_boundary;
+    has_changed = has_changed | xor(invasion(i,j,k),is_connected);
 
-    if ~is_connected
-        is_connected = find_invaded_nearby(invasion, i,j,k, Nx,Ny,Nz);
-    end
-
-    if ~is_connected
-        continue;
-    end
-
-    invasion(i,j,k) = true;
-    has_changed = true;
+    invasion(i,j,k) = invasion(i,j,k) | is_connected;
 end
 end
 
