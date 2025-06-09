@@ -27,64 +27,43 @@ while is_invading
     num_iter = num_iter+1;
     not_checked = find(invadable(:) & ~invasion(:))';
     [I,J,K] = ind2sub(size(invadable),not_checked);
-    [invasion, is_invading] = calc_percolation_iter(invasion,I,J,K);
+    [invasion, is_invading] = calc_percolation_iter(invasion,I,J,K,not_checked);
 end
 
 end
 
-function [invasion,has_changed] = calc_percolation_iter(invasion,I,J,K)
+function [invasion,has_changed] = calc_percolation_iter(invasion,I,J,K,ind)
 [Nx,Ny,Nz] = size(invasion);
 has_changed = false;
-for idx = 1:numel(I)
-    i = I(idx);
-    j = J(idx);
-    k = K(idx);
-
-    is_connected = find_invaded_nearby(invasion, i,j,k, Nx,Ny,Nz);
-
-    has_changed = has_changed | xor(invasion(i,j,k),is_connected);
-
-    invasion(i,j,k) = invasion(i,j,k) | is_connected;
-end
+has_invaded_nearby = find_invaded_nearby(invasion, I,J,K, Nx,Ny,Nz);
+has_changed = has_changed || any(xor(has_invaded_nearby,invasion(ind)));
+invasion(ind) = invasion(ind) | has_invaded_nearby;
 end
 
-function is_next_to_invaded = find_invaded_nearby(invasion, i,j,k, Nx,Ny,Nz)
-is_next_to_invaded = false;
+function is_next_to_invaded = find_invaded_nearby(invasion, I,J,K, Nx,Ny,Nz)
 delta_around = [-1,1];
-
+is_next_to_invaded = false(1,numel(I));
 for di=delta_around
-    ii = i + di;
-    if ii < 1 || ii > Nx
-        continue;
-    end
+    II = I + di; % Bound checks not required
+    
+    ind_di = sub2ind([Nx,Ny,Nz],II,J,K);
 
-    is_next_to_invaded = invasion(ii,j,k);
-    if is_next_to_invaded
-        return;
-    end
+    is_next_to_invaded = is_next_to_invaded | invasion(ind_di);
 end
 
 for dj=delta_around
-    jj = j + dj;
-    if jj < 1 || jj > Ny
-        continue;
-    end
+    JJ = J + dj; % Bound checks not required
+    
+    ind_dj = sub2ind([Nx,Ny,Nz],I,JJ,K);
 
-    is_next_to_invaded = invasion(i,jj,k);
-    if is_next_to_invaded
-        return;
-    end
+    is_next_to_invaded = is_next_to_invaded | invasion(ind_dj);
 end
 
 for dk=delta_around
-    kk = k + dk;
-    if kk < 1 || kk > Nz
-        continue;
-    end
+    KK = K + dk; % Bound checks not required
+    
+    ind_dk = sub2ind([Nx,Ny,Nz],I,J,KK);
 
-    is_next_to_invaded = invasion(i,j,kk);
-    if is_next_to_invaded
-        return;
-    end
+    is_next_to_invaded = is_next_to_invaded | invasion(ind_dk);
 end
 end
