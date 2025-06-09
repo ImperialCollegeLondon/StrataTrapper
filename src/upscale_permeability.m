@@ -129,6 +129,11 @@ for dir = dirs(mask)
 
     Pin = X1(end);
 
+    if Pin <= Pout
+        Kabs(dir) = 0;
+        continue;
+    end
+
     Kabs(dir) = Q * Muw / (Pin-Pout) * L(dir).^2 * mult_common;
 
     if isnan(Kabs(dir))
