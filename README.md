@@ -50,8 +50,10 @@ and/or define an arbitrary subset of cells to process.
 with arbitrary number of parallel workers
 optionally enabling a UI progress bar.
 6. Visualise outputs with [`plot_result`](src/plot_result.m) function
-7. Export the outputs to [PFLOTRAN-OGS](https://docs.opengosim.com/)-compatible
-text files using [`ogs_export`](src/ogs/ogs_export.m) function.
+7. Export the outputs to [PFLOTRAN-OGS](https://docs.opengosim.com/)
+or [OPM Flow](https://opm-project.org/?page_id=19) format
+using [`ogs_export`](src/export/ogs_export.m)
+or [`opm_export`](src/export/opm_export.m) function, respectively.
 
 Tips:
 
