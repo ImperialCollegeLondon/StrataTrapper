@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.16.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.15.0...v0.16.0) (2025-11-19)
+
+
+### Features
+
+* **export:** ✨ export to OPM Flow simulator ([68f8263](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/68f8263768d3d8670df7c3b46c637c6d8c0f875e))
+
+
+### Bug Fixes
+
+* 🦺 ensure non-negative upscaled permeability ([9aa748c](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/9aa748c58a3b696cd27aea37fa32c50f84265951))
+* **export:** 🔥 do not export SATNUM ([11037fd](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/11037fdcb1dafb4c67107004a23f5340b542d559))
+* **export:** 🩹 `ogs_export` exports to `ogs/` by default ([9ef25a5](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/9ef25a5759e41f43ec4d597e77f1d565b053b6e0))
+
 ## [0.15.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.14.0...v0.15.0) (2025-06-02)
 
 
