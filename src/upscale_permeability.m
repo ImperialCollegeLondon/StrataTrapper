@@ -137,6 +137,8 @@ for dir = dirs(mask)
     end
 end
 
+Kabs = max(Kabs,0);
+
 end
 
 function result = harm_mean(a,b)

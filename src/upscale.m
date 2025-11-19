@@ -178,6 +178,8 @@ K_phase_upscaled([1,4]) = K_phase_upscaled([1,4]) ./ Kx_mD; % NOTE: avoid dividi
 K_phase_upscaled([2,5]) = K_phase_upscaled([2,5]) ./ Ky_mD;
 K_phase_upscaled([3,6]) = K_phase_upscaled([3,6]) ./ Kz_mD;
 
+K_phase_upscaled(~isfinite(K_phase_upscaled)) = 0;
+
 krg = K_phase_upscaled(1:3)';
 krw = K_phase_upscaled(4:6)';
 
