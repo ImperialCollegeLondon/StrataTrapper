@@ -54,6 +54,11 @@ plot_result(strata_trapped,visible=visible);
 ogs_export(strata_trapped);
 
 % export_fut = parfeval(backgroundPool,@ogs_export,0,strata_trapped); % or run in background
+
+%% OPM Flow inputs generation
+
+opm_export(strata_trapped);
+
 end
 
 %% helpers
