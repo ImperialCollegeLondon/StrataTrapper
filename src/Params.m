@@ -34,5 +34,15 @@ classdef Params
                 params.cap_pressure.leverett_j.func(sw));
             fclose(chc_file);
         end
+
+        function export_str = export_opm(params,sw)
+            sg = 1 - sw;
+            krg = params.krg.func(sg); %#ok<PROPLC>
+            krw = params.krw.func(sw); %#ok<PROPLC>
+            jfunc = params.cap_pressure.leverett_j.func(sw);
+            data = [sg;krg;krw;jfunc]; %#ok<PROPLC>
+            data = data(:,end:-1:1);
+            export_str = sprintf('%e\t%e\t%e\t%e\n',data);
+        end
     end
 end
