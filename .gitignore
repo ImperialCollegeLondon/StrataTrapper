@@ -1,4 +1,6 @@
-out/
+/out/
+/ogs/
+/opm/
 .buildtool/
 
 # Created by https://www.toptal.com/developers/gitignore/api/matlab,microsoftoffice,latex
