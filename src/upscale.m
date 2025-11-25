@@ -5,6 +5,21 @@ if max(porosities,[],'all') <= 0
     error('inactive cell');
 end
 
+mip(1:length(saturations)) = struct('sw',nan,'sub_sw',[]);
+
+if isscalar(porosities)
+    poro_upscaled = porosities(1);
+    perm_upscaled = reshape(permeabilities(:,:,1,:),1,3);
+    pc_upscaled = arrayfun(@(sw)params.cap_pressure.func(sw,poro_upscaled,perm_upscaled),...
+        saturations(:),"UniformOutput",true);
+    krw = params.krw.func(saturations);
+    krw = [krw;krw;krw];
+    krg = params.krg.func(1-saturations);
+    krg = [krg;krg;krg];
+    mip = [];
+    return;
+end
+
 downscale_dims = size(porosities);
 
 dr_sub = dr ./ downscale_dims;
@@ -27,8 +42,6 @@ krw = zeros(3,length(sw_upscaled));
 entry_pressures = params.cap_pressure.func(1,porosities,permeabilities);
 pc_max = params.cap_pressure.func(params.sw_resid,porosities,permeabilities);
 pc_points = linspace(max(pc_max(isfinite(pc_max))),min(entry_pressures(:)),length(saturations));
-
-mip(1:length(saturations)) = struct('sw',nan,'sub_sw',[]);
 
 for index_saturation = 1:length(saturations)
 
