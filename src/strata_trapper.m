@@ -11,7 +11,7 @@ arguments
         "SubrangeSize",1,...
         'MaxNumWorkers',Inf);
     % disable misleading linear solver warnings from `upscale_permeability`
-    args.disable_linsol_warnings (1,1) logical = true; 
+    args.disable_linsol_warnings (1,1) logical = true;
 end
 
 cells_num = min(length(args.mask),grid.cells.num);
@@ -63,6 +63,7 @@ parfor (cell_index = 1:subset_len, args.parfor_arg)
 
     for i = 1:3
         krg_cell(i,:) = monotonize(saturations, krg_cell(i,:), -1);
+        krw_cell(i,end:-1:1) = monotonize(saturations(end:-1:1), krw_cell(i,end:-1:1), -1);
     end
 
     krw(cell_index,:,:) = krw_cell; %#ok<PFOUS>
