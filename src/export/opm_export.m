@@ -28,7 +28,7 @@ fclose(runspec_fid);
 grid = strata_trapped.grid;
 
 % export porosity
-porosity = zeros(grid.cells.num,1);
+porosity = zeros(prod(grid.cartDims),1);
 if ~isempty(args.default_poro)
     porosity(:) = args.default_poro;
 end
@@ -49,6 +49,11 @@ fclose(jfunc_fid);
 
 % Write mappings
 write_mappings(output_prefix,strata_trapped.grid,strata_trapped.idx,1);
+
+% Set FIPNUM region for MIP-upscaled cells
+fip_mip = ones(prod(grid.cartDims),1);
+fip_mip(grid.cells.indexMap(strata_trapped.idx)) = 2;
+write_keyword([output_prefix,'FIPMIP.inc'],'FIPMIP',fip_mip,0,0);
 
 % Write umbrella GRID file
 grid_str = {
@@ -81,6 +86,9 @@ regions_str = {
     ""
     "INCLUDE"
     "KRNUMZ.inc /"
+    ""
+    "INCLUDE"
+    "FIPMIP.inc /"
     };
 regions_fid = fopen([output_prefix,'REGIONS.inc'],'wb','native','UTF-8');
 fprintf(regions_fid,'%s\n',regions_str{:});
@@ -88,8 +96,6 @@ fclose(regions_fid);
 
 % Write single SGWFN file: 1 + NX*NY*NZ*3 tables
 write_sgwfn(strata_trapped,output_prefix);
-
-% TODO add FIPNUM region for MIP-upscaled cells
 end
 
 function write_sgwfn(strata_trapped,prefix)

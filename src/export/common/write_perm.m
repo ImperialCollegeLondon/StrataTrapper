@@ -1,6 +1,6 @@
 function write_perm(prefix,G,perm,idx,default_perm)
 perm = perm / milli / darcy;
-perm_mapping = zeros(G.cells.num,3);
+perm_mapping = zeros(prod(G.cartDims),3);
 if ~isempty(default_perm)
     perm_mapping(:,:) = default_perm;
 end
