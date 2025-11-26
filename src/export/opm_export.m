@@ -1,11 +1,11 @@
-function [] = opm_export(strata_trapped, output_folder)
+function [] = opm_export(strata_trapped, args)
 arguments
     strata_trapped (1,1) struct
-    output_folder  char   = 'opm'
+    args.output_folder  char   = 'opm'
 end
 
-mkdir(output_folder);
-output_prefix = append(output_folder,'/');
+mkdir(args.output_folder);
+output_prefix = append(args.output_folder,'/');
 
 tab_dims = 1 + numel(strata_trapped.idx)*3;
 write_keyword([output_prefix,'TABDIMS.inc'],'TABDIMS',tab_dims,0,0);
