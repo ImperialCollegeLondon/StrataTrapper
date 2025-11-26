@@ -25,7 +25,7 @@ generate_sfn(strata_trapped,output_prefix,'.data',1);
 write_mappings(output_prefix,strata_trapped.grid,strata_trapped.idx,1);
 
 % export permeability
-write_perm(output_prefix,strata_trapped.grid,strata_trapped.permeability,strata_trapped.idx);
+write_perm(output_prefix,strata_trapped.grid,strata_trapped.permeability,strata_trapped.idx,[]);
 
 
 % create grid properties include file
