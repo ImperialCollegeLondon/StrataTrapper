@@ -1,24 +1,43 @@
-function [] = opm_export(strata_trapped, output_folder)
+function [] = opm_export(strata_trapped, args)
 arguments
     strata_trapped (1,1) struct
-    output_folder  char   = 'opm'
+    args.output_folder  char   = 'opm'
+    args.default_poro (:,1) double = []
+    args.default_perm (:,3) double = []
 end
 
-mkdir(output_folder);
-output_prefix = append(output_folder,'/');
+mkdir(args.output_folder);
+output_prefix = append(args.output_folder,'/');
 
 tab_dims = 1 + numel(strata_trapped.idx)*3;
 write_keyword([output_prefix,'TABDIMS.inc'],'TABDIMS',tab_dims,0,0);
 
+% Write umbrella RUNSPEC file
+runspec_str = {
+    "INCLUDE"
+    "TABDIMS.inc /"
+    ""
+    "ENDSCALE"
+    "/"
+    ""
+    };
+runspec_fid = fopen([output_prefix,'RUNSPEC.inc'],'wb','native','UTF-8');
+fprintf(runspec_fid,'%s\n',runspec_str{:});
+fclose(runspec_fid);
+
 grid = strata_trapped.grid;
 
 % export porosity
-porosity = zeros(grid.cells.num,1);
+porosity = zeros(prod(grid.cartDims),1);
+if ~isempty(args.default_poro)
+    porosity(:) = args.default_poro;
+end
 porosity(grid.cells.indexMap(strata_trapped.idx)) = strata_trapped.porosity;
 write_keyword([output_prefix,'PORO.inc'],'PORO',porosity,0,0);
 
 % export permeability
-write_perm(output_prefix,strata_trapped.grid,strata_trapped.permeability,strata_trapped.idx);
+write_perm(output_prefix,strata_trapped.grid,strata_trapped.permeability,strata_trapped.idx,...
+    args.default_perm);
 
 % Write JFUNC include file
 mult = strata_trapped.params.cap_pressure.mult / (dyne / centi / meter);
@@ -30,6 +49,11 @@ fclose(jfunc_fid);
 
 % Write mappings
 write_mappings(output_prefix,strata_trapped.grid,strata_trapped.idx,1);
+
+% Set FIPNUM region for MIP-upscaled cells
+fip_mip = zeros(prod(grid.cartDims),1);
+fip_mip(grid.cells.indexMap(strata_trapped.idx)) = 1;
+write_keyword([output_prefix,'FIPMIP.inc'],'FIPMIP',fip_mip,0,0);
 
 % Write umbrella GRID file
 grid_str = {
@@ -62,6 +86,9 @@ regions_str = {
     ""
     "INCLUDE"
     "KRNUMZ.inc /"
+    ""
+    "INCLUDE"
+    "FIPMIP.inc /"
     };
 regions_fid = fopen([output_prefix,'REGIONS.inc'],'wb','native','UTF-8');
 fprintf(regions_fid,'%s\n',regions_str{:});
@@ -69,68 +96,6 @@ fclose(regions_fid);
 
 % Write single SGWFN file: 1 + NX*NY*NZ*3 tables
 write_sgwfn(strata_trapped,output_prefix);
-
-%{
-RUNSPEC
-
-TABDIMS
-1 -- 1 + NX*NY*NZ*3
-/
-
-GRID
-
-INCLUDE
-poro_upsc.inc /
-
-INCLUDE
-permx_upsc.inc /
-
-INCLUDE
-permy_upsc.inc /
-
-INCLUDE
-permz_upsc.inc /
-
-JFUNC
-'WATER' 0.0 28.750878 * * XY /
-
-PROPS
-
-SGWFN
-0.0 0.0 1.0 0.0
-0.5 0.5 0.5 0.0
-1.0 1.0 0.0 0.0 / -- x1
-0.0 0.0 1.0 0.0
-0.5 0.5 0.5 0.0
-1.0 1.0 0.0 0.0 / -- x2
-0.0 0.0 1.0 0.0
-0.5 0.5 0.5 0.0
-1.0 1.0 0.0 0.0 / -- y1
-0.0 0.0 1.0 0.0
-0.5 0.5 0.5 0.0
-1.0 1.0 0.0 0.0 / -- y2
-0.0 0.0 1.0 0.0
-0.5 0.5 0.5 0.0
-1.0 1.0 0.0 0.0 / -- z1
-0.0 0.0 1.0 0.0
-0.5 0.5 0.5 0.0
-1.0 1.0 0.0 0.0 / -- z2
-
-REGIONS
-
-KRNUMX
-115200*1
-/
-
-KRNUMY
-115200*2
-/
-
-KRNUMZ
-115200*3
-/
-%}
-
 end
 
 function write_sgwfn(strata_trapped,prefix)
