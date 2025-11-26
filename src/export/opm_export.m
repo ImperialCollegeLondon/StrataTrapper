@@ -69,68 +69,6 @@ fclose(regions_fid);
 
 % Write single SGWFN file: 1 + NX*NY*NZ*3 tables
 write_sgwfn(strata_trapped,output_prefix);
-
-%{
-RUNSPEC
-
-TABDIMS
-1 -- 1 + NX*NY*NZ*3
-/
-
-GRID
-
-INCLUDE
-poro_upsc.inc /
-
-INCLUDE
-permx_upsc.inc /
-
-INCLUDE
-permy_upsc.inc /
-
-INCLUDE
-permz_upsc.inc /
-
-JFUNC
-'WATER' 0.0 28.750878 * * XY /
-
-PROPS
-
-SGWFN
-0.0 0.0 1.0 0.0
-0.5 0.5 0.5 0.0
-1.0 1.0 0.0 0.0 / -- x1
-0.0 0.0 1.0 0.0
-0.5 0.5 0.5 0.0
-1.0 1.0 0.0 0.0 / -- x2
-0.0 0.0 1.0 0.0
-0.5 0.5 0.5 0.0
-1.0 1.0 0.0 0.0 / -- y1
-0.0 0.0 1.0 0.0
-0.5 0.5 0.5 0.0
-1.0 1.0 0.0 0.0 / -- y2
-0.0 0.0 1.0 0.0
-0.5 0.5 0.5 0.0
-1.0 1.0 0.0 0.0 / -- z1
-0.0 0.0 1.0 0.0
-0.5 0.5 0.5 0.0
-1.0 1.0 0.0 0.0 / -- z2
-
-REGIONS
-
-KRNUMX
-115200*1
-/
-
-KRNUMY
-115200*2
-/
-
-KRNUMZ
-115200*3
-/
-%}
-
 end
 
 function write_sgwfn(strata_trapped,prefix)
