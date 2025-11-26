@@ -50,6 +50,11 @@ fclose(jfunc_fid);
 % Write mappings
 write_mappings(output_prefix,strata_trapped.grid,strata_trapped.idx,1);
 
+% Set FIPNUM region for MIP-upscaled cells
+fip_mip = zeros(prod(grid.cartDims),1);
+fip_mip(grid.cells.indexMap(strata_trapped.idx)) = 1;
+write_keyword([output_prefix,'FIPMIP.inc'],'FIPMIP',fip_mip,0,0);
+
 % Write umbrella GRID file
 grid_str = {
     "INCLUDE"
@@ -81,6 +86,9 @@ regions_str = {
     ""
     "INCLUDE"
     "KRNUMZ.inc /"
+    ""
+    "INCLUDE"
+    "FIPMIP.inc /"
     };
 regions_fid = fopen([output_prefix,'REGIONS.inc'],'wb','native','UTF-8');
 fprintf(regions_fid,'%s\n',regions_str{:});
