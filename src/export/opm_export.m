@@ -12,6 +12,19 @@ output_prefix = append(args.output_folder,'/');
 tab_dims = 1 + numel(strata_trapped.idx)*3;
 write_keyword([output_prefix,'TABDIMS.inc'],'TABDIMS',tab_dims,0,0);
 
+% Write umbrella RUNSPEC file
+runspec_str = {
+    "INCLUDE"
+    "TABDIMS.inc /"
+    ""
+    "ENDSCALE"
+    "/"
+    ""
+    };
+runspec_fid = fopen([output_prefix,'RUNSPEC.inc'],'wb','native','UTF-8');
+fprintf(runspec_fid,'%s\n',runspec_str{:});
+fclose(runspec_fid);
+
 grid = strata_trapped.grid;
 
 % export porosity
@@ -76,7 +89,6 @@ fclose(regions_fid);
 % Write single SGWFN file: 1 + NX*NY*NZ*3 tables
 write_sgwfn(strata_trapped,output_prefix);
 
-% FIXME: add ENDSCALE and umbrella RUNSPEC include file
 % TODO add FIPNUM region for MIP-upscaled cells
 end
 
