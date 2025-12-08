@@ -7,6 +7,14 @@ end
 
 mip(1:length(saturations)) = struct('sw',nan,'sub_sw',[]);
 
+% apply thresholds before proceeding
+small_poro = porosities < options.m_poro_threshold;
+porosities = porosities .* (~small_poro) + options.m_poro_threshold .* small_poro;
+
+perm_threshold = reshape(options.m_perm_threshold_mD,[1,1,1,3])*milli*darcy;
+small_Kabs = permeabilities < perm_threshold;
+permeabilities = permeabilities .* (~small_Kabs) + perm_threshold .* small_Kabs;
+
 if isscalar(porosities)
     poro_upscaled = porosities(1);
     perm_upscaled = reshape(permeabilities(:,:,1,:),1,3);
