@@ -27,6 +27,7 @@ dr_sub = dr ./ downscale_dims;
 permeabilities_mD = permeabilities./milli./darcy;
 
 perm_upscaled_mD = upscale_permeability(permeabilities_mD, dr_sub(1),dr_sub(2),dr_sub(3));
+perm_upscaled_mD(perm_upscaled_mD(:)<options.m_perm_threshold_mD) = 0;
 perm_upscaled = perm_upscaled_mD.*milli.*darcy;
 
 sw_upscaled = saturations;
