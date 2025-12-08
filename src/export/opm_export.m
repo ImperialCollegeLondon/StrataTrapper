@@ -4,6 +4,7 @@ arguments
     args.output_folder  char   = 'opm'
     args.default_poro (:,1) double = []
     args.default_perm (:,3) double = []
+    args.multxyz (:,3) double {mustBeNonnegative} = []
 end
 
 mkdir(args.output_folder);
@@ -96,6 +97,14 @@ fclose(regions_fid);
 
 % Write single SGWFN file: 1 + NX*NY*NZ*3 tables
 write_sgwfn(strata_trapped,output_prefix);
+
+% WRITE MULT[XYZ] if provided
+if ~isempty(args.multxyz)
+    write_keyword([output_prefix,'MULTX.inc'],'MULTX',args.multxyz(:,1),0,0);
+    write_keyword([output_prefix,'MULTY.inc'],'MULTY',args.multxyz(:,2),0,0);
+    write_keyword([output_prefix,'MULTZ.inc'],'MULTZ',args.multxyz(:,3),0,0);
+end
+
 end
 
 function write_sgwfn(strata_trapped,prefix)
