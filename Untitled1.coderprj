@@ -218,8 +218,341 @@
     <layer id="matlabCoder" version="R2025a">
       <parts>
         <part role="matlabCoder">
-          <MF0 packageUris="http://schema.mathworks.com/mf0/coderapp_core_proj_dm/R2025a http://schema.mathworks.com/mf0/coderapp_core_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_gpucoder_proj_dm/R2025a http://schema.mathworks.com/mf0/coderapp_gpucoder_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_matlabcoder_proj_dm/R2025a http://schema.mathworks.com/mf0/coderapp_matlabcoder_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_types_project_datamodel/R2025a http://schema.mathworks.com/mf0/coderapp_types_runtime_datamodel/R2022b" version="1.1">
-            <coderapp.internal.mlc.mfz.MatlabCoderProjectState id="1" type="coderapp.internal.mlc.mfz.MatlabCoderProjectState"/>
+          <MF0 packageUris="http://schema.mathworks.com/mf0/coderapp_config_datamodel/R2021a.001 http://schema.mathworks.com/mf0/coderapp_core_proj_dm/R2025a http://schema.mathworks.com/mf0/coderapp_core_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_form_datamodel/R2020a http://schema.mathworks.com/mf0/coderapp_gpucoder_proj_dm/R2025a http://schema.mathworks.com/mf0/coderapp_gpucoder_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_matlabcoder_proj_dm/R2025a http://schema.mathworks.com/mf0/coderapp_matlabcoder_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_types_project_datamodel/R2025a http://schema.mathworks.com/mf0/coderapp_types_runtime_datamodel/R2022b http://schema.mathworks.com/mf0/coderapp_utils_datamodel/R2020a" version="1.1">
+            <coderapp.internal.mlc.mfz.MatlabCoderProjectState id="1" type="coderapp.internal.mlc.mfz.MatlabCoderProjectState">
+              <WorkflowTarget>MEX</WorkflowTarget>
+              <Activity id="2" type="coderapp.internal.mlc.mfz.MainBuildActivity">
+                <Compile>NOT_PLANNED</Compile>
+                <Generate>FAIL</Generate>
+                <TargetHardware>MATLAB Host Computer</TargetHardware>
+                <TargetLanguage>C++</TargetLanguage>
+                <Result id="3" type="coderapp.internal.mlc.mfz.MatlabCoderCodegenResult"/>
+              </Activity>
+              <MainBuildResult id="3" type="coderapp.internal.mlc.mfz.MatlabCoderCodegenResult">
+                <LogDirectory>E:\melizare\NORCE\StrataTrapper\codegen\mex\upscale</LogDirectory>
+                <MainReport id="4" type="coderapp.internal.build.mfz.CodegenArtifact"/>
+                <Artifacts id="4" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <SubType>CODEGEN_REPORT</SubType>
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>E:\melizare\NORCE\StrataTrapper\codegen\mex\upscale\html\report.mldatx</Path>
+                  </File>
+                  <Type>CODEGEN_REPORT</Type>
+                </Artifacts>
+                <BuildFolder type="coderapp.internal.util.mfz.FileSpec"/>
+                <Messages type="coderapp.internal.util.mfz.Message">
+                  <FileRange type="coderapp.internal.util.mfz.FileRange">
+                    <File type="coderapp.internal.util.mfz.FileSpec">
+                      <Path>E:\melizare\NORCE\StrataTrapper\src\upscale.m</Path>
+                    </File>
+                    <Range type="coderapp.internal.util.mfz.Range">
+                      <End>898</End>
+                      <Start>780</Start>
+                    </Range>
+                  </FileRange>
+                  <Identifier>Coder:builtins:FunctionCallFailed</Identifier>
+                  <Text>Function call failed.</Text>
+                  <Type>ERROR</Type>
+                </Messages>
+                <Messages type="coderapp.internal.util.mfz.Message">
+                  <FileRange type="coderapp.internal.util.mfz.FileRange">
+                    <File type="coderapp.internal.util.mfz.FileSpec">
+                      <Path>E:\melizare\NORCE\StrataTrapper\src\upscale.m</Path>
+                    </File>
+                    <Range type="coderapp.internal.util.mfz.Range">
+                      <End>1044</End>
+                      <Start>1037</Start>
+                    </Range>
+                  </FileRange>
+                  <Identifier>Coder:builtins:IncompatibleEmptyAssignment</Identifier>
+                  <Text>Treating expression of size 0 x 0 as struct [1 x 0] to match later assignments.</Text>
+                  <Type>WARNING</Type>
+                </Messages>
+                <Messages type="coderapp.internal.util.mfz.Message">
+                  <FileRange type="coderapp.internal.util.mfz.FileRange">
+                    <File type="coderapp.internal.util.mfz.FileSpec">
+                      <Path>E:\melizare\NORCE\StrataTrapper\src\upscale.m</Path>
+                    </File>
+                    <Range type="coderapp.internal.util.mfz.Range">
+                      <End>1271</End>
+                      <Start>1202</Start>
+                    </Range>
+                  </FileRange>
+                  <Identifier>Coder:builtins:FunctionCallFailed</Identifier>
+                  <Text>Function call failed.</Text>
+                  <Type>ERROR</Type>
+                </Messages>
+                <Messages type="coderapp.internal.util.mfz.Message">
+                  <FileRange type="coderapp.internal.util.mfz.FileRange">
+                    <File type="coderapp.internal.util.mfz.FileSpec">
+                      <Path>E:\melizare\NORCE\StrataTrapper\src\upscale.m</Path>
+                    </File>
+                    <Range type="coderapp.internal.util.mfz.Range">
+                      <End>1619</End>
+                      <Start>1567</Start>
+                    </Range>
+                  </FileRange>
+                  <Identifier>Coder:builtins:FunctionCallFailed</Identifier>
+                  <Text>Function call failed.</Text>
+                  <Type>ERROR</Type>
+                </Messages>
+                <Messages type="coderapp.internal.util.mfz.Message">
+                  <FileRange type="coderapp.internal.util.mfz.FileRange">
+                    <File type="coderapp.internal.util.mfz.FileSpec">
+                      <Path>E:\melizare\NORCE\StrataTrapper\src\upscale.m</Path>
+                    </File>
+                    <Range type="coderapp.internal.util.mfz.Range">
+                      <End>1697</End>
+                      <Start>1631</Start>
+                    </Range>
+                  </FileRange>
+                  <Identifier>Coder:builtins:FunctionCallFailed</Identifier>
+                  <Text>Function call failed.</Text>
+                  <Type>ERROR</Type>
+                </Messages>
+                <Messages type="coderapp.internal.util.mfz.Message">
+                  <FileRange type="coderapp.internal.util.mfz.FileRange">
+                    <File type="coderapp.internal.util.mfz.FileSpec">
+                      <Path>E:\melizare\NORCE\StrataTrapper\src\upscale.m</Path>
+                    </File>
+                    <Range type="coderapp.internal.util.mfz.Range">
+                      <End>849</End>
+                      <Start>794</Start>
+                    </Range>
+                  </FileRange>
+                  <Identifier>Coder:builtins:FunctionCallFailed</Identifier>
+                  <Text>Function call failed.</Text>
+                  <Type>ERROR</Type>
+                </Messages>
+                <Messages type="coderapp.internal.util.mfz.Message">
+                  <FileRange type="coderapp.internal.util.mfz.FileRange">
+                    <File type="coderapp.internal.util.mfz.FileSpec">
+                      <Path>E:\bin\matlab\2025a\toolbox\eml\lib\matlab\datatypes\applyfuns\arrayfun.m</Path>
+                    </File>
+                    <Range type="coderapp.internal.util.mfz.Range">
+                      <End>2447</End>
+                      <Start>2409</Start>
+                    </Range>
+                  </FileRange>
+                  <Identifier>Coder:builtins:FunctionCallFailed</Identifier>
+                  <Text>Function call failed.</Text>
+                  <Type>ERROR</Type>
+                </Messages>
+                <Messages type="coderapp.internal.util.mfz.Message">
+                  <FileRange type="coderapp.internal.util.mfz.FileRange">
+                    <File type="coderapp.internal.util.mfz.FileSpec">
+                      <Path>E:\bin\matlab\2025a\toolbox\eml\lib\matlab\datatypes\applyfuns\arrayfun.m</Path>
+                    </File>
+                    <Range type="coderapp.internal.util.mfz.Range">
+                      <End>4597</End>
+                      <Start>4552</Start>
+                    </Range>
+                  </FileRange>
+                  <Identifier>Coder:builtins:FunctionCallFailed</Identifier>
+                  <Text>Function call failed.</Text>
+                  <Type>ERROR</Type>
+                </Messages>
+                <Messages type="coderapp.internal.util.mfz.Message">
+                  <FileRange type="coderapp.internal.util.mfz.FileRange">
+                    <File type="coderapp.internal.util.mfz.FileSpec">
+                      <Path>E:\bin\matlab\2025a\toolbox\eml\eml\+coder\+internal\outputScalarEg.m</Path>
+                    </File>
+                    <Range type="coderapp.internal.util.mfz.Range">
+                      <End>1063</End>
+                      <Start>1014</Start>
+                    </Range>
+                  </FileRange>
+                  <Identifier>Coder:builtins:FunctionCallFailed</Identifier>
+                  <Text>Function call failed.</Text>
+                  <Type>ERROR</Type>
+                </Messages>
+                <Messages type="coderapp.internal.util.mfz.Message">
+                  <FileRange type="coderapp.internal.util.mfz.FileRange">
+                    <File type="coderapp.internal.util.mfz.FileSpec">
+                      <Path>E:\melizare\NORCE\StrataTrapper\src\CapPressure.m</Path>
+                    </File>
+                    <Range type="coderapp.internal.util.mfz.Range">
+                      <End>1101</End>
+                      <Start>1073</Start>
+                    </Range>
+                  </FileRange>
+                  <Identifier>Coder:builtins:FunctionCallFailed</Identifier>
+                  <Text>Function call failed.</Text>
+                  <Type>ERROR</Type>
+                </Messages>
+                <Messages type="coderapp.internal.util.mfz.Message">
+                  <FileRange type="coderapp.internal.util.mfz.FileRange">
+                    <File type="coderapp.internal.util.mfz.FileSpec">
+                      <Path>E:\melizare\NORCE\StrataTrapper\src\CapPressure.m</Path>
+                    </File>
+                    <Range type="coderapp.internal.util.mfz.Range">
+                      <End>1169</End>
+                      <Start>1157</Start>
+                    </Range>
+                  </FileRange>
+                  <Identifier>Coder:builtins:VariableCreatedByIndexing</Identifier>
+                  <Text>Variable 'poresize_mult' has not been assigned. To assign the variable, use a complete assignment and not a subscript. Code generation does not support creating arrays via indexing.</Text>
+                  <Type>ERROR</Type>
+                </Messages>
+                <Messages type="coderapp.internal.util.mfz.Message">
+                  <FileRange type="coderapp.internal.util.mfz.FileRange">
+                    <File type="coderapp.internal.util.mfz.FileSpec">
+                      <Path>E:\melizare\NORCE\StrataTrapper\src\CapPressure.m</Path>
+                    </File>
+                    <Range type="coderapp.internal.util.mfz.Range">
+                      <End>1276</End>
+                      <Start>1275</Start>
+                    </Range>
+                  </FileRange>
+                  <Identifier>Coder:builtins:VariableCreatedByIndexing</Identifier>
+                  <Text>Variable 'pc' has not been assigned. To assign the variable, use a complete assignment and not a subscript. Code generation does not support creating arrays via indexing.</Text>
+                  <Type>ERROR</Type>
+                </Messages>
+                <Messages type="coderapp.internal.util.mfz.Message">
+                  <FileRange type="coderapp.internal.util.mfz.FileRange">
+                    <File type="coderapp.internal.util.mfz.FileSpec">
+                      <Path>E:\melizare\NORCE\StrataTrapper\src\CapPressure.m</Path>
+                    </File>
+                    <Range type="coderapp.internal.util.mfz.Range">
+                      <End>3296</End>
+                      <Start>3293</Start>
+                    </Range>
+                  </FileRange>
+                  <Identifier>Coder:builtins:SizeMismatch</Identifier>
+                  <Text>Arrays have incompatible sizes ([1 x 3] and [1 x 1]).
+The size to the left is the size of the left-hand side of the assignment.</Text>
+                  <Type>ERROR</Type>
+                </Messages>
+                <Messages type="coderapp.internal.util.mfz.Message">
+                  <FileRange type="coderapp.internal.util.mfz.FileRange">
+                    <File type="coderapp.internal.util.mfz.FileSpec">
+                      <Path>E:\melizare\NORCE\StrataTrapper\src\CapPressure.m</Path>
+                    </File>
+                    <Range type="coderapp.internal.util.mfz.Range">
+                      <End>1101</End>
+                      <Start>1073</Start>
+                    </Range>
+                  </FileRange>
+                  <Identifier>Coder:builtins:FunctionCallFailed</Identifier>
+                  <Text>Function call failed.</Text>
+                  <Type>ERROR</Type>
+                </Messages>
+                <Messages type="coderapp.internal.util.mfz.Message">
+                  <FileRange type="coderapp.internal.util.mfz.FileRange">
+                    <File type="coderapp.internal.util.mfz.FileSpec">
+                      <Path>E:\melizare\NORCE\StrataTrapper\src\CapPressure.m</Path>
+                    </File>
+                    <Range type="coderapp.internal.util.mfz.Range">
+                      <End>1169</End>
+                      <Start>1157</Start>
+                    </Range>
+                  </FileRange>
+                  <Identifier>Coder:builtins:VariableCreatedByIndexing</Identifier>
+                  <Text>Variable 'poresize_mult' has not been assigned. To assign the variable, use a complete assignment and not a subscript. Code generation does not support creating arrays via indexing.</Text>
+                  <Type>ERROR</Type>
+                </Messages>
+                <Messages type="coderapp.internal.util.mfz.Message">
+                  <FileRange type="coderapp.internal.util.mfz.FileRange">
+                    <File type="coderapp.internal.util.mfz.FileSpec">
+                      <Path>E:\melizare\NORCE\StrataTrapper\src\CapPressure.m</Path>
+                    </File>
+                    <Range type="coderapp.internal.util.mfz.Range">
+                      <End>1276</End>
+                      <Start>1275</Start>
+                    </Range>
+                  </FileRange>
+                  <Identifier>Coder:builtins:VariableCreatedByIndexing</Identifier>
+                  <Text>Variable 'pc' has not been assigned. To assign the variable, use a complete assignment and not a subscript. Code generation does not support creating arrays via indexing.</Text>
+                  <Type>ERROR</Type>
+                </Messages>
+                <Messages type="coderapp.internal.util.mfz.Message">
+                  <FileRange type="coderapp.internal.util.mfz.FileRange">
+                    <File type="coderapp.internal.util.mfz.FileSpec">
+                      <Path>E:\melizare\NORCE\StrataTrapper\src\CapPressure.m</Path>
+                    </File>
+                    <Range type="coderapp.internal.util.mfz.Range">
+                      <End>3086</End>
+                      <Start>3083</Start>
+                    </Range>
+                  </FileRange>
+                  <Identifier>Coder:builtins:SizeMismatch</Identifier>
+                  <Text>Arrays have incompatible sizes ([:? x :? x :? x 3] and [:? x :? x :?]).
+The size to the left is the size of the left-hand side of the assignment.</Text>
+                  <Type>ERROR</Type>
+                </Messages>
+                <Messages type="coderapp.internal.util.mfz.Message">
+                  <FileRange type="coderapp.internal.util.mfz.FileRange">
+                    <File type="coderapp.internal.util.mfz.FileSpec">
+                      <Path>E:\melizare\NORCE\StrataTrapper\src\CapPressure.m</Path>
+                    </File>
+                    <Range type="coderapp.internal.util.mfz.Range">
+                      <End>1101</End>
+                      <Start>1073</Start>
+                    </Range>
+                  </FileRange>
+                  <Identifier>Coder:builtins:FunctionCallFailed</Identifier>
+                  <Text>Function call failed.</Text>
+                  <Type>ERROR</Type>
+                </Messages>
+                <Messages type="coderapp.internal.util.mfz.Message">
+                  <FileRange type="coderapp.internal.util.mfz.FileRange">
+                    <File type="coderapp.internal.util.mfz.FileSpec">
+                      <Path>E:\melizare\NORCE\StrataTrapper\src\CapPressure.m</Path>
+                    </File>
+                    <Range type="coderapp.internal.util.mfz.Range">
+                      <End>1169</End>
+                      <Start>1157</Start>
+                    </Range>
+                  </FileRange>
+                  <Identifier>Coder:builtins:VariableCreatedByIndexing</Identifier>
+                  <Text>Variable 'poresize_mult' has not been assigned. To assign the variable, use a complete assignment and not a subscript. Code generation does not support creating arrays via indexing.</Text>
+                  <Type>ERROR</Type>
+                </Messages>
+                <Messages type="coderapp.internal.util.mfz.Message">
+                  <FileRange type="coderapp.internal.util.mfz.FileRange">
+                    <File type="coderapp.internal.util.mfz.FileSpec">
+                      <Path>E:\melizare\NORCE\StrataTrapper\src\CapPressure.m</Path>
+                    </File>
+                    <Range type="coderapp.internal.util.mfz.Range">
+                      <End>1276</End>
+                      <Start>1275</Start>
+                    </Range>
+                  </FileRange>
+                  <Identifier>Coder:builtins:VariableCreatedByIndexing</Identifier>
+                  <Text>Variable 'pc' has not been assigned. To assign the variable, use a complete assignment and not a subscript. Code generation does not support creating arrays via indexing.</Text>
+                  <Type>ERROR</Type>
+                </Messages>
+                <Messages type="coderapp.internal.util.mfz.Message">
+                  <FileRange type="coderapp.internal.util.mfz.FileRange">
+                    <File type="coderapp.internal.util.mfz.FileSpec">
+                      <Path>E:\melizare\NORCE\StrataTrapper\src\CapPressure.m</Path>
+                    </File>
+                    <Range type="coderapp.internal.util.mfz.Range">
+                      <End>3086</End>
+                      <Start>3083</Start>
+                    </Range>
+                  </FileRange>
+                  <Identifier>Coder:builtins:SizeMismatch</Identifier>
+                  <Text>Arrays have incompatible sizes ([:? x :? x :? x 3] and [:? x :? x :?]).
+The size to the left is the size of the left-hand side of the assignment.</Text>
+                  <Type>ERROR</Type>
+                </Messages>
+                <Messages type="coderapp.internal.util.mfz.Message">
+                  <FileRange type="coderapp.internal.util.mfz.FileRange">
+                    <File type="coderapp.internal.util.mfz.FileSpec">
+                      <Path>E:\melizare\NORCE\StrataTrapper\src\upscale_permeability.m</Path>
+                    </File>
+                    <Range type="coderapp.internal.util.mfz.Range">
+                      <End>1280</End>
+                      <Start>1274</Start>
+                    </Range>
+                  </FileRange>
+                  <Identifier>Coder:builtins:UndefinedFunctionOrVariableExtra</Identifier>
+                  <Text>Undefined function or variable 'A_ndiag'. The first assignment to a local variable determines its class.</Text>
+                  <Type>ERROR</Type>
+                </Messages>
+                <Timestamp>2025-12-10T10:45:57</Timestamp>
+              </MainBuildResult>
+            </coderapp.internal.mlc.mfz.MatlabCoderProjectState>
           </MF0>
         </part>
         <part role="standaloneConfig">
