@@ -40,3 +40,15 @@ gpu_env_config.BasicCodegen  = 1;
 gpu_env_config.BasicCodeexec = 1;   % optional but recommended
 
 check_gpu_install = coder.checkGpuInstall(gpu_env_config);
+
+%%
+cfg = coder.config("mex");
+cfg.TargetLang = "C++";
+cfg.GenerateReport = true;
+cfg.NumberOfCpuThreads = 72;
+cfg.SIMDAcceleration = "Full";
+cfg.CppNamespace = "strata_trapper";
+cfg.OptimizeReductions = true;
+cfg.EnableAutoParallelization = true;
+cfg.EnableOpenMP = true;
+cfg.Name
