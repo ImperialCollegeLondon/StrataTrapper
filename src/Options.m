@@ -4,7 +4,7 @@ classdef Options
         sat_tol (1,1) double {mustBeNonnegative} = 1e-4
         hydrostatic_correction (1,1) logical = false
         m_save_mip_step (1,1) {mustBeOfClass(m_save_mip_step,'logical')} = false;
-        m_perm_threshold_mD (1,1) double {mustBeNonnegative} = 0;
+        m_perm_threshold_mD (1,3) double {mustBeNonnegative} = [0,0,0];
     end
 
     methods % builders
