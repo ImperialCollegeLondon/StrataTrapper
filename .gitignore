@@ -445,3 +445,4 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/matlab,microsoftoffice,latex,windows,linux,macos
+cuda_gen/*
