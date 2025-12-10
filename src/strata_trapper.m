@@ -45,8 +45,8 @@ end
 
 disable_linsol_warnings = args.disable_linsol_warnings;
 
-% for cell_index = 1:subset_len
-parfor (cell_index = 1:subset_len, args.parfor_arg)
+for cell_index = 1:subset_len
+% parfor (cell_index = 1:subset_len, args.parfor_arg)
     original_warning_states = warnings_off(disable_linsol_warnings);
 
     sub_porosity = sub_rock(cell_index).poro;

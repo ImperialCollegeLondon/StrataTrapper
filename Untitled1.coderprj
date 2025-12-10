@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<coderProject client="MatlabCoder" containerVersion="1" createdBy="R2025a" modifiedBy="R2025a">
+  <layers>
+    <layer id="core" version="R2025a">
+      <parts>
+        <part role="testRepository">
+          <MF0 packageUris="http://schema.mathworks.com/mf0/coderapp_config_datamodel/R2021a.001 http://schema.mathworks.com/mf0/coderapp_core_proj_dm/R2025a http://schema.mathworks.com/mf0/coderapp_core_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_form_datamodel/R2020a http://schema.mathworks.com/mf0/coderapp_gpucoder_proj_dm/R2025a http://schema.mathworks.com/mf0/coderapp_gpucoder_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_matlabcoder_proj_dm/R2025a http://schema.mathworks.com/mf0/coderapp_matlabcoder_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_types_project_datamodel/R2025a http://schema.mathworks.com/mf0/coderapp_types_runtime_datamodel/R2022b http://schema.mathworks.com/mf0/coderapp_utils_datamodel/R2020a" version="1.1">
+            <coderapp.internal.core.mfz.TestRepositoryState id="1" type="coderapp.internal.core.mfz.TestRepositoryState"/>
+          </MF0>
+        </part>
+      </parts>
+    </layer>
+    <layer id="interface" version="R2025a">
+      <parts>
+        <part role="mainInterface">
+          <MF0 packageUris="http://schema.mathworks.com/mf0/coderapp_config_datamodel/R2021a.001 http://schema.mathworks.com/mf0/coderapp_core_proj_dm/R2025a http://schema.mathworks.com/mf0/coderapp_core_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_form_datamodel/R2020a http://schema.mathworks.com/mf0/coderapp_gpucoder_proj_dm/R2025a http://schema.mathworks.com/mf0/coderapp_gpucoder_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_matlabcoder_proj_dm/R2025a http://schema.mathworks.com/mf0/coderapp_matlabcoder_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_types_project_datamodel/R2025a http://schema.mathworks.com/mf0/coderapp_types_runtime_datamodel/R2022b http://schema.mathworks.com/mf0/coderapp_utils_datamodel/R2020a" version="1.1">
+            <coderapp.internal.interface.project.Interface id="1" type="coderapp.internal.interface.project.Interface">
+              <EntryPoints id="2" type="coderapp.internal.interface.project.EntryPointFunction">
+                <Signatures id="3" type="coderapp.internal.interface.project.FunctionSignature">
+                  <Inputs id="4" type="coderapp.internal.interface.project.Input">
+                    <Name>dr</Name>
+                    <Type id="5" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Inputs>
+                  <Inputs id="6" type="coderapp.internal.interface.project.Input">
+                    <Name>saturations</Name>
+                    <Type id="7" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Inputs>
+                  <Inputs id="8" type="coderapp.internal.interface.project.Input">
+                    <Name>params</Name>
+                    <Type id="9" type="coderapp.internal.codertype.ClassType"/>
+                  </Inputs>
+                  <Inputs id="10" type="coderapp.internal.interface.project.Input">
+                    <Name>options</Name>
+                    <Type id="11" type="coderapp.internal.codertype.ClassType"/>
+                  </Inputs>
+                  <Inputs id="12" type="coderapp.internal.interface.project.Input">
+                    <Name>porosities</Name>
+                    <Type id="13" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Inputs>
+                  <Inputs id="14" type="coderapp.internal.interface.project.Input">
+                    <Name>permeabilities</Name>
+                    <Type id="15" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Inputs>
+                  <NumOutputs>5</NumOutputs>
+                </Signatures>
+                <File type="coderapp.internal.util.mfz.FileSpec">
+                  <Path>src/upscale.m</Path>
+                </File>
+                <Name>upscale</Name>
+              </EntryPoints>
+              <SizeConstraints id="16" type="coderapp.internal.interface.project.SizeConstraints">
+                <Value type="coderapp.internal.interface.project.SizeConstraintsValue"/>
+              </SizeConstraints>
+              <Types id="17" type="coderapp.internal.codertype.TypeStore">
+                <Types id="5" type="coderapp.internal.codertype.PrimitiveType">
+                  <ClassName>double</ClassName>
+                  <Size type="coderapp.internal.codertype.Dimension"/>
+                  <Size type="coderapp.internal.codertype.Dimension">
+                    <Length>3</Length>
+                  </Size>
+                </Types>
+                <Types id="7" type="coderapp.internal.codertype.PrimitiveType">
+                  <ClassName>double</ClassName>
+                  <Size type="coderapp.internal.codertype.Dimension"/>
+                  <Size type="coderapp.internal.codertype.Dimension">
+                    <Sizedness>UNBOUNDED</Sizedness>
+                  </Size>
+                </Types>
+                <Types id="18" type="coderapp.internal.codertype.PrimitiveType">
+                  <ClassName>double</ClassName>
+                  <Size type="coderapp.internal.codertype.Dimension"/>
+                  <Size type="coderapp.internal.codertype.Dimension"/>
+                </Types>
+                <Types id="19" type="coderapp.internal.codertype.PrimitiveType">
+                  <ClassName>double</ClassName>
+                  <Size type="coderapp.internal.codertype.Dimension">
+                    <Length>41</Length>
+                  </Size>
+                  <Size type="coderapp.internal.codertype.Dimension">
+                    <Length>2</Length>
+                  </Size>
+                </Types>
+                <Types id="20" type="coderapp.internal.codertype.ClassType">
+                  <Properties id="21" type="coderapp.internal.codertype.Property">
+                    <Name>data</Name>
+                    <Type id="19" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Properties>
+                  <ClassName>TableFunction</ClassName>
+                  <Size type="coderapp.internal.codertype.Dimension"/>
+                  <Size type="coderapp.internal.codertype.Dimension"/>
+                </Types>
+                <Types id="22" type="coderapp.internal.codertype.ClassType">
+                  <Properties id="23" type="coderapp.internal.codertype.Property">
+                    <Name>contact_angle</Name>
+                    <Type id="18" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Properties>
+                  <Properties id="24" type="coderapp.internal.codertype.Property">
+                    <Name>surface_tension</Name>
+                    <Type id="18" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Properties>
+                  <Properties id="25" type="coderapp.internal.codertype.Property">
+                    <Name>leverett_j</Name>
+                    <Type id="20" type="coderapp.internal.codertype.ClassType"/>
+                  </Properties>
+                  <Properties id="26" type="coderapp.internal.codertype.Property">
+                    <Name>perm_weights</Name>
+                    <Type id="5" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Properties>
+                  <Properties id="27" type="coderapp.internal.codertype.Property">
+                    <Name>mult</Name>
+                    <Type id="18" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Properties>
+                  <ClassName>CapPressure</ClassName>
+                  <Size type="coderapp.internal.codertype.Dimension"/>
+                  <Size type="coderapp.internal.codertype.Dimension"/>
+                </Types>
+                <Types id="9" type="coderapp.internal.codertype.ClassType">
+                  <Properties id="28" type="coderapp.internal.codertype.Property">
+                    <Name>krw</Name>
+                    <Type id="20" type="coderapp.internal.codertype.ClassType"/>
+                  </Properties>
+                  <Properties id="29" type="coderapp.internal.codertype.Property">
+                    <Name>krg</Name>
+                    <Type id="20" type="coderapp.internal.codertype.ClassType"/>
+                  </Properties>
+                  <Properties id="30" type="coderapp.internal.codertype.Property">
+                    <Name>cap_pressure</Name>
+                    <Type id="22" type="coderapp.internal.codertype.ClassType"/>
+                  </Properties>
+                  <Properties id="31" type="coderapp.internal.codertype.Property">
+                    <Name>rho_gas</Name>
+                    <Type id="18" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Properties>
+                  <Properties id="32" type="coderapp.internal.codertype.Property">
+                    <Name>rho_water</Name>
+                    <Type id="18" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Properties>
+                  <Properties id="33" type="coderapp.internal.codertype.Property">
+                    <Name>sw_resid</Name>
+                    <Type id="18" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Properties>
+                  <ClassName>Params</ClassName>
+                  <Size type="coderapp.internal.codertype.Dimension"/>
+                  <Size type="coderapp.internal.codertype.Dimension"/>
+                </Types>
+                <Types id="34" type="coderapp.internal.codertype.PrimitiveType">
+                  <ClassName>uint32</ClassName>
+                  <Size type="coderapp.internal.codertype.Dimension"/>
+                  <Size type="coderapp.internal.codertype.Dimension"/>
+                </Types>
+                <Types id="35" type="coderapp.internal.codertype.PrimitiveType">
+                  <ClassName>logical</ClassName>
+                  <Size type="coderapp.internal.codertype.Dimension"/>
+                  <Size type="coderapp.internal.codertype.Dimension"/>
+                </Types>
+                <Types id="11" type="coderapp.internal.codertype.ClassType">
+                  <Properties id="36" type="coderapp.internal.codertype.Property">
+                    <Name>sat_num_points</Name>
+                    <Type id="34" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Properties>
+                  <Properties id="37" type="coderapp.internal.codertype.Property">
+                    <Name>sat_tol</Name>
+                    <Type id="18" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Properties>
+                  <Properties id="38" type="coderapp.internal.codertype.Property">
+                    <Name>hydrostatic_correction</Name>
+                    <Type id="35" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Properties>
+                  <Properties id="39" type="coderapp.internal.codertype.Property">
+                    <Name>m_save_mip_step</Name>
+                    <Type id="35" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Properties>
+                  <Properties id="40" type="coderapp.internal.codertype.Property">
+                    <Name>m_perm_threshold_mD</Name>
+                    <Type id="5" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Properties>
+                  <Properties id="41" type="coderapp.internal.codertype.Property">
+                    <Name>m_poro_threshold</Name>
+                    <Type id="18" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Properties>
+                  <ClassName>Options</ClassName>
+                  <Size type="coderapp.internal.codertype.Dimension"/>
+                  <Size type="coderapp.internal.codertype.Dimension"/>
+                </Types>
+                <Types id="13" type="coderapp.internal.codertype.PrimitiveType">
+                  <ClassName>double</ClassName>
+                  <Size type="coderapp.internal.codertype.Dimension">
+                    <Sizedness>UNBOUNDED</Sizedness>
+                  </Size>
+                  <Size type="coderapp.internal.codertype.Dimension">
+                    <Sizedness>UNBOUNDED</Sizedness>
+                  </Size>
+                  <Size type="coderapp.internal.codertype.Dimension">
+                    <Sizedness>UNBOUNDED</Sizedness>
+                  </Size>
+                </Types>
+                <Types id="15" type="coderapp.internal.codertype.PrimitiveType">
+                  <ClassName>double</ClassName>
+                  <Size type="coderapp.internal.codertype.Dimension">
+                    <Sizedness>UNBOUNDED</Sizedness>
+                  </Size>
+                  <Size type="coderapp.internal.codertype.Dimension">
+                    <Sizedness>UNBOUNDED</Sizedness>
+                  </Size>
+                  <Size type="coderapp.internal.codertype.Dimension">
+                    <Sizedness>UNBOUNDED</Sizedness>
+                  </Size>
+                  <Size type="coderapp.internal.codertype.Dimension">
+                    <Length>3</Length>
+                  </Size>
+                </Types>
+              </Types>
+            </coderapp.internal.interface.project.Interface>
+          </MF0>
+        </part>
+      </parts>
+    </layer>
+    <layer id="matlabCoder" version="R2025a">
+      <parts>
+        <part role="matlabCoder">
+          <MF0 packageUris="http://schema.mathworks.com/mf0/coderapp_core_proj_dm/R2025a http://schema.mathworks.com/mf0/coderapp_core_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_gpucoder_proj_dm/R2025a http://schema.mathworks.com/mf0/coderapp_gpucoder_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_matlabcoder_proj_dm/R2025a http://schema.mathworks.com/mf0/coderapp_matlabcoder_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_types_project_datamodel/R2025a http://schema.mathworks.com/mf0/coderapp_types_runtime_datamodel/R2022b" version="1.1">
+            <coderapp.internal.mlc.mfz.MatlabCoderProjectState id="1" type="coderapp.internal.mlc.mfz.MatlabCoderProjectState"/>
+          </MF0>
+        </part>
+        <part role="standaloneConfig">
+          <MF0 packageUris="http://schema.mathworks.com/mf0/coderapp_config_datamodel/R2021a.001 http://schema.mathworks.com/mf0/coderapp_core_proj_dm/R2025a http://schema.mathworks.com/mf0/coderapp_core_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_form_datamodel/R2020a http://schema.mathworks.com/mf0/coderapp_gpucoder_proj_dm/R2025a http://schema.mathworks.com/mf0/coderapp_gpucoder_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_matlabcoder_proj_dm/R2025a http://schema.mathworks.com/mf0/coderapp_matlabcoder_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_types_project_datamodel/R2025a http://schema.mathworks.com/mf0/coderapp_types_runtime_datamodel/R2022b http://schema.mathworks.com/mf0/coderapp_utils_datamodel/R2020a" version="1.1">
+            <coderapp.internal.ext.ConfigStore id="1" type="coderapp.internal.ext.ConfigStore">
+              <Values id="2" type="coderapp.internal.ext.ConfigEntry">
+                <Key>targetLang</Key>
+                <Data id="3" type="coderapp.internal.config.data.EnumParamData">
+                  <Value>C++</Value>
+                  <Help type="coderapp.internal.util.DocRef"/>
+                </Data>
+              </Values>
+            </coderapp.internal.ext.ConfigStore>
+          </MF0>
+        </part>
+        <part role="mexConfig">
+          <MF0 packageUris="http://schema.mathworks.com/mf0/coderapp_config_datamodel/R2021a.001 http://schema.mathworks.com/mf0/coderapp_core_proj_dm/R2025a http://schema.mathworks.com/mf0/coderapp_core_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_form_datamodel/R2020a http://schema.mathworks.com/mf0/coderapp_gpucoder_proj_dm/R2025a http://schema.mathworks.com/mf0/coderapp_gpucoder_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_matlabcoder_proj_dm/R2025a http://schema.mathworks.com/mf0/coderapp_matlabcoder_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_types_project_datamodel/R2025a http://schema.mathworks.com/mf0/coderapp_types_runtime_datamodel/R2022b http://schema.mathworks.com/mf0/coderapp_utils_datamodel/R2020a" version="1.1">
+            <coderapp.internal.ext.ConfigStore id="1" type="coderapp.internal.ext.ConfigStore">
+              <Values id="2" type="coderapp.internal.ext.ConfigEntry">
+                <Key>gpuEnabled</Key>
+                <Data id="3" type="coderapp.internal.config.data.BooleanParamData">
+                  <Value>true</Value>
+                  <Help type="coderapp.internal.util.DocRef"/>
+                </Data>
+              </Values>
+            </coderapp.internal.ext.ConfigStore>
+          </MF0>
+        </part>
+      </parts>
+    </layer>
+    <layer id="gpuCoder" version="R2025a">
+      <parts>
+        <part role="gpuCoder">
+          <MF0 packageUris="http://schema.mathworks.com/mf0/coderapp_config_datamodel/R2021a.001 http://schema.mathworks.com/mf0/coderapp_core_proj_dm/R2025a http://schema.mathworks.com/mf0/coderapp_core_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_form_datamodel/R2020a http://schema.mathworks.com/mf0/coderapp_gpucoder_proj_dm/R2025a http://schema.mathworks.com/mf0/coderapp_gpucoder_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_matlabcoder_proj_dm/R2025a http://schema.mathworks.com/mf0/coderapp_matlabcoder_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_types_project_datamodel/R2025a http://schema.mathworks.com/mf0/coderapp_types_runtime_datamodel/R2022b http://schema.mathworks.com/mf0/coderapp_utils_datamodel/R2020a" version="1.1">
+            <coderapp.internal.gpu.mfz.GpuCoderProjectState id="1" type="coderapp.internal.gpu.mfz.GpuCoderProjectState"/>
+          </MF0>
+        </part>
+      </parts>
+    </layer>
+  </layers>
+</coderProject>

@@ -4,6 +4,7 @@ function [invasion,num_iter] = calc_percolation(p_boundary,p_entry, ...
 h_ref = Lz*0.5;
 
 Nz = size(p_entry,3);
+h = zeros(1,1,1,Nz);
 h(1,1,1:Nz) = linspace(Lz/Nz/2,Lz - Lz/Nz/2,Nz);
 
 hydrostatic_correction = 0;
