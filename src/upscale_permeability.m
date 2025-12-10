@@ -58,7 +58,7 @@ map_to_cond = zeros(num_cells_ext,1);
 map_to_cond(1:num_cells_ext,1)=0;
 map_to_cond(idx_conductive) = 1:length(idx_conductive);
 
-A_ndiag{3,2} = [];
+A_ndiag = cell(3,2);
 
 for dir=dirs
     cond_dir = cond(:,dir);

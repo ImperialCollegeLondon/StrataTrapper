@@ -5,7 +5,7 @@ if max(porosities,[],'all') <= 0
     error('inactive cell');
 end
 
-mip = repmat(struct('sw',nan,'sub_sw',[]),1,numel(saturations));
+mip = repmat(construct_mip_cell_data(),1,numel(saturations));
 
 % apply thresholds before proceeding
 small_poro = porosities < options.m_poro_threshold;
@@ -61,6 +61,8 @@ for index_saturation = 1:length(saturations)
     calc_endpoint = index_saturation == 1 || index_saturation == length(saturations);
     max_iterations = calc_endpoint*1000 + ~calc_endpoint*100;
     err_prev = Inf;
+    pc_mid_tot = 0;
+    sub_sw = zeros(0,0,0); coder.varsize('sub_sw');
     for iteration_num=1:max_iterations
         [pc_mid_tot, sw_mid, pc_mid, sub_sw, converged, err] = mip_iteration(...
             sw_target, dr, entry_pressures, porosities, permeabilities, pc_mid, ...
@@ -215,4 +217,10 @@ krx(end+1) = value;
 kry(end+1) = value;
 krz(end+1) = value;
 kr = [krx;kry;krz];
+end
+
+function mip_cell_data = construct_mip_cell_data()
+sub_sw = zeros(0,0,0);
+coder.varsize('sub_sw');
+mip_cell_data = struct('sw',nan,'sub_sw',sub_sw);
 end
