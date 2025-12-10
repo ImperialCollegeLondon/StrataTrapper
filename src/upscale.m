@@ -1,5 +1,13 @@
 function [perm_upscaled, pc_upscaled, krw, krg, mip] = upscale(...
     dr, saturations, params, options, porosities, permeabilities)
+arguments
+    dr (1,3) double
+    saturations (1, :) double
+    params (1,1) Params
+    options (1,1) Options
+    porosities (:,:,:) double
+    permeabilities (:,:,:,3) double
+end
 
 if max(porosities,[],'all') <= 0
     error('inactive cell');
