@@ -45,8 +45,8 @@ end
 
 disable_linsol_warnings = args.disable_linsol_warnings;
 
-for cell_index = 1:subset_len
-% parfor (cell_index = 1:subset_len, args.parfor_arg)
+% for cell_index = 1:subset_len
+parfor (cell_index = 1:subset_len, args.parfor_arg)
     original_warning_states = warnings_off(disable_linsol_warnings);
 
     sub_porosity = sub_rock(cell_index).poro;
@@ -54,7 +54,7 @@ for cell_index = 1:subset_len
 
     timer_start = tic;
 
-    [perm_upscaled_cell, pc_upscaled, krw_cell, krg_cell, mip_cell] = upscale(...
+    [perm_upscaled_cell, pc_upscaled, krw_cell, krg_cell, mip_cell] = upscale_mex(...
         DR(cell_index,:), saturations, params, options, sub_porosity, sub_permeability);
 
     if options.m_save_mip_step

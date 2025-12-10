@@ -49,7 +49,10 @@ krw = zeros(3,length(sw_upscaled));
 
 entry_pressures = params.cap_pressure.func(1,porosities,permeabilities);
 pc_max = params.cap_pressure.func(params.sw_resid,porosities,permeabilities);
-pc_points = linspace(max(pc_max(isfinite(pc_max))),min(entry_pressures(:)),length(saturations));
+is_pc_max_finite = isfinite(pc_max(:));
+pc_max_finite = pc_max(:);
+pc_max_finite = pc_max_finite(is_pc_max_finite);
+pc_points = linspace(max(pc_max_finite),min(entry_pressures(:)),length(saturations));
 
 for index_saturation = 1:length(saturations)
 
