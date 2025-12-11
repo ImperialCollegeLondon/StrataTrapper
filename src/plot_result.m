@@ -9,7 +9,7 @@ arguments
 end
 
 if ~isempty(args.mask)
-    strata_trapped = apply_mask(strata_trapped,mask);
+    strata_trapped = apply_mask(strata_trapped,args.mask);
 end
 
 if isempty(args.parent)
