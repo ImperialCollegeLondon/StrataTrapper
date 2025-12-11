@@ -54,7 +54,7 @@ parfor (cell_index = 1:subset_len, args.parfor_arg)
 
     timer_start = tic;
 
-    [perm_upscaled_cell, pc_upscaled, krw_cell, krg_cell, mip_cell] = upscale_mex(...
+    [perm_upscaled_cell, pc_upscaled, krw_cell, krg_cell, mip_cell] = upscale(...
         DR(cell_index,:), saturations, params, options, sub_porosity, sub_permeability);
 
     if options.m_save_mip_step
