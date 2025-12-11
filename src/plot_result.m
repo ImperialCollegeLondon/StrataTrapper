@@ -5,6 +5,11 @@ arguments
     args.kr_scale = "log"
     args.parent = struct([]);
     args.visible char = 'on';
+    args.mask = [];
+end
+
+if ~isempty(args.mask)
+    strata_trapped = apply_mask(strata_trapped,mask);
 end
 
 if isempty(args.parent)
@@ -149,4 +154,17 @@ t_krg.Layout.Tile = 2;
 ax_krg_x = nexttile(t_krg,1);
 ax_krg_y = nexttile(t_krg,2);
 ax_krg_z = nexttile(t_krg,3);
+end
+
+function strata_trapped = apply_mask(strata_trapped, mask)
+arguments
+    strata_trapped
+    mask
+end
+strata_trapped.capillary_pressure = strata_trapped.capillary_pressure(mask,:);
+strata_trapped.idx = strata_trapped.idx(mask);
+strata_trapped.permeability = strata_trapped.permeability(mask,:);
+strata_trapped.porosity = strata_trapped.porosity(mask);
+strata_trapped.rel_perm_gas = strata_trapped.rel_perm_gas(mask,:,:);
+strata_trapped.rel_perm_wat = strata_trapped.rel_perm_wat(mask,:,:);
 end
