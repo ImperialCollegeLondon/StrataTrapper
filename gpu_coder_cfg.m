@@ -45,10 +45,15 @@ check_gpu_install = coder.checkGpuInstall(gpu_env_config);
 cfg = coder.config("mex");
 cfg.TargetLang = "C++";
 cfg.GenerateReport = true;
-cfg.NumberOfCpuThreads = 0;
-cfg.SIMDAcceleration = "Full";
 cfg.CppNamespace = "strata_trapper";
+
+cfg.InlineBetweenMathWorksFunctions = "Speed";
+cfg.InlineBetweenUserAndMathWorksFunctions = "Speed";
+cfg.InlineBetweenUserFunctions = "Speed";
+
+cfg.SIMDAcceleration = "Full";
+
+cfg.NumberOfCpuThreads = 32;
 cfg.OptimizeReductions = true;
-cfg.EnableAutoParallelization = false;
-cfg.EnableOpenMP = false;
-cfg.Name
+
+codegen -o upscale -config cfg -v upscale;
