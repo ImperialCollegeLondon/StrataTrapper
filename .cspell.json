@@ -21,6 +21,7 @@
     "ignoreWords": [
         "buildfile",
         "buildplan",
-        "localfunctions"
+        "localfunctions",
+        "codegen_mex"
     ]
 }
