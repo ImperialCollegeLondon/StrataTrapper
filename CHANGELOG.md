@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.17.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.16.0...v0.17.0) (2025-12-12)
+
+
+### Features
+
+* 📦️ MEX-accelerated `upscale` function ([2afdca7](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/2afdca7372a28b9cd5876c6c8b35e3e4b39e9da9))
+* **export:** `opm_export` out FIPMIP region of MIP upscaling mask ([12c8a17](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/12c8a171fcb16d96bf000e183a5d5d07f98cad76))
+* **export:** ✨ MULT[XYZ] for OPM (optional) ([73f5da7](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/73f5da7599fec1ef3a51d8f0e81f197120d11d2e))
+* **options:** ✨ porosity/permeability thresholds ([adf1dc6](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/adf1dc6ba53a134dc9ebb08fc84a013694fb889b))
+* support 1x1x1 upscaling edge case ([8259137](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/8259137aea7ab94627acb7c974ad5ab13e09d93c))
+
+
+### Bug Fixes
+
+* **export:** `opm_export`: export ENDSCALE ([4077382](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/407738230bb0a66f1e4cf5e364af58244f1c67e0))
+* **export:** `opm_export`: make `output_folder` named argument ([64aab5f](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/64aab5f144bfec954f5d5123170a50971868ec6e))
+* **export:** dimensionality of output PERM cubes ([768bdb1](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/768bdb1931f6a0ec3945c118748345cea7981f4a))
+* **export:** OPM: export with default PORO and PERM ([8996909](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/89969098678afd831dca65f1badb5c7fbf00c82d))
+* monotonize water rel. perms ([1e9d240](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/1e9d240be07ff7d4f2adb9ff6138104393fa1783))
+
 ## [0.16.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.15.0...v0.16.0) (2025-11-19)
 
 
