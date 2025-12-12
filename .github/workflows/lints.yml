@@ -1,8 +1,6 @@
 on:
     workflow_call:
 jobs:
-    links:
-        uses: ./.github/workflows/links.yml
     commit:
         name: Commit messages
         runs-on: ubuntu-latest
