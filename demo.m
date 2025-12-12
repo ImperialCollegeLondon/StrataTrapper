@@ -33,7 +33,7 @@ downscale_demo(params, downscale_params,visible);
 
 %% Run StrataTrapper
 
-mask = true(ceil(grid.cells.num* 1e-3),1); % process only a fraction of cells
+mask = true(10,1); % process only a fraction of cells
 
 sub_rock = downscale_all(grid,rock,mask,downscale_params);
 
@@ -101,7 +101,7 @@ ylabel(tiles,'y, m');
 end
 
 function [grid, rock] = grid_demo(downscale_params)
-grid.cartDims = [80, 120, 35];
+grid.cartDims = [5, 3, 2];
 grid.cells.num = prod(grid.cartDims);
 grid.cells.indexMap = 1:grid.cells.num;
 
