@@ -3,10 +3,12 @@ function plan = buildfile()
 plan = buildplan(localfunctions);
 plan.DefaultTasks = ["check", "test"];
 
+test_options = {"IncludeSubfolders",true};
+
 if isMATLABReleaseOlderThan("R2023b")
     plan("test") = matlab.buildtool.Task( ...
     Description="Run tests", ...
-    Actions=@(~) assert(runtests().Failed == 0));
+    Actions=@(~) assert(runtests(test_options{:}).Failed == 0));
 
     plan("check") = matlab.buildtool.Task(...
     Description="Identify code issues", ...
@@ -16,7 +18,7 @@ if isMATLABReleaseOlderThan("R2023b")
 end
 
 plan("check") = matlab.buildtool.tasks.CodeIssuesTask(WarningThreshold=0);
-plan("test") = matlab.buildtool.tasks.TestTask;
+plan("test") = matlab.buildtool.tasks.TestTask(test_options{:});
 
 end
 
