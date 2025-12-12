@@ -26,7 +26,7 @@ classdef CapPressure
                 obj (1,1) CapPressure
                 sw  (1,1) double
                 poro double {mustBeNonnegative}
-                perm double {mustBeNonnegative}
+                perm (:,:,:,:) double {mustBeNonnegative}
             end
 
             perm = obj.transform_perm(poro,perm);
@@ -43,7 +43,7 @@ classdef CapPressure
                 obj (1,1) CapPressure
                 pc  (1,1) double
                 poro double {mustBeNonnegative}
-                perm double {mustBeNonnegative}
+                perm (:,:,:,:) double {mustBeNonnegative}
             end
 
             lj = obj.inv_lj(pc,poro,perm);
@@ -58,7 +58,7 @@ classdef CapPressure
                 obj (1,1) CapPressure
                 pc  double
                 poro double {mustBeNonnegative}
-                perm double {mustBeNonnegative}
+                perm (:,:,:,:) double {mustBeNonnegative}
             end
 
             perm = obj.transform_perm(poro,perm);
@@ -74,7 +74,7 @@ classdef CapPressure
                 obj (1,1) CapPressure
                 sw  (1,1) double
                 poro double {mustBeNonnegative}
-                perm double {mustBePositive}
+                perm (:,:,:,:) double {mustBePositive}
             end
 
             perm = obj.transform_perm(poro,perm);
@@ -85,17 +85,24 @@ classdef CapPressure
             dpc_dsw = obj.mult * obj.leverett_j.deriv(sw) * sqrt(poresize_mult);
         end
 
-        function perm = transform_perm(obj,poro,perm)
+        function perm_transformed = transform_perm(obj,poro,perm)
+        arguments
+            obj (1,1) CapPressure
+            poro double
+            perm (:,:,:,:) double 
+        end
             dims_poro = size(poro);
             dims_perm = size(perm);
             if (length(dims_poro) == 3) && (length(dims_perm) == 4) && (dims_perm(4) == 3)
-                perm = sum(perm .* reshape(obj.perm_weights, 1, 1, 1, 3), 4);
+                perm_transformed = sum(perm .* reshape(obj.perm_weights, 1, 1, 1, 3), 4);
                 return;
             end
 
             if (length(dims_poro) == 2) && (length(dims_perm) == 2) && (dims_perm(2) == 3)
-                perm = sum(perm .* reshape(obj.perm_weights, 1, 3), 2);
+                perm_transformed = sum(perm .* reshape(obj.perm_weights, 1, 3), 2);
+                return;
             end
+            perm_transformed = perm;
         end
     end
 end
