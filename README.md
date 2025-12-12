@@ -11,6 +11,7 @@ Repository: [github.com/ImperialCollegeLondon/StrataTrapper](https://github.com/
 * [The StrataTrapper codes](#the-stratatrapper-codes)
 * [Structure](#structure)
 * [Running](#running)
+* [MEX acceleration](#mex-acceleration)
 * [Versions](#versions)
 * [Contributing](#contributing)
 * [References](#references)
@@ -62,6 +63,27 @@ if they are in a startup folder.
 * The heaviest part of the algorithm is essentially parallel with no synchronisation.
 So, using several parallel workers usually results
 in a proportional performance boost.
+
+## MEX acceleration
+
+We provide the `CodeGenMex` class to automatically build
+a MEX-accelerated version of the `upscale` function.
+
+```matlab
+% 1. compile MEX functions
+codegen_mex = CodeGenMex().config().build();
+
+% 2. use strata_trapper normally
+...
+
+% 3. recompile MEX functions when the source code changes
+codegen_mex.build();
+
+% 4. delete MEX functions to use the original
+codegen_mex.clear();
+```
+
+Requires [MATLAB Coder](https://uk.mathworks.com/products/matlab-coder.html).
 
 ## Versions
 
