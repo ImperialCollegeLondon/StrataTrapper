@@ -4,6 +4,7 @@ function [invasion,num_iter] = calc_percolation(p_boundary,p_entry, ...
 h_ref = Lz*0.5;
 
 Nz = size(p_entry,3);
+h = zeros(1,1,Nz);
 h(1,1,1:Nz) = linspace(Lz/Nz/2,Lz - Lz/Nz/2,Nz);
 
 hydrostatic_correction = 0;
@@ -28,10 +29,10 @@ end
 function [invasion,has_changed] = calc_percolation_iter(invasion,Idx)
 [Nx,Ny,Nz] = size(invasion);
 has_changed = false;
-for idx = Idx
-    i = idx(1);
-    j = idx(2);
-    k = idx(3);
+for num_col = 1:size(Idx,2)
+    i = Idx(1,num_col);
+    j = Idx(2,num_col);
+    k = Idx(3,num_col);
 
     is_boundary = i==1 || i==Nx || j==1 || j==Ny || k==1 || k==Nz;
 

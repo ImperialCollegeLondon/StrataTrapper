@@ -39,6 +39,7 @@ cond_sum = sum(abs(cond),2);
 
 idx_conductive = find(cond_sum>0);
 
+idx_adj = zeros(numel(idx_conductive),3,2);
 idx_adj(:,1,1) = idx_conductive - 1;
 idx_adj(:,1,2) = idx_conductive + 1;
 idx_adj(:,2,1) = idx_conductive - x;
@@ -53,11 +54,11 @@ A_diag(:,1) = 1:num_eqs;
 A_diag(:,2) = 1:num_eqs;
 
 num_cells_ext = x*y*z;
-
+map_to_cond = zeros(num_cells_ext,1);
 map_to_cond(1:num_cells_ext,1)=0;
 map_to_cond(idx_conductive) = 1:length(idx_conductive);
 
-A_ndiag{3,2} = [];
+A_ndiag = cell(3,2);
 
 for dir=dirs
     cond_dir = cond(:,dir);
@@ -75,7 +76,7 @@ for dir=dirs
 end
 
 A_ndiag = cell2mat(reshape(A_ndiag,[],1));
-
+lin_to_sub = zeros(num_cells_ext,3);
 [lin_to_sub(:,1),lin_to_sub(:,2),lin_to_sub(:,3)] = ind2sub([x,y,z],1:num_cells_ext);
 is_inner = false(num_cells_ext,3);
 

@@ -1,11 +1,19 @@
 function [perm_upscaled, pc_upscaled, krw, krg, mip] = upscale(...
     dr, saturations, params, options, porosities, permeabilities)
+arguments
+    dr (1,3) double
+    saturations (1, :) double
+    params (1,1) Params
+    options (1,1) Options
+    porosities (:,:,:) double
+    permeabilities (:,:,:,3) double
+end
 
 if max(porosities,[],'all') <= 0
     error('inactive cell');
 end
 
-mip(1:length(saturations)) = struct('sw',nan,'sub_sw',[]);
+mip = repmat(construct_mip_cell_data(),1,numel(saturations));
 
 % apply thresholds before proceeding
 small_poro = porosities < options.m_poro_threshold;
@@ -49,7 +57,10 @@ krw = zeros(3,length(sw_upscaled));
 
 entry_pressures = params.cap_pressure.func(1,porosities,permeabilities);
 pc_max = params.cap_pressure.func(params.sw_resid,porosities,permeabilities);
-pc_points = linspace(max(pc_max(isfinite(pc_max))),min(entry_pressures(:)),length(saturations));
+is_pc_max_finite = isfinite(pc_max(:));
+pc_max_finite = pc_max(:);
+pc_max_finite = pc_max_finite(is_pc_max_finite);
+pc_points = linspace(max(pc_max_finite),min(entry_pressures(:)),length(saturations));
 
 for index_saturation = 1:length(saturations)
 
@@ -61,6 +72,8 @@ for index_saturation = 1:length(saturations)
     calc_endpoint = index_saturation == 1 || index_saturation == length(saturations);
     max_iterations = calc_endpoint*1000 + ~calc_endpoint*100;
     err_prev = Inf;
+    pc_mid_tot = 0;
+    sub_sw = zeros(0,0,0); coder.varsize('sub_sw');
     for iteration_num=1:max_iterations
         [pc_mid_tot, sw_mid, pc_mid, sub_sw, converged, err] = mip_iteration(...
             sw_target, dr, entry_pressures, porosities, permeabilities, pc_mid, ...
@@ -109,12 +122,12 @@ pc_upscaled_extra = exp(interp1( ...
 pc_upscaled = [pc_upscaled,pc_upscaled_extra];
 
 sw_upscaled(end+1) = sw_extra(1);
-krw(:,end+1) = 0;
-krg(:,end+1) = max(params.krg.data(:,2));
+krw = extend_cols_with(krw,0);
+krg = extend_cols_with(krg,max(params.krg.data(:,2)));
 
 sw_upscaled(end+1) = sw_extra(2);
-krw(:,end+1) = max(params.krw.data(:,2));
-krg(:,end+1) = 0;
+krw = extend_cols_with(krw,max(params.krw.data(:,2)));
+krg = extend_cols_with(krg,0);
 
 [sw_upscaled,unique_idx] = unique(sw_upscaled);
 pc_upscaled = pc_upscaled(unique_idx);
@@ -204,4 +217,21 @@ K_phase_upscaled(~isfinite(K_phase_upscaled)) = 0;
 krg = K_phase_upscaled(1:3)';
 krw = K_phase_upscaled(4:6)';
 
+end
+
+function kr = extend_cols_with(kr,value)
+krx = kr(1,:);
+kry = kr(2,:);
+krz = kr(3,:);
+
+krx(end+1) = value;
+kry(end+1) = value;
+krz(end+1) = value;
+kr = [krx;kry;krz];
+end
+
+function mip_cell_data = construct_mip_cell_data()
+sub_sw = zeros(0,0,0);
+coder.varsize('sub_sw');
+mip_cell_data = struct('sw',nan,'sub_sw',sub_sw);
 end
