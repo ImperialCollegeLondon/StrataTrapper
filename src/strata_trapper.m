@@ -18,10 +18,11 @@ end
 
 cells_num = min(length(args.mask),grid.cells.num);
 cell_idxs = 1:cells_num;
-mask = args.mask(cell_idxs);
+mask = args.mask(cell_idxs)~=0;
 subset_len = sum(mask);
+param_ids = args.mask(mask);
 
-[par_wb, update_queue] = ParWaitBar(sum(mask) * args.enable_waitbar);
+[par_wb, update_queue] = ParWaitBar(subset_len * args.enable_waitbar);
 
 perm_upscaled = zeros(subset_len, 3);
 poro_upscaled = zeros(subset_len,1);
@@ -56,8 +57,12 @@ parfor (cell_index = 1:subset_len, args.parfor_arg)
 
     timer_start = tic;
 
+    param_id_cell = param_ids(cell_index);
+    params_cell = params(param_id_cell);
+
     [perm_upscaled_cell, pc_upscaled, krw_cell, krg_cell, mip_cell] = upscale(...
-        DR(cell_index,:), saturations, params, options, sub_porosity, sub_permeability);
+        DR(cell_index,:), saturations, params_cell, options, ...
+        sub_porosity, sub_permeability);
 
     if options.m_save_mip_step
         mip(cell_index,:) = mip_cell;
@@ -100,7 +105,8 @@ strata_trapped = struct(...
     'params', params, ...
     'options', args.options, ...
     'grid', grid, ...
-    'mip', mip ...
+    'mip', mip, ...
+    'param_ids',param_ids...
     );
 
 perf.num_coarse = subset_len;
