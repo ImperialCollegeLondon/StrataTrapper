@@ -27,7 +27,7 @@ param_ids = args.mask(mask);
 perm_upscaled = zeros(subset_len, 3);
 poro_upscaled = zeros(subset_len,1);
 
-saturations = linspace(params.sw_resid,1,args.options.sat_num_points);
+saturations = linspace(min([params.sw_resid]),1,args.options.sat_num_points); % FIXME several params
 
 cap_pres_upscaled = nan(subset_len,length(saturations));
 krw = nan(subset_len,3,length(saturations));
@@ -90,7 +90,7 @@ parfor (cell_index = 1:subset_len, args.parfor_arg)
     warnings_on(original_warning_states);
 end
 
-krw(:,:,saturations<=params.sw_resid) = 0;
+krw(:,:,saturations<=min([params.sw_resid])) = 0; % FIXME: per-param handling
 krg(krg<0) = 0;
 krg(:,:,saturations>=1)=0;
 
