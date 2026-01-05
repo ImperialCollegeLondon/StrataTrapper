@@ -2,7 +2,7 @@ function strata_trapped = strata_trapper(grid, sub_rock, params, args)
 arguments
     grid            (1,1) struct
     sub_rock        (1,:) struct
-    params          (1,:) Params
+    params          (1,:) Params {mustBeNonempty}
     args.options         (1,1) Options = Options();
     args.enable_waitbar  (1,1) logical = false;
     args.mask            (:,1) ...
