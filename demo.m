@@ -33,8 +33,8 @@ downscale_demo(params, downscale_params,visible);
 
 %% Run StrataTrapper
 
-mask = uint8(ones(10,1)); % process only a fraction of cells
-
+mask = uint8([0,1,2,1,0,1,2,1,0]); % process only a fraction of cells
+params = [params,params];
 sub_rock = downscale_all(grid,rock,mask,downscale_params);
 
 options = Options().save_mip_step(true);
