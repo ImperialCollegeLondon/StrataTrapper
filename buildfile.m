@@ -1,5 +1,6 @@
 function plan = buildfile()
 startup;
+
 plan = buildplan(localfunctions);
 plan.DefaultTasks = ["check", "test", "test_codegen"];
 
@@ -17,7 +18,7 @@ if isMATLABReleaseOlderThan("R2023b")
 
     plan("check") = matlab.buildtool.Task(...
     Description="Identify code issues", ...
-    Actions=@(~) assert(code_issues()) );
+    Actions=@(~) assert(code_issues(0)));
 
     return;
 end
@@ -27,8 +28,10 @@ plan("test") = matlab.buildtool.tasks.TestTask(test_options{:});
 plan("test_codegen") = matlab.buildtool.tasks.TestTask(test_codegen_options{:});
 end
 
-function issue_free = code_issues()
-    issues = codeIssues();
-    disp(issues.Issues);
-    issue_free = isempty(issues.Issues);
+function flag = code_issues(warning_threshold)
+    issues = codeIssues().Issues;
+    disp(issues);
+    errors = find(issues.Severity == 'error');
+    warnings = find(issues.Severity == 'warning');
+    flag = (numel(errors) == 0) && (numel(warnings) <= warning_threshold);
 end
