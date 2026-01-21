@@ -1,13 +1,15 @@
-function [] = ogs_export(strata_trapped, output_folder)
+function [] = ogs_export(strata_trapped, args)
 arguments
     strata_trapped (1,1) struct
+    args.output_folder  char   = 'ogs'
     args.default_poro (:,1) double = []
+    args.default_perm (:,3) double = []
     args.satnum = [];
 end
 
-mkdir(output_folder);
+mkdir(args.output_folder);
 
-output_prefix = append(output_folder,'/');
+output_prefix = append(args.output_folder,'/');
 
 grid = strata_trapped.grid;
 
@@ -25,8 +27,8 @@ write_krnum(output_prefix,strata_trapped.grid,strata_trapped.idx,...
     numel(strata_trapped.params),args.satnum);
 
 % export permeability
-write_perm(output_prefix,strata_trapped.grid,strata_trapped.permeability,strata_trapped.idx,[]);
-
+write_perm(output_prefix,strata_trapped.grid,strata_trapped.permeability,strata_trapped.idx,...
+    args.default_perm);
 
 % create grid properties include file
 grid_fid = fopen([output_prefix,'grid.inc'],'wb','native','UTF-8');
