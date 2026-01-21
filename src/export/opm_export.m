@@ -30,12 +30,7 @@ fclose(runspec_fid);
 grid = strata_trapped.grid;
 
 % export porosity
-porosity = zeros(prod(grid.cartDims),1);
-if ~isempty(args.default_poro)
-    porosity(:) = args.default_poro;
-end
-porosity(grid.cells.indexMap(strata_trapped.idx)) = strata_trapped.porosity;
-write_keyword([output_prefix,'PORO.inc'],'PORO',porosity,0,0);
+write_poro(output_prefix,grid,strata_trapped.porosity,strata_trapped.idx,args.default_poro);
 
 % export permeability
 write_perm(output_prefix,strata_trapped.grid,strata_trapped.permeability,strata_trapped.idx,...
