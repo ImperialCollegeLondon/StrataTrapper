@@ -113,5 +113,22 @@ classdef CapPressure
             end
             perm_transformed = perm;
         end
+
+        function cap_pressure = normalize(cap_pressure)
+            % normalize J-functions so that Pc models have the same mult
+            arguments
+                cap_pressure (1,:) CapPressure 
+            end
+            mults = [cap_pressure.mult];
+            mults_mean = mean(mults);
+            j_func_mult = mults./mults_mean;
+            for i=1:numel(cap_pressure)
+                cap_pressure(i).leverett_j.data(:,2) = ...
+                    cap_pressure(i).leverett_j.data(:,2) * j_func_mult(i);
+                cap_pressure(i).surface_tension = ...
+                    cap_pressure(i).surface_tension / j_func_mult(i);
+                cap_pressure(i).mult = mults_mean;
+            end
+        end
     end
 end
