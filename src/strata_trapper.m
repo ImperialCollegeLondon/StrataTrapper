@@ -7,7 +7,7 @@ arguments
     args.enable_waitbar  (1,1) logical = false;
     args.mask            (:,1) ...
         {mustBeOfClass(args.mask,"uint8"), must_be_param_id(args.mask, params)} ...
-        = ones(grid.cells.num,1); % cell to param correspondense
+        = ones(grid.cells.num,1); % cell to param correspondence
     args.parfor_arg = parforOptions(gcp('nocreate'),...
         "RangePartitionMethod","fixed",...
         "SubrangeSize",1,...
@@ -80,7 +80,7 @@ parfor (cell_index = 1:subset_len, args.parfor_arg)
     krw_cell(:,saturations_cell<=params_cell.sw_resid) = 0;
     krg_cell(:,saturations_cell>=1)=0;
 
-    krw(cell_index,:,:) = krw_cell; 
+    krw(cell_index,:,:) = krw_cell;
     krg(cell_index,:,:) = krg_cell;
 
     timer_stop = toc(timer_start);

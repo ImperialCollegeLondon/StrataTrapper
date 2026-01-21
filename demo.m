@@ -282,12 +282,12 @@ krg_data = [
         sw_norm = (sw - sw_irr)./(1-sw_irr);
     end
 
-interfactial_tension = 36 * milli * newton / meter;
+interfacial_tension = 36 * milli * newton / meter;
 pe = 270 * kilo * pascal;
 contact_angle = deg2rad(37);
 ref_poro = 0.21;
 ref_perm = 0.003 * darcy;
-j_min = pe / cos(contact_angle) / interfactial_tension * sqrt(ref_perm/ref_poro);
+j_min = pe / cos(contact_angle) / interfacial_tension * sqrt(ref_perm/ref_poro);
 
 sw_pc = unique(1-krg_data(:,1));
 sw_pc(1) = sw_pc(1) +(sw_pc(2) - sw_pc(1))*0.01;
@@ -300,5 +300,5 @@ jlev = j_min * calc_sw_norm(sw_pc,krw_data(1,1)).^pc_shape * pc_mult;
 params = Params(...
     TableFunction(krw_data),...
     TableFunction(krg_data),...
-    CapPressure(contact_angle,interfactial_tension,TableFunction([sw_pc,jlev]), [1 1 0]),NaN,1000);
+    CapPressure(contact_angle,interfacial_tension,TableFunction([sw_pc,jlev]), [1 1 0]),NaN,1000);
 end
