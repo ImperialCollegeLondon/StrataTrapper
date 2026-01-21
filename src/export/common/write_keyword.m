@@ -4,11 +4,17 @@ arguments
     keyword {mustBeText}
     data (:,1) {mustBeNumericOrLogical}
     offset (1,1) {mustBeNumericOrLogical}
-    data_fallback (1,1) {mustBeNumericOrLogical}
+    data_fallback (:,1) {mustBeNumericOrLogical}
 end
 
-data(data~=0) = data(data~=0) + offset;
-data(data==0) = data_fallback;
+data(data~=0) = data(data~=0) + offset; % add offset to non-zero data
+
+% replace zeros with fallback values
+if isscalar(data_fallback)
+    data(data==0) = data_fallback; 
+else
+    data(data==0) = data_fallback(data==0); 
+end
 
 output_fid =  fopen(file_name,'wb','native','UTF-8');
     
