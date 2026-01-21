@@ -20,7 +20,7 @@ write_poro(output_prefix,grid,strata_trapped.porosity,strata_trapped.idx,args.de
 strata_trapped.params.export_ogs(strata_trapped.saturation,[output_prefix,'chc.inc']);
 
 % export upscaled curves
-generate_sfn(strata_trapped,output_prefix,'.data',1);
+generate_sfn(strata_trapped,output_prefix,'.data',numel(strata_trapped.params));
 
 % export curve mappings
 write_krnum(output_prefix,strata_trapped.grid,strata_trapped.idx,...

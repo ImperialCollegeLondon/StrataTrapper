@@ -45,8 +45,12 @@ Feel free to play with it and use as an example for your own scripts.
 and input fine-scale porosity and permeability for each coarse block.
 3. Setup input rock-fluid properties and algorithm options represented by
   [`Params`](src/Params.m) and [`Options`](src/Options.m) classes.
-4. Create logical `mask` to filter out impermeable cells
-and/or define an arbitrary subset of cells to process.
+  Pass an array of `Params` for multiple-region models.
+4. Create integer `mask` to:
+    * filter out impermeable cells
+    and/or compute an arbitrary subset of cells by putting `0`s
+    * Put index `n` of the input array of `Params`
+    to map coarse cells to the corresponding regions
 5. Run [`strata_trapper`](src/strata_trapper.m) function
 with arbitrary number of parallel workers
 optionally enabling a UI progress bar.

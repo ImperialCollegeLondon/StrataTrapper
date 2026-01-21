@@ -11,7 +11,7 @@ end
 mkdir(args.output_folder);
 output_prefix = append(args.output_folder,'/');
 
-tab_dims = 1 + numel(strata_trapped.idx)*3;
+tab_dims = numel(strata_trapped.params) + numel(strata_trapped.idx)*3;
 write_keyword([output_prefix,'TABDIMS.inc'],'TABDIMS',tab_dims,0,0);
 
 % Write umbrella RUNSPEC file
@@ -36,8 +36,15 @@ write_poro(output_prefix,grid,strata_trapped.porosity,strata_trapped.idx,args.de
 write_perm(output_prefix,strata_trapped.grid,strata_trapped.permeability,strata_trapped.idx,...
     args.default_perm);
 
+% normalize capillary pressure multipliers before export
+cap_pressure = [strata_trapped.params.cap_pressure];
+cap_pressure = cap_pressure.normalize();
+for i=1:numel(strata_trapped.params)
+    strata_trapped.params(i).cap_pressure = cap_pressure(i);
+end
+
 % Write JFUNC include file
-mult = strata_trapped.params.cap_pressure.mult / (dyne / centi / meter);
+mult = cap_pressure(1).mult / (dyne / centi / meter);
 jfunc_line = sprintf("'WATER' 0.0 %f * * XY /", mult); % TODO: generalize 'XY'
 jfunc_str = {"JFUNC",jfunc_line};
 jfunc_fid = fopen([output_prefix,'JFUNC.inc'],'wb','native','UTF-8');
@@ -48,9 +55,9 @@ fclose(jfunc_fid);
 write_krnum(output_prefix,strata_trapped.grid,strata_trapped.idx,...
     numel(strata_trapped.params),args.satnum);
 
-% Set FIPNUM region for MIP-upscaled cells
+% Set FIPNUM regions for MIP-upscaled cells
 fip_mip = zeros(prod(grid.cartDims),1);
-fip_mip(grid.cells.indexMap(strata_trapped.idx)) = 1;
+fip_mip(grid.cells.indexMap(strata_trapped.idx)) = strata_trapped.param_ids;
 write_keyword([output_prefix,'FIPMIP.inc'],'FIPMIP',fip_mip,0,0);
 
 % Write umbrella GRID file
@@ -92,7 +99,7 @@ regions_fid = fopen([output_prefix,'REGIONS.inc'],'wb','native','UTF-8');
 fprintf(regions_fid,'%s\n',regions_str{:});
 fclose(regions_fid);
 
-% Write single SGWFN file: 1 + NX*NY*NZ*3 tables
+% Write SGWFN tables: numel(params) + NX*NY*NZ*3 tables
 write_sgwfn(strata_trapped,output_prefix);
 
 % WRITE MULT[XYZ] if provided
@@ -110,32 +117,38 @@ arguments
     prefix char
 end
 
-original_sgwfn = strata_trapped.params.export_opm(strata_trapped.saturation);
+% NOTE: CapPressure array should be normalized
+cap_pressure = [strata_trapped.params.cap_pressure];
 
-leverett_j = strata_trapped.params.cap_pressure.inv_lj(...
+leverett_j = cap_pressure.inv_lj(...
     strata_trapped.capillary_pressure,...
     strata_trapped.porosity,...
-    strata_trapped.permeability);
+    strata_trapped.permeability, ...
+    strata_trapped.param_ids);
 
 sgwfn_fid = fopen([prefix,'SGWFN.inc'],'wb','native','UTF-8');
 fprintf(sgwfn_fid,'%s\n',"SGWFN");
-% 1. Write original table
-fprintf(sgwfn_fid,'%s/ -- 1: original fine-scale curves\n',original_sgwfn);
+% 1. Write original tables
+for param_id = 1:numel(strata_trapped.params)
+    sgfn_export_str = ...
+        strata_trapped.params(param_id).export_opm(strata_trapped.saturation(param_id,:));
+    fprintf(sgwfn_fid,'%s/ -- %u: original fine-scale curves\n',sgfn_export_str,param_id);
+end
+
 % 2. Write upscaled tables
 for direction=1:3
     write_tables_for_direction(sgwfn_fid, strata_trapped.idx,...
         strata_trapped.rel_perm_wat, strata_trapped.rel_perm_gas,...
-        strata_trapped.saturation,leverett_j,...
-        direction);
+        strata_trapped.saturation,leverett_j, strata_trapped.param_ids,direction);
 end
 fclose(sgwfn_fid);
 
 end
 
-function write_tables_for_direction(file_id,idx, krw, krg,saturations,leverett_j,direction)
+function write_tables_for_direction(file_id,idx, krw, krg,saturations,leverett_j,param_id,direction)
 dir_label = ['X','Y','Z'];
 for cell_index = 1:length(idx)
-    sw = saturations;
+    sw = saturations(param_id(cell_index),:);
     sg = 1 - sw;
     krg_cell = squeeze(krg(cell_index,direction,:))';
     krw_cell  = squeeze(krw(cell_index,direction,:))';
