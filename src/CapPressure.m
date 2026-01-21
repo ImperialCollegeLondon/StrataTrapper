@@ -53,20 +53,29 @@ classdef CapPressure
             sw = obj.leverett_j.inv(lj);
         end
 
-        function lj = inv_lj(obj,pc,poro,perm)
+        function lj = inv_lj(obj,pc,poro,perm,param_ids)
             arguments
-                obj (1,1) CapPressure
+                obj (1,:) CapPressure
                 pc  double
                 poro double {mustBeNonnegative}
                 perm (:,:,:,:) double {mustBeNonnegative}
+                param_ids = [];
+            end
+            if isscalar(obj)
+                perm = obj.transform_perm(poro,perm);
+    
+                poresize_mult = perm./ poro;
+                poresize_mult(poro == 0) = +Inf;
+    
+                lj = pc ./ obj.mult .* sqrt(poresize_mult);
+                return;
             end
 
-            perm = obj.transform_perm(poro,perm);
-
-            poresize_mult = perm./ poro;
-            poresize_mult(poro == 0) = +Inf;
-
-            lj = pc ./ obj.mult .* sqrt(poresize_mult);
+            lj = nan(size(pc));
+            for param_id=unique(param_ids)'
+                mask = param_ids == param_id;
+                lj(mask,:) = obj(param_id).inv_lj(pc(mask,:),poro(mask),perm(mask,:));
+            end
         end
 
         function dpc_dsw = deriv(obj,sw,poro,perm)
