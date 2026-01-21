@@ -80,7 +80,7 @@ parfor (cell_index = 1:subset_len, args.parfor_arg)
     krw_cell(:,saturations_cell<=params_cell.sw_resid) = 0;
     krg_cell(:,saturations_cell>=1)=0;
 
-    krw(cell_index,:,:) = krw_cell; %#ok<PFOUS>
+    krw(cell_index,:,:) = krw_cell; 
     krg(cell_index,:,:) = krg_cell;
 
     timer_stop = toc(timer_start);
