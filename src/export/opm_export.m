@@ -5,6 +5,7 @@ arguments
     args.default_poro (:,1) double = []
     args.default_perm (:,3) double = []
     args.multxyz (:,3) double {mustBeNonnegative} = []
+    args.satnum = [];
 end
 
 mkdir(args.output_folder);
@@ -49,7 +50,8 @@ fprintf(jfunc_fid,'%s\n',jfunc_str{:});
 fclose(jfunc_fid);
 
 % Write mappings
-write_mappings(output_prefix,strata_trapped.grid,strata_trapped.idx,1);
+write_krnum(output_prefix,strata_trapped.grid,strata_trapped.idx,...
+    numel(strata_trapped.params),args.satnum);
 
 % Set FIPNUM region for MIP-upscaled cells
 fip_mip = zeros(prod(grid.cartDims),1);
