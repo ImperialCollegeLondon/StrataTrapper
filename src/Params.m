@@ -21,17 +21,30 @@ classdef Params
         end
 
         function export_ogs(params,sw,file_path)
+            arguments
+                params (1,:) Params {mustBeNonempty}
+                sw (:,:) double
+                file_path char
+            end
+
+            cap_pressure = [params.cap_pressure]; %#ok<PROPLC>
+            cap_pressure = cap_pressure.normalize(); %#ok<PROPLC>
+
             chc_file = fopen(file_path,'wb','native','UTF-8');
 
             fprintf(chc_file,'%s %f %s\n\n','JLEV_GW', ...
-            params.cap_pressure.surface_tension / (dyne / centi /meter) ...
-            * cos(params.cap_pressure.contact_angle),'XY dynes/cm');
+                cap_pressure(1).mult / (dyne / centi /meter),'XY dynes/cm'); %#ok<PROPLC>
 
-            write_sat_jlev(1,chc_file,...
-                params.krw.func(sw),...
-                params.krg.func(1-sw),...
-                sw,...
-                params.cap_pressure.leverett_j.func(sw));
+            for tab_num=1:numel(params)
+                sw_tab = sw(tab_num,:);
+                write_sat_jlev(tab_num,chc_file,...
+                    params(tab_num).krw.func(sw_tab),...
+                    params(tab_num).krg.func(1-sw_tab),...
+                    sw_tab,...
+                    cap_pressure(tab_num).leverett_j.func(sw_tab)); %#ok<PROPLC>
+            end
+
+
             fclose(chc_file);
         end
 
