@@ -1,6 +1,7 @@
 function [] = ogs_export(strata_trapped, output_folder)
 arguments
     strata_trapped (1,1) struct
+    args.default_poro (:,1) double = []
     args.satnum = [];
 end
 
@@ -11,9 +12,7 @@ output_prefix = append(output_folder,'/');
 grid = strata_trapped.grid;
 
 % export porosity
-porosity = zeros(grid.cells.num,1);
-porosity(grid.cells.indexMap(strata_trapped.idx)) = strata_trapped.porosity;
-write_keyword([output_prefix,'PORO.inc'],'PORO',porosity,0,0);
+write_poro(output_prefix,grid,strata_trapped.porosity,strata_trapped.idx,args.default_poro);
 
 % export fine-scale curves
 strata_trapped.params.export_ogs(strata_trapped.saturation,[output_prefix,'chc.inc']);
