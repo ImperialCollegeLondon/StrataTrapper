@@ -1,7 +1,7 @@
 function [] = ogs_export(strata_trapped, output_folder)
 arguments
     strata_trapped (1,1) struct
-    output_folder  char   = 'ogs'
+    args.satnum = [];
 end
 
 mkdir(output_folder);
@@ -22,7 +22,8 @@ strata_trapped.params.export_ogs(strata_trapped.saturation,[output_prefix,'chc.i
 generate_sfn(strata_trapped,output_prefix,'.data',1);
 
 % export curve mappings
-write_mappings(output_prefix,strata_trapped.grid,strata_trapped.idx,1);
+write_krnum(output_prefix,strata_trapped.grid,strata_trapped.idx,...
+    numel(strata_trapped.params),args.satnum);
 
 % export permeability
 write_perm(output_prefix,strata_trapped.grid,strata_trapped.permeability,strata_trapped.idx,[]);
