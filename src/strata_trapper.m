@@ -2,10 +2,12 @@ function strata_trapped = strata_trapper(grid, sub_rock, params, args)
 arguments
     grid            (1,1) struct
     sub_rock        (1,:) struct
-    params          (1,1) Params
+    params          (1,:) Params {mustBeNonempty}
     args.options         (1,1) Options = Options();
     args.enable_waitbar  (1,1) logical = false;
-    args.mask            (:,1) {mustBeOfClass(args.mask,"logical")} = true(grid.cells.num,1);
+    args.mask            (:,1) ...
+        {mustBeOfClass(args.mask,"uint8"), must_be_param_id(args.mask, params)} ...
+        = ones(grid.cells.num,1); % cell to param correspondense
     args.parfor_arg = parforOptions(gcp('nocreate'),...
         "RangePartitionMethod","fixed",...
         "SubrangeSize",1,...
@@ -16,19 +18,23 @@ end
 
 cells_num = min(length(args.mask),grid.cells.num);
 cell_idxs = 1:cells_num;
-mask = args.mask(cell_idxs);
+mask = args.mask(cell_idxs)~=0;
 subset_len = sum(mask);
+param_ids = args.mask(mask);
 
-[par_wb, update_queue] = ParWaitBar(sum(mask) * args.enable_waitbar);
+[par_wb, update_queue] = ParWaitBar(subset_len * args.enable_waitbar);
 
 perm_upscaled = zeros(subset_len, 3);
 poro_upscaled = zeros(subset_len,1);
 
-saturations = linspace(params.sw_resid,1,args.options.sat_num_points);
+saturations = nan(numel(params),args.options.sat_num_points);
+for i=1:numel(params)
+    saturations(i,:) = linspace(params(i).sw_resid,1,args.options.sat_num_points);
+end
 
-cap_pres_upscaled = nan(subset_len,length(saturations));
-krw = nan(subset_len,3,length(saturations));
-krg = nan(subset_len,3,length(saturations));
+cap_pres_upscaled = nan(subset_len,args.options.sat_num_points);
+krw = nan(subset_len,3,args.options.sat_num_points);
+krg = nan(subset_len,3,args.options.sat_num_points);
 
 DR = [grid.DX(mask),grid.DY(mask),grid.DZ(mask)];
 
@@ -38,7 +44,7 @@ num_sub = zeros(subset_len,1);
 elapsed = zeros(subset_len,1);
 
 if options.m_save_mip_step
-    mip(1:subset_len,1:numel(saturations)) = struct('sw',nan,'sub_sw',[]);
+    mip(1:subset_len,1:args.options.sat_num_points) = struct('sw',nan,'sub_sw',[]);
 else
     mip = struct([]);
 end
@@ -54,17 +60,25 @@ parfor (cell_index = 1:subset_len, args.parfor_arg)
 
     timer_start = tic;
 
+    param_id_cell = param_ids(cell_index);
+    params_cell = params(param_id_cell);
+    saturations_cell = saturations(param_id_cell,:);
+
     [perm_upscaled_cell, pc_upscaled, krw_cell, krg_cell, mip_cell] = upscale(...
-        DR(cell_index,:), saturations, params, options, sub_porosity, sub_permeability);
+        DR(cell_index,:), saturations_cell, params_cell, options, ...
+        sub_porosity, sub_permeability);
 
     if options.m_save_mip_step
         mip(cell_index,:) = mip_cell;
     end
 
     for i = 1:3
-        krg_cell(i,:) = monotonize(saturations, krg_cell(i,:), -1);
-        krw_cell(i,end:-1:1) = monotonize(saturations(end:-1:1), krw_cell(i,end:-1:1), -1);
+        krg_cell(i,:) = monotonize(saturations_cell, krg_cell(i,:), -1);
+        krw_cell(i,end:-1:1) = monotonize(saturations_cell(end:-1:1), krw_cell(i,end:-1:1), -1);
     end
+
+    krw_cell(:,saturations_cell<=params_cell.sw_resid) = 0;
+    krg_cell(:,saturations_cell>=1)=0;
 
     krw(cell_index,:,:) = krw_cell; %#ok<PFOUS>
     krg(cell_index,:,:) = krg_cell;
@@ -83,9 +97,7 @@ parfor (cell_index = 1:subset_len, args.parfor_arg)
     warnings_on(original_warning_states);
 end
 
-krw(:,:,saturations<=params.sw_resid) = 0;
 krg(krg<0) = 0;
-krg(:,:,saturations>=1)=0;
 
 strata_trapped = struct(...
     'permeability', perm_upscaled, ...
@@ -98,7 +110,8 @@ strata_trapped = struct(...
     'params', params, ...
     'options', args.options, ...
     'grid', grid, ...
-    'mip', mip ...
+    'mip', mip, ...
+    'param_ids',param_ids...
     );
 
 perf.num_coarse = subset_len;

@@ -1,6 +1,7 @@
-function fig = plot_result(strata_trapped, args)
+function fig = plot_result(strata_trapped, param_id, args)
 arguments
-    strata_trapped
+    strata_trapped (1,1) struct
+    param_id (1,1) uint8
     args.font_size = 14
     args.kr_scale = "log"
     args.parent = struct([]);
@@ -17,18 +18,21 @@ end
 [t_all,t_kr,t_krw,t_krg,ax_pc,ax_krw_x,ax_krw_y,ax_krw_z,ax_krg_x,ax_krg_y,ax_krg_z] ...
     = nested_tiles(fig);
 
-leverett_j_upscaled = strata_trapped.params.cap_pressure.inv_lj(...
-    strata_trapped.capillary_pressure,...
-    strata_trapped.porosity,...
-    strata_trapped.permeability);
+mask = strata_trapped.param_ids == param_id;
 
-[~, ax_pc] =  stat_plot(ax_pc,strata_trapped.saturation,...
-    @(sw)strata_trapped.params.cap_pressure.leverett_j.func(sw), leverett_j_upscaled,true);
+leverett_j_upscaled = strata_trapped.params(param_id).cap_pressure.inv_lj(...
+    strata_trapped.capillary_pressure(mask,:),...
+    strata_trapped.porosity(mask,:),...
+    strata_trapped.permeability(mask,:));
+
+[~, ax_pc] =  stat_plot(ax_pc,strata_trapped.saturation(param_id,:),...
+    @(sw)strata_trapped.params(param_id).cap_pressure.leverett_j.func(sw),leverett_j_upscaled,...
+    param_id,true);
 title(ax_pc,'Leverett J-function');
 ylabel(ax_pc,'[-]');
 ax_pc.YScale='log';
 curves_plot([ax_krw_x,ax_krw_y,ax_krw_z;ax_krg_x,ax_krg_y,ax_krg_z], ...
-    strata_trapped, strata_trapped.params, args.kr_scale);
+    strata_trapped, strata_trapped.params(param_id), param_id, args.kr_scale);
 
 xlabel(t_all,'Wetting phase saturation',FontSize=args.font_size);
 title(t_kr,'Relative permeability',FontSize=args.font_size);
@@ -44,44 +48,49 @@ subtitle(ax_krg_z,'z','Interpreter','latex');
 end
 
 
-function curves_plot(ax_kr, strata_trapped, params,scale)
+function curves_plot(ax_kr, strata_trapped, params,param_id,scale)
 arguments
     ax_kr
     strata_trapped
     params
+    param_id
     scale = "log"
 end
-sub_data = @(data,direction) squeeze(data(:,direction,:));
 
-stat_plot(ax_kr(1,1),strata_trapped.saturation,...
-    @(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,1));
+mask = strata_trapped.param_ids == param_id;
+saturation =  strata_trapped.saturation(param_id,:);
+sub_data = @(data,direction) squeeze(data(mask,direction,:));
+
+stat_plot(ax_kr(1,1),saturation,...
+    @(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,1),param_id);
 ax_kr(1,1).YScale = scale;
-stat_plot(ax_kr(2,1),strata_trapped.saturation,...
-    @(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,1));
+stat_plot(ax_kr(2,1),saturation,...
+    @(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,1),param_id);
 ax_kr(2,1).YScale = scale;
 
-stat_plot(ax_kr(1,2),strata_trapped.saturation,...
-    @(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,2));
+stat_plot(ax_kr(1,2),saturation,...
+    @(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,2),param_id);
 ax_kr(1,2).YScale = scale;
-stat_plot(ax_kr(2,2),strata_trapped.saturation,...
-    @(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,2));
+stat_plot(ax_kr(2,2),saturation,...
+    @(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,2),param_id);
 ax_kr(2,2).YScale = scale;
 
-stat_plot(ax_kr(1,3),strata_trapped.saturation,...
-    @(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,3));
+stat_plot(ax_kr(1,3),saturation,...
+    @(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,3),param_id);
 ax_kr(1,3).YScale = scale;
-stat_plot(ax_kr(2,3),strata_trapped.saturation, ...
-    @(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,3));
+stat_plot(ax_kr(2,3),saturation, ...
+    @(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,3),param_id);
 ax_kr(2,3).YScale = scale;
 end
 
 
-function [y_lim, ax] = stat_plot(ax, x_data, base_func, data,show_legend,color)
+function [y_lim, ax] = stat_plot(ax, x_data, base_func, data, param_id, show_legend,color)
 arguments
     ax
     x_data (1,:) double
     base_func
     data   (:,:) double
+    param_id
     show_legend (1,1) logical = false
     color = 'blue'
 end
@@ -105,7 +114,7 @@ ax.YLimitMethod="tight";
 if show_legend
     legends = {'Median','Quantiles 0.01 and 0.99',''};
     if ~isempty(base_func)
-        legends{end+1} = 'Intrinsic curve';
+        legends{end+1} = sprintf('Fine-scale curve (id: %u)',param_id);
     end
 
     legend(ax,legends,'Location','northoutside');
