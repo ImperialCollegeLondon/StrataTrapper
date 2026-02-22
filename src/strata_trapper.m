@@ -134,6 +134,8 @@ perf.num_sat = args.options.sat_num_points;
 
 strata_trapped.perf = compute_performance(perf,1);
 
+strata_trapped = organize(strata_trapped);
+
 par_wb.finish();
 
 end

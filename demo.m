@@ -1,4 +1,4 @@
-function demo(args)
+function strata_trapped = demo(args)
 arguments
     args.parfor_arg = Inf;
     args.show_figures = true;
