@@ -3,7 +3,7 @@ function errors = measure_compression_error(original, compressed)
 %
 % Quantifies how well the compressed representation approximates the original
 % upscaled tables by reconstructing from compressed data and computing MSE and
-% maximum absolute errors.
+% maximum absolute errors per direction.
 %
 % Syntax:
 %   errors = measure_compression_error(original, compressed)
@@ -13,21 +13,22 @@ function errors = measure_compression_error(original, compressed)
 %                .capillary_pressure (subset_len, sat_num_points)
 %                .rel_perm_wat (subset_len, 3, sat_num_points)
 %                .rel_perm_gas (subset_len, 3, sat_num_points)
-%   compressed - struct with compressed data (output from compress_tables):
-%                .capillary_pressure (n_compressed, sat_num_points)
-%                .rel_perm_wat (n_compressed, 3, sat_num_points)  
-%                .rel_perm_gas (n_compressed, 3, sat_num_points)
+%   compressed - (3,1) struct array from compress_tables
+%                Each element compressed(dir) has:
+%                .capillary_pressure (n_compressed_dir, sat_num_points)
+%                .rel_perm_wat (n_compressed_dir, sat_num_points)
+%                .rel_perm_gas (n_compressed_dir, sat_num_points)
 %                .mapping (1, subset_len) uint32
 %
 % Output:
-%   errors - struct with error metrics:
-%     mse_capillary_pressure - Mean squared error for Pc (1,1) double
+%   errors - struct with error metrics (all per direction):
+%     mse_capillary_pressure - Mean squared error for Pc (3,1) double
 %     mse_rel_perm_wat       - MSE for krw per direction (3,1) double
 %     mse_rel_perm_gas       - MSE for krg per direction (3,1) double
-%     max_abs_error_pc       - Maximum absolute error for Pc (1,1) double
+%     max_abs_error_pc       - Maximum absolute error for Pc (3,1) double
 %     max_abs_error_krw      - Max abs error for krw per direction (3,1) double
 %     max_abs_error_krg      - Max abs error for krg per direction (3,1) double
-%     rmse_capillary_pressure - Root mean squared error for Pc (1,1) double
+%     rmse_capillary_pressure - Root mean squared error for Pc (3,1) double
 %     rmse_rel_perm_wat      - RMSE for krw per direction (3,1) double
 %     rmse_rel_perm_gas      - RMSE for krg per direction (3,1) double
 %
@@ -35,19 +36,16 @@ function errors = measure_compression_error(original, compressed)
 %   original = struct('capillary_pressure', pc, ...
 %                     'rel_perm_wat', krw, ...
 %                     'rel_perm_gas', krg);
-%   compressed = compress_tables(capillary_pressure=pc, ...
-%                                 rel_perm_wat=krw, ...
-%                                 rel_perm_gas=krg, ...
-%                                 idx=idx);
+%   compressed = compress_tables(idx, pc, krw, krg, poro, perm, params);
 %   errors = measure_compression_error(original, compressed);
-%   fprintf('Pc MSE: %.2e, Max error: %.2e\n', ...
-%           errors.mse_capillary_pressure, errors.max_abs_error_pc);
+%   fprintf('X-direction Pc MSE: %.2e, Max error: %.2e\n', ...
+%           errors.mse_capillary_pressure(1), errors.max_abs_error_pc(1));
 %
 % See also: compress_tables
 
 arguments
     original (1,1) struct
-    compressed (1,1) struct
+    compressed (3,1) struct
 end
 
 % Validate required fields in original
@@ -59,59 +57,71 @@ for i = 1:length(required_fields_orig)
         'original struct missing required field: %s', field);
 end
 
-% Validate required fields in compressed
+% Validate dimensions
+subset_len = size(original.capillary_pressure, 1);
+
+% Validate compressed struct array
+assert(numel(compressed) == 3, ...
+    'measure_compression_error:InvalidStructure', ...
+    'compressed must be a (3,1) struct array');
+
+% Validate required fields in compressed per direction
 required_fields_comp = {'capillary_pressure', 'rel_perm_wat', 'rel_perm_gas', 'mapping'};
-for i = 1:length(required_fields_comp)
-    field = required_fields_comp{i};
-    assert(isfield(compressed, field), ...
-        'measure_compression_error:MissingField', ...
-        'compressed struct missing required field: %s', field);
+for dir = 1:3
+    for i = 1:length(required_fields_comp)
+        field = required_fields_comp{i};
+        assert(isfield(compressed(dir), field), ...
+            'measure_compression_error:MissingField', ...
+            'compressed(%d) missing required field: %s', dir, field);
+    end
+    
+    % Validate mapping dimensions for this direction
+    assert(size(compressed(dir).mapping, 1) == 1 && size(compressed(dir).mapping, 2) == subset_len, ...
+        'measure_compression_error:DimensionMismatch', ...
+        'Direction %d: mapping must be (1, %d) but is (%d, %d)', ...
+        dir, subset_len, size(compressed(dir).mapping, 1), size(compressed(dir).mapping, 2));
 end
 
-% Get dimensions
-subset_len = size(original.capillary_pressure, 1);
-sat_num_points = size(original.capillary_pressure, 2);
-
-% Validate mapping
-assert(length(compressed.mapping) == subset_len, ...
-    'measure_compression_error:DimensionMismatch', ...
-    'mapping length (%d) must match original table count (%d)', ...
-    length(compressed.mapping), subset_len);
-
-assert(all(compressed.mapping >= 1) && all(compressed.mapping <= size(compressed.capillary_pressure, 1)), ...
-    'measure_compression_error:InvalidMapping', ...
-    'mapping indices must be in range [1, %d]', size(compressed.capillary_pressure, 1));
-
-% Reconstruct original data from compressed representation
-reconstructed_pc = compressed.capillary_pressure(compressed.mapping, :);
-reconstructed_krw = compressed.rel_perm_wat(compressed.mapping, :, :);
-reconstructed_krg = compressed.rel_perm_gas(compressed.mapping, :, :);
-
-% Compute errors for capillary pressure
-diff_pc = original.capillary_pressure - reconstructed_pc;
-errors.mse_capillary_pressure = mean(diff_pc(:).^2);
-errors.rmse_capillary_pressure = sqrt(errors.mse_capillary_pressure);
-errors.max_abs_error_pc = max(abs(diff_pc(:)));
-
-% Compute errors for rel_perm_wat per direction
+% Initialize error metrics (all per direction now)
+errors.mse_capillary_pressure = zeros(3, 1);
+errors.rmse_capillary_pressure = zeros(3, 1);
+errors.max_abs_error_pc = zeros(3, 1);
 errors.mse_rel_perm_wat = zeros(3, 1);
 errors.rmse_rel_perm_wat = zeros(3, 1);
 errors.max_abs_error_krw = zeros(3, 1);
-
-for dir = 1:3
-    diff_krw = squeeze(original.rel_perm_wat(:, dir, :)) - squeeze(reconstructed_krw(:, dir, :));
-    errors.mse_rel_perm_wat(dir) = mean(diff_krw(:).^2);
-    errors.rmse_rel_perm_wat(dir) = sqrt(errors.mse_rel_perm_wat(dir));
-    errors.max_abs_error_krw(dir) = max(abs(diff_krw(:)));
-end
-
-% Compute errors for rel_perm_gas per direction
 errors.mse_rel_perm_gas = zeros(3, 1);
 errors.rmse_rel_perm_gas = zeros(3, 1);
 errors.max_abs_error_krg = zeros(3, 1);
 
+% Compute errors per direction
 for dir = 1:3
-    diff_krg = squeeze(original.rel_perm_gas(:, dir, :)) - squeeze(reconstructed_krg(:, dir, :));
+    mapping_dir = compressed(dir).mapping;
+    
+    % Validate mapping indices for this direction
+    n_compressed_dir = size(compressed(dir).capillary_pressure, 1);
+    assert(all(mapping_dir >= 1) && all(mapping_dir <= n_compressed_dir), ...
+        'measure_compression_error:InvalidMapping', ...
+        'Direction %d: mapping indices must be in range [1, %d]', dir, n_compressed_dir);
+    
+    % Reconstruct capillary pressure for this direction
+    reconstructed_pc = compressed(dir).capillary_pressure(mapping_dir, :);
+    diff_pc = original.capillary_pressure - reconstructed_pc;
+    errors.mse_capillary_pressure(dir) = mean(diff_pc(:).^2);
+    errors.rmse_capillary_pressure(dir) = sqrt(errors.mse_capillary_pressure(dir));
+    errors.max_abs_error_pc(dir) = max(abs(diff_pc(:)));
+    
+    % Reconstruct rel_perm_wat for this direction
+    reconstructed_krw = compressed(dir).rel_perm_wat(mapping_dir, :);
+    original_krw_dir = squeeze(original.rel_perm_wat(:, dir, :));
+    diff_krw = original_krw_dir - reconstructed_krw;
+    errors.mse_rel_perm_wat(dir) = mean(diff_krw(:).^2);
+    errors.rmse_rel_perm_wat(dir) = sqrt(errors.mse_rel_perm_wat(dir));
+    errors.max_abs_error_krw(dir) = max(abs(diff_krw(:)));
+    
+    % Reconstruct rel_perm_gas for this direction
+    reconstructed_krg = compressed(dir).rel_perm_gas(mapping_dir, :);
+    original_krg_dir = squeeze(original.rel_perm_gas(:, dir, :));
+    diff_krg = original_krg_dir - reconstructed_krg;
     errors.mse_rel_perm_gas(dir) = mean(diff_krg(:).^2);
     errors.rmse_rel_perm_gas(dir) = sqrt(errors.mse_rel_perm_gas(dir));
     errors.max_abs_error_krg(dir) = max(abs(diff_krg(:)));
