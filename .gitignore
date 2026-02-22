@@ -2,6 +2,7 @@
 /ogs/
 /opm/
 .buildtool/
+/tmp/
 
 # Created by https://www.toptal.com/developers/gitignore/api/matlab,microsoftoffice,latex,windows,linux,macos
 # Edit at https://www.toptal.com/developers/gitignore?templates=matlab,microsoftoffice,latex,windows,linux,macos
