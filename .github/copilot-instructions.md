@@ -150,6 +150,10 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/) with gitmoji
 
 **Commit as:** GitHub Copilot <github-copilot@users.noreply.github.com>
 
+```shell
+git commit --author="GitHub Copilot <github-copilot@users.noreply.github.com>" ...
+```
+
 **Format**: `type(scope): emoji description`
 
 **Types**: `feat`, `fix`, `chore`, `ci`, `refactor`, `test`, `build`, `docs`
