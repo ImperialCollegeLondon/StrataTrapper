@@ -18,5 +18,11 @@
     },
     "editor.rulers": [
         100
-    ]
+    ],
+    "chat.tools.terminal.autoApprove": {
+        "/^git config user\\.name && git config user\\.email$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
 }
