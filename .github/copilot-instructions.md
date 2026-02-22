@@ -160,6 +160,38 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/) with gitmoji
 - `matlab-repo-init` - repository initialization/setup
 - `release-please` - release automation
 
+**Commit Message Template**:
+
+```
+<type>(<scope>): <emoji> <description>
+
+<optional body with more details>
+
+Co-authored-by: <name> <email>
+```
+
+**Field Definitions**:
+
+- `type`: Conventional commit type (feat, fix, chore, test, refactor, docs, build, ci)
+- `scope`: Feature or subsystem affected (see approved scopes above)
+- `emoji`: Standard gitmoji indicator (see examples below)
+- `description`: Concise one-liner describing the change
+- `body`: Optional detailed explanation of what was implemented, split across multiple lines
+- `Co-authored-by`: Name and email of human developer (for agentic sessions, retrieved from git config)
+
+**Emoji Reference**:
+
+- ✨ new feature
+- 🐛 bug fix
+- ✅ tests
+- ♻️ refactor
+- 🚸 UX improvement
+- 💚 CI fix
+- 📦 build/dependencies
+- 🚚 rename/move files
+- 💡 comments/documentation
+- ✏️ typos
+
 **Examples from commit history**:
 ```
 feat(export): ✨ MULT[XYZ] for OPM (optional)
@@ -170,7 +202,27 @@ chore: ✏️ fix typos in comments
 test: ✅ reduce grid size in `demo`
 ```
 
-Common gitmoji: ✨ (new feature), 🐛 (bug fix), ♻️ (refactor), 🚸 (UX improvement), 💚 (CI fix), ✏️ (typo), 📦️ (build/dependencies), ✅ (tests), 🚚 (rename/move), 💡 (comments)
+**Agentic session examples**:
+
+```
+feat(compress): ✨ add stub compress_tables function (Phase 1)
+
+Implements zeroth iteration of compression pipeline.
+- Identity mapping (no compression yet)
+- Full input/output validation using granular validators
+- Zero reconstruction error for stub implementation
+
+Co-authored-by: Max Elizarev <44438314+djmaxus@users.noreply.github.com>
+```
+
+```
+test(compress): ✅ add comprehensive unit tests for compression
+
+Implements CompressTablesTest class with 8 test methods covering identity mapping,
+output structure, error measurement, and invariant validation.
+
+Co-authored-by: Max Elizarev <44438314+djmaxus@users.noreply.github.com>
+```
 
 ## Agentic Session Commit Plan
 
