@@ -148,6 +148,8 @@ Based on [Jackson & Krevor (2020)](https://doi.org/10.1029/2020GL088616). The MI
 
 Follow [Conventional Commits](https://www.conventionalcommits.org/) with gitmoji:
 
+**Commit as:** GitHub Copilot <github-copilot@users.noreply.github.com>
+
 **Format**: `type(scope): emoji description`
 
 **Types**: `feat`, `fix`, `chore`, `ci`, `refactor`, `test`, `build`, `docs`
