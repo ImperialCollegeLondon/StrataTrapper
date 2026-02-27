@@ -144,13 +144,21 @@ n_sat = size(leverett_j, 2);
 
 feature_vectors = build_feature_vectors(n_cells,n_sat,leverett_j,krw_dir,krg_dir);
 
-[U,S,V] = svd(feature_vectors',"econ");
+origin = min(feature_vectors,[],1)';
+[U,S,V] = svd(feature_vectors'-origin,"econ");
+
+n_pca = round(n_sat*3*0.1);
+Ur = U(:,1:n_pca);
+
+feature_latent = V(:,1:n_pca);
 
 options.UseParallel = false;
 options.UseSubstreams = false;
 
-[km_idx,km_c,km_sumd,km_d] = kmeans(feature_vectors,round(n_cells*0.1),'OnlinePhase','off',...
-    'MaxIter',100,"Display","iter","Options",options,'Distance','sqeuclidean');
+[km_idx,km_c,km_sumd,km_d] = kmeans(feature_latent,round(n_cells*0.01),'OnlinePhase','off',...
+    'MaxIter',1000,"Display","iter","Options",options,'Distance','sqeuclidean');
+
+km_c = (Ur * S(1:n_pca,1:n_pca) * km_c'+origin)';
 
 % Build output struct for this direction
 dir_compressed = struct();
