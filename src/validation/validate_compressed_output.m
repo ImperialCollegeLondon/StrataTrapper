@@ -34,7 +34,7 @@ num_original = length(compressed(1).idx);
 % Validate each direction independently
 for dir = 1:3
     % Validate required fields exist
-    required_fields = {'capillary_pressure', 'rel_perm_wat', 'rel_perm_gas', 'mapping'};
+    required_fields = {'leverett_j', 'rel_perm_wat', 'rel_perm_gas', 'mapping'};
     for i = 1:length(required_fields)
         field = required_fields{i};
         if ~isfield(compressed(dir), field)
@@ -44,9 +44,9 @@ for dir = 1:3
     end
 
     % Validate field types
-    if ~isa(compressed(dir).capillary_pressure, 'double')
+    if ~isa(compressed(dir).leverett_j, 'double')
         error('compress_tables:InvalidOutput', ...
-            'Direction %d: capillary_pressure must be double', dir);
+            'Direction %d: leverett_j must be double', dir);
     end
     if ~isa(compressed(dir).rel_perm_wat, 'double')
         error('compress_tables:InvalidOutput', ...
@@ -62,8 +62,8 @@ for dir = 1:3
     end
 
     % Get dimensions for this direction
-    n_compressed_dir = size(compressed(dir).capillary_pressure, 1);
-    n_sat = size(compressed(dir).capillary_pressure, 2);
+    n_compressed_dir = size(compressed(dir).leverett_j, 1);
+    n_sat = size(compressed(dir).leverett_j, 2);
 
     % Validate mapping dimensions: (1, num_original)
     if ~isequal(size(compressed(dir).mapping), [1, num_original])
@@ -80,13 +80,13 @@ for dir = 1:3
     end
 
     % Validate table dimensions match for this direction
-    pc_size = size(compressed(dir).capillary_pressure);
+    pc_size = size(compressed(dir).leverett_j);
     krw_size = size(compressed(dir).rel_perm_wat);
     krg_size = size(compressed(dir).rel_perm_gas);
 
     if pc_size(1) ~= n_compressed_dir
         error('compress_tables:InvalidOutput', ...
-            'Direction %d: capillary_pressure first dimension mismatch', dir);
+            'Direction %d: leverett_j first dimension mismatch', dir);
     end
     if krw_size(1) ~= n_compressed_dir || krg_size(1) ~= n_compressed_dir
         error('compress_tables:InvalidOutput', ...
@@ -101,8 +101,8 @@ for dir = 1:3
     end
 
     % Validate output arrays are real and finite
-    if ~all(isreal(compressed(dir).capillary_pressure), 'all') || ...
-            ~all(isfinite(compressed(dir).capillary_pressure), 'all')
+    if ~all(isreal(compressed(dir).leverett_j), 'all') || ...
+            ~all(isfinite(compressed(dir).leverett_j), 'all')
         error('compress_tables:InvalidOutput', ...
             'Direction %d: capillary pressure contains non-real or non-finite values', dir);
     end

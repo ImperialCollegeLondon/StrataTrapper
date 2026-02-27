@@ -97,7 +97,7 @@ leverett_j = cap_pressure_obj.inv_lj(capillary_pressure, porosity, permeability)
 % Shape: (subset_len, sat_num_points)
 
 % Step 2: Process each direction independently using nested function
-compressed = repmat(struct('capillary_pressure', [], 'rel_perm_wat', [], ...
+compressed = repmat(struct('leverett_j', [], 'rel_perm_wat', [], ...
     'rel_perm_gas', [], 'mapping', []), 3, 1);
 
 for dir = 1:3
@@ -147,11 +147,14 @@ end
             j_curve = leverett_j(cell_idx, :);
             krw_curve = krw_dir(cell_idx, :);
             krg_curve = krg_dir(cell_idx, :);
-            feature_vectors(cell_idx, :) = log10([j_curve, krw_curve, krg_curve]);
+            feature_vectors(cell_idx, :) = [abs(log10(j_curve)), krw_curve, krg_curve];
         end
         feature_vectors(~isfinite(feature_vectors)) = 0;
 
         % Compute checksums using sorted sum (minimize rounding errors)
+        % NOTE: Instead, I could do N^2/2 comparisons of pair-wise MSEs, but might
+        % be too much. Instead, I can compute N checksums and N diffs, and
+        % then run M bisect iterations to match my MSE criteria
         checksums = zeros(n_cells, 1);
         for cell_idx = 1:n_cells
             sorted_values = sort(feature_vectors(cell_idx, :));
@@ -187,7 +190,8 @@ end
 
         % Build output struct for this direction
         dir_compressed = struct();
-        dir_compressed.capillary_pressure = pc_original(unique_indices, :);
+        % FIXME: return J-funcs
+        dir_compressed.leverett_j = leverett_j(unique_indices, :);
         dir_compressed.rel_perm_wat = krw_dir(unique_indices, :);
         dir_compressed.rel_perm_gas = krg_dir(unique_indices, :);
         dir_compressed.mapping = compressed_idx_map';
