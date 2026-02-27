@@ -118,6 +118,7 @@ end
 
 end
 
+% TODO: Introduce bisect to satisfy given MSE upper bounds
 function dir_compressed = compress_tables_dir(leverett_j, krw_dir, krg_dir, ...
     pc_original, tolerance)
 % COMPRESS_TABLES_DIR Compress tables for a single spatial direction
