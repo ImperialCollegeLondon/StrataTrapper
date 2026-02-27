@@ -155,7 +155,7 @@ feature_latent = V(:,1:n_pca);
 options.UseParallel = false;
 options.UseSubstreams = false;
 
-[km_idx,km_c,km_sumd,km_d] = kmeans(feature_latent,round(n_cells*0.01),'OnlinePhase','off',...
+[km_idx,km_c,km_sumd,km_d] = kmeans(feature_latent,round(n_cells*0.1),'OnlinePhase','off',...
     'MaxIter',1000,"Display","iter","Options",options,'Distance','sqeuclidean');
 
 km_c = (Ur * S(1:n_pca,1:n_pca) * km_c'+origin)';
