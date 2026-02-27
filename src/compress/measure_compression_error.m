@@ -87,7 +87,7 @@ end
 % FIXME: compare J-functions
 errors.mse_leverett_j = zeros(3, 1);
 errors.rmse_leverett_j = zeros(3, 1);
-errors.max_abs_error_pc = zeros(3, 1);
+errors.max_abs_error_jfunc = zeros(3, 1);
 errors.mse_rel_perm_wat = zeros(3, 1);
 errors.rmse_rel_perm_wat = zeros(3, 1);
 errors.max_abs_error_krw = zeros(3, 1);
@@ -113,7 +113,7 @@ for dir = 1:3
     diff_jfunc = original_leverett_j - reconstructed_jfunc;
     errors.mse_leverett_j(dir) = mean(diff_jfunc(:).^2);
     errors.rmse_leverett_j(dir) = sqrt(errors.mse_leverett_j(dir));
-    errors.max_abs_error_pc(dir) = max(abs(diff_jfunc(:)));
+    errors.max_abs_error_jfunc(dir) = max(abs(diff_jfunc(:)));
     
     % Reconstruct rel_perm_wat for this direction
     reconstructed_krw = compressed(dir).rel_perm_wat(mapping_dir, :);
