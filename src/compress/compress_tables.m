@@ -116,91 +116,111 @@ for dir = 1:3
     compressed(dir).idx = idx;
 end
 
-% === NESTED FUNCTION: PER-DIRECTION COMPRESSION ===
-    function dir_compressed = compress_tables_dir(leverett_j, krw_dir, krg_dir, ...
-            pc_original, tolerance)
-        % COMPRESS_TABLES_DIR Compress tables for a single spatial direction
-        %
-        % Performs sum-based duplicate detection on the joint feature vector
-        % [J-function, krw, krg] for this direction.
-        %
-        % Inputs:
-        %   leverett_j  - (subset_len, sat_num_points) J-function values
-        %   krw_dir     - (subset_len, sat_num_points) water rel perm for this direction
-        %   krg_dir     - (subset_len, sat_num_points) gas rel perm for this direction
-        %   pc_original - (subset_len, sat_num_points) original capillary pressure
-        %   tolerance   - duplicate detection tolerance (scalar double)
-        %
-        % Output:
-        %   dir_compressed - struct with fields:
-        %     capillary_pressure - (n_compressed, sat_num_points)
-        %     rel_perm_wat       - (n_compressed, sat_num_points)
-        %     rel_perm_gas       - (n_compressed, sat_num_points)
-        %     mapping            - (1, subset_len) uint32
+end
 
-        n_cells = size(leverett_j, 1);
-        n_sat = size(leverett_j, 2);
+function dir_compressed = compress_tables_dir(leverett_j, krw_dir, krg_dir, ...
+    pc_original, tolerance)
+% COMPRESS_TABLES_DIR Compress tables for a single spatial direction
+%
+% Performs sum-based duplicate detection on the joint feature vector
+% [J-function, krw, krg] for this direction.
+%
+% Inputs:
+%   leverett_j  - (subset_len, sat_num_points) J-function values
+%   krw_dir     - (subset_len, sat_num_points) water rel perm for this direction
+%   krg_dir     - (subset_len, sat_num_points) gas rel perm for this direction
+%   pc_original - (subset_len, sat_num_points) original capillary pressure
+%   tolerance   - duplicate detection tolerance (scalar double)
+%
+% Output:
+%   dir_compressed - struct with fields:
+%     capillary_pressure - (n_compressed, sat_num_points)
+%     rel_perm_wat       - (n_compressed, sat_num_points)
+%     rel_perm_gas       - (n_compressed, sat_num_points)
+%     mapping            - (1, subset_len) uint32
 
-        % Build feature vectors: [J, krw, krg]
-        feature_vectors = zeros(n_cells, 3 * n_sat);
-        for cell_idx = 1:n_cells
-            j_curve = leverett_j(cell_idx, :);
-            krw_curve = krw_dir(cell_idx, :);
-            krg_curve = krg_dir(cell_idx, :);
-            feature_vectors(cell_idx, :) = [abs(log10(j_curve)), krw_curve, krg_curve];
-        end
-        feature_vectors(~isfinite(feature_vectors)) = 0;
+n_cells = size(leverett_j, 1);
+n_sat = size(leverett_j, 2);
 
-        % Compute checksums using sorted sum (minimize rounding errors)
-        % NOTE: Instead, I could do N^2/2 comparisons of pair-wise MSEs, but might
-        % be too much. Instead, I can compute N checksums and N diffs, and
-        % then run M bisect iterations to match my MSE criteria
-        checksums = zeros(n_cells, 1);
-        for cell_idx = 1:n_cells
-            sorted_values = sort(feature_vectors(cell_idx, :));
-            checksums(cell_idx) = sum(sorted_values, 'double');
-        end
+feature_vectors = build_feature_vectors(n_cells,n_sat,leverett_j,krw_dir,krg_dir);
 
-        % Find unique tables within tolerance
-        [sorted_checksums, sort_idx] = sort(checksums);
+[U,S,V] = svd(feature_vectors',"econ");
 
-        % Mark unique entries (first of each group within tolerance)
-        % TODO: consider enhancing this comparison, leveraging small cumulative diffs.
-        % The current impl effectively halves the number of tables, 
-        % as it compares adjasent checksums.
-        % Option 1:
-        % Option 2: compare all N*(N-1)/2 disances pair-wise (it starts to look like
-        % k-means)
-        unique_mask = true(n_cells, 1);
-        unique_mask(2:end) = diff(sorted_checksums) > tolerance;
+options.UseParallel = false;
+options.UseSubstreams = false;
 
-        % Find indices of unique representatives
-        unique_indices = sort_idx(unique_mask);
+[km_idx,km_c,km_sumd,km_d] = kmeans(feature_vectors,round(n_cells*0.1),'OnlinePhase','off',...
+    'MaxIter',100,"Display","iter","Options",options,'Distance','sqeuclidean');
 
-        % Build mapping: original index -> unique representative index
-        compressed_idx_map = zeros(n_cells, 1, 'uint32');
-        compressed_counter = uint32(1);
-        current_group_rep = 1;
+% Build output struct for this direction
+dir_compressed = struct();
+% FIXME: return J-funcs
+dir_compressed.leverett_j = 10.^km_c(:,1:n_sat);
+dir_compressed.rel_perm_wat = km_c(:, (n_sat+1):(2*n_sat));
+dir_compressed.rel_perm_gas = km_c(:, (2*n_sat+1):end);
+dir_compressed.mapping = uint32(km_idx)';
+return;
 
-        for i = 1:n_cells
-            if unique_mask(i)
-                % This is a unique representative
-                compressed_idx_map(sort_idx(i)) = compressed_counter;
-                current_group_rep = compressed_counter;
-                compressed_counter = compressed_counter + 1;
-            else
-                % This is a duplicate of the previous representative
-                compressed_idx_map(sort_idx(i)) = current_group_rep;
-            end
-        end
+% Compute checksums using sorted sum (minimize rounding errors)
+% NOTE: Instead, I could do N^2/2 comparisons of pair-wise MSEs, but might
+% be too much. Instead, I can compute N checksums and N diffs, and
+% then run M bisect iterations to match my MSE criteria
+checksums = zeros(n_cells, 1);
+for cell_idx = 1:n_cells
+    sorted_values = sort(feature_vectors(cell_idx, :));
+    checksums(cell_idx) = sum(sorted_values, 'double');
+end
 
-        % Build output struct for this direction
-        dir_compressed = struct();
-        % FIXME: return J-funcs
-        dir_compressed.leverett_j = leverett_j(unique_indices, :);
-        dir_compressed.rel_perm_wat = krw_dir(unique_indices, :);
-        dir_compressed.rel_perm_gas = krg_dir(unique_indices, :);
-        dir_compressed.mapping = compressed_idx_map';
+% Find unique tables within tolerance
+[sorted_checksums, sort_idx] = sort(checksums);
+
+% Mark unique entries (first of each group within tolerance)
+% TODO: consider enhancing this comparison, leveraging small cumulative diffs.
+% The current impl effectively halves the number of tables,
+% as it compares adjasent checksums.
+% Option 1:
+% Option 2: compare all N*(N-1)/2 disances pair-wise (it starts to look like
+% k-means)
+unique_mask = true(n_cells, 1);
+unique_mask(2:end) = diff(sorted_checksums) > tolerance;
+
+% Find indices of unique representatives
+unique_indices = sort_idx(unique_mask);
+
+% Build mapping: original index -> unique representative index
+compressed_idx_map = zeros(n_cells, 1, 'uint32');
+compressed_counter = uint32(1);
+current_group_rep = 1;
+
+for i = 1:n_cells
+    if unique_mask(i)
+        % This is a unique representative
+        compressed_idx_map(sort_idx(i)) = compressed_counter;
+        current_group_rep = compressed_counter;
+        compressed_counter = compressed_counter + 1;
+    else
+        % This is a duplicate of the previous representative
+        compressed_idx_map(sort_idx(i)) = current_group_rep;
     end
+end
 
+% Build output struct for this direction
+dir_compressed = struct();
+% FIXME: return J-funcs
+dir_compressed.leverett_j = leverett_j(unique_indices, :);
+dir_compressed.rel_perm_wat = krw_dir(unique_indices, :);
+dir_compressed.rel_perm_gas = krg_dir(unique_indices, :);
+dir_compressed.mapping = compressed_idx_map';
+end
+
+function feature_vectors = build_feature_vectors(n_cells,n_sat,leverett_j,krw_dir,krg_dir)
+% Build feature vectors: [J, krw, krg]
+feature_vectors = zeros(n_cells, 3 * n_sat);
+for cell_idx = 1:n_cells
+    j_curve = leverett_j(cell_idx, :);
+    krw_curve = krw_dir(cell_idx, :);
+    krg_curve = krg_dir(cell_idx, :);
+    feature_vectors(cell_idx, :) = [log10(j_curve), krw_curve, krg_curve];
+end
+feature_vectors(~isfinite(feature_vectors)) = 0;
 end
