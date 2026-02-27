@@ -165,6 +165,12 @@ end
         [sorted_checksums, sort_idx] = sort(checksums);
 
         % Mark unique entries (first of each group within tolerance)
+        % TODO: consider enhancing this comparison, leveraging small cumulative diffs.
+        % The current impl effectively halves the number of tables, 
+        % as it compares adjasent checksums.
+        % Option 1:
+        % Option 2: compare all N*(N-1)/2 disances pair-wise (it starts to look like
+        % k-means)
         unique_mask = true(n_cells, 1);
         unique_mask(2:end) = diff(sorted_checksums) > tolerance;
 
