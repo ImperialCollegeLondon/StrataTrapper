@@ -71,7 +71,9 @@ Each compression step (including final clustering) is lossy. Loss measurements: 
 
 The function should be complemented with an additional function that computes this difference between the inputs and the outputs of the compression function at every stage of the algorithm.
 
-Multi-objective representation optimisation
+### Multi-objective compression optimisation
+
+We aim for Pareto-optimal result with respect to minimal approximation error achieved with the smallest number of representatives.
 
 ```mermaid
 flowchart TD
