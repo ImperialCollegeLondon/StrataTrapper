@@ -56,6 +56,7 @@ should_clean -- no ---> red
 red -- Corey/LET parameterisation ---> latent
 red -- Data-driven (e.g., PCA) ---> latent
 latent -- ML-based clustering ---> repr
+latent -- Vector Quantisation ---> repr
 repr ---> isparam
 isparam -- yes ---> inv
 inv -- no ---> param
