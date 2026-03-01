@@ -10,6 +10,6 @@ classdef StrataTrapped
 
         end
 
-        function Self = quantize(self,args);
+        Self = quantize(self,args);
     end
 end
