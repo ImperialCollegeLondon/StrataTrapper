@@ -1,5 +1,4 @@
 function [quantized, mse] = quantize(strata_trapped,num_quants)
-%QUANTIZE Summary of this function goes here
 arguments (Input)
     strata_trapped (1,1) StrataTrapped
     num_quants (1,1) uint32
