@@ -7,8 +7,8 @@ arguments (Input)
     args.num_quants (:,1) uint32 {mustBeScalarOrEmpty, mustBePositive} = []
 end
 arguments (Output)
-    quantized
-    mse
+    quantized (3,1) struct
+    mse (3,1) struct
 end
 
 % transform strata_trapped into direction-wise struct array
@@ -23,7 +23,7 @@ end
 
 % quantize each direction
 for dir = 1:3
-    quantized(dir) = quantize_dir(quantized(dir),args);
+    [quantized(dir), mse(dir)] = quantize_dir(quantized(dir),args);
 end
 
 end
