@@ -175,6 +175,7 @@ classdef CompressTablesTest < matlab.unittest.TestCase
             for dir = 1:3
                 n_compressed_dir = size(compressed(dir).capillary_pressure, 1);
                 mapping_dir = compressed(dir).mapping;
+            end
                 
                 % Mapping dimensions: (1, subset_len) per direction
                 testCase.verifySize(mapping_dir, [1, testCase.testData.subset_len]);
@@ -226,7 +227,7 @@ classdef CompressTablesTest < matlab.unittest.TestCase
                 testCase.testData.porosity, ...
                 testCase.testData.permeability, ...
                 testCase.testData.params), ...
-                'MATLAB:validation:UnableToConvert');
+                'compress_tables:DimensionMismatch');
 
             % Mismatch in saturation points
             bad_pc = testCase.testData.capillary_pressure(:, 1:end-5);
@@ -237,7 +238,7 @@ classdef CompressTablesTest < matlab.unittest.TestCase
                 testCase.testData.porosity, ...
                 testCase.testData.permeability, ...
                 testCase.testData.params), ...
-                'MATLAB:validation:UnableToConvert');
+                'compress_tables:DimensionMismatch');
 
             % Wrong number of directions
             bad_krg = testCase.testData.rel_perm_gas(:, 1:2, :);
@@ -248,7 +249,7 @@ classdef CompressTablesTest < matlab.unittest.TestCase
                 testCase.testData.porosity, ...
                 testCase.testData.permeability, ...
                 testCase.testData.params), ...
-                'MATLAB:validation:UnableToConvert');
+                'compress_tables:InvalidDimensions');
         end
 
         function testErrorMeasurementValidation(testCase)
@@ -316,6 +317,7 @@ classdef CompressTablesTest < matlab.unittest.TestCase
                 testCase.verifyTrue(all(isreal(compressed(dir).rel_perm_wat), 'all'));
                 testCase.verifyTrue(all(isfinite(compressed(dir).rel_perm_gas), 'all'));
                 testCase.verifyTrue(all(isreal(compressed(dir).rel_perm_gas), 'all'));
+            end
             perm = testCase.testData.permeability;
 
             % Compute J-function using CapPressure.inv_lj() (reference)

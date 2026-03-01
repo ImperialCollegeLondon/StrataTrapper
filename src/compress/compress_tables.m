@@ -162,6 +162,8 @@ end
         [sorted_checksums, sort_idx] = sort(checksums);
 
         % Mark unique entries (first of each group within tolerance)
+        % FIXME: we should compare "each to each within tolerance to identify
+        % the final subset of unique tables
         unique_mask = true(n_cells, 1);
         unique_mask(2:end) = diff(sorted_checksums) > tolerance;
 
