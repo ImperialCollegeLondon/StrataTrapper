@@ -40,7 +40,7 @@ input[Input data]
 should_clean{Merge similar entries?}
 clean[Near-idential entries removed]
 red{Dimensionality reduction}
-latent[Low-rank representation]
+latent[Feature vectors]
 repr[N representative cluster points]
 isparam{Were correlations used?}
 inv{Transform parameters back to tables?}
@@ -55,6 +55,7 @@ should_clean -- checksum error method ---> clean ---> red
 should_clean -- no ---> red
 red -- Corey/LET parameterisation ---> latent
 red -- Data-driven (e.g., PCA) ---> latent
+red -- no ---> latent
 latent -- ML-based clustering ---> repr
 latent -- Vector Quantisation ---> repr
 repr ---> isparam
@@ -62,7 +63,7 @@ isparam -- yes ---> inv
 inv -- no ---> param
 inv -- yes ---> tabs
 isparam -- no ---> tabs
-red -- no ---> tabs
+
 ```
 
 ### Error measurement
