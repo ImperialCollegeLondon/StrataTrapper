@@ -70,6 +70,31 @@ Each compression step (including final clustering) is lossy. Loss measurements: 
 
 The function should be complemented with an additional function that computes this difference between the inputs and the outputs of the compression function at every stage of the algorithm.
 
+Multi-objective representation optimisation
+
+```mermaid
+flowchart TD
+init[/Initial hyper-parameters/]
+input[/Input representation/]
+params[/Hyper-parameters/]
+init --> params
+compress[Compression]
+output[/Output representation/]
+input ---> compress
+params ---> compress
+compress --> output
+output --> N[/$$N~$$ represenatives/]
+calc_mse[Error calculation]
+input --> calc_mse
+output --> calc_mse --> mse
+is_optimal{"Try to optimise for $$~N~\&~\varepsilon_i$$"}
+N --> is_optimal
+mse[/"Approximation errors $$~\varepsilon_i$$"/]
+mse --> is_optimal
+is_optimal -- no --- finish[END]
+is_optimal -- yes --> upd[Update parameters] --> params
+```
+
 ## Implementation plan
 
 1. You shoud start with a trivial function that only re-packs the inputs to the output format (almost a "no-op" function)
