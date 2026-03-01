@@ -20,6 +20,8 @@ classdef Params
             obj.rho_water = rho_water;
         end
 
+        % FIXME change to private methods and put ExportFormat-based public
+        % method
         function export_ogs(params,sw,file_path)
             arguments
                 params (1,:) Params {mustBeNonempty}
@@ -47,7 +49,9 @@ classdef Params
 
             fclose(chc_file);
         end
-
+        
+        % FIXME change to private methods and put ExportFormat-based public
+        % method
         function export_str = export_opm(params,sw)
             sg = 1 - sw;
             krg = params.krg.func(sg); %#ok<PROPLC>
