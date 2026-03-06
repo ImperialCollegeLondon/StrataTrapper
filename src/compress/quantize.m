@@ -159,6 +159,8 @@ end
 
 function [encoded, decoder] = reduce_corr(quantized)
 error("not implemented");
+fittype;
+fit;
 end
 
 function mapping = merge_maps(map_1, map_2)
