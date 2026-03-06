@@ -33,23 +33,21 @@ quantized.tables = tables;
 
 end
 
-function [quantized, mse] = quantize_dir(tables_dir,options)
+function [quantized] = quantize_dir(tables_dir,options)
 arguments (Input)
     tables_dir (1,1) struct
     options (1,1) QuantizeOptions
 end
 arguments (Output)
     quantized
-    mse
 end
 
 features = to_features(tables_dir,options.use_total_mobility);
 
 mapping_dedup = deduplicate(features,options.duplicate_threshold);
-
+mapping_dedup(2) = 1;
 if isempty(options.num_quants)
-    quantized = from_quants(tables,mapping_dedup);
-    mse = mse_dedup;
+    quantized = from_quants(tables_dir,mapping_dedup);
     return;
 end
 
@@ -58,9 +56,9 @@ features_dedup = features(:,mapping_dedup);
 
 end
 
-function [output, mse] = deduplicate(input,duplicate_threshold);
+function mapping_dedup = deduplicate(features,duplicate_threshold)
     if ~isempty(duplicate_threshold)
-        output = input;
+        mapping_dedup = 1:size(features,2);
         return;
     end
 end
@@ -99,7 +97,12 @@ function features = to_features(tables,use_total_mobility)
 end
 
 function tables_quant = from_quants(tables,mapping)
-
+    tables_quant = tables;
+    [quant_idx, ~, ic] = unique(mapping);
+    tables_quant.leverett_j = tables_quant.leverett_j(quant_idx,:);
+    tables_quant.krw = tables_quant.krw(quant_idx,:);
+    tables_quant.krg = tables_quant.krg(quant_idx,:);
+    tables_quant.mapping = ic';
 end
 
 function [encoded, decoder, mse_reduction] = reduce_pca(quantized)
@@ -107,5 +110,5 @@ function [encoded, decoder, mse_reduction] = reduce_pca(quantized)
 end
 
 function [encoded, decoder, mse_reduction] = reduce_corr(quantized)
-
+    error("unimplemented");
 end
