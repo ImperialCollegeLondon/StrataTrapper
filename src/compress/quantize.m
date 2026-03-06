@@ -71,16 +71,33 @@ num_samples = size(features,2);
 
 mapping_dedup = zeros(1,num_samples);
 
-checksums = sum(abs(features),1);
+sorted_features = sort(abs(features),1,"ascend");
+
+checksums = sum(sorted_features,1);
+sorted_checksums = sort(checksums,"ascend");
+checksum_diffs = diff(sorted_checksums);
+
+can_dedup = any(checksum_diffs <= duplicate_threshold);
+
+if ~can_dedup
+    mapping_dedup = 1:size(features,2);
+    return;
+end
 
 for ref_sample_num=1:num_samples
     % exit early if all mappings are ready
+    if mapping_dedup(ref_sample_num) ~=0
+        continue;
+    end
     if all(mapping_dedup)
         break;
     end
     % find all close checksums to ref_sample_num
-    is_sample_close = abs(checksums - checksums(ref_sample_num)) <= duplicate_threshold;
-    is_sample_close = is_sample_close*ref_sample_num;
+    is_sample_close = abs(checksums(mapping_dedup==0) - checksums(ref_sample_num)) ...
+        <= duplicate_threshold;
+
+    mapping_dedup(mapping_dedup==0) = mapping_dedup(mapping_dedup==0)...
+        +is_sample_close*ref_sample_num;
 end
 end
 
