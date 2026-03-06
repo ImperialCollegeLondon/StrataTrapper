@@ -1,10 +1,7 @@
 function [quantized, mse] = quantize(strata_trapped,options)
 arguments (Input)
     strata_trapped (1,1) struct
-    options.use_total_mobility (1,1) logical = false
-    options.duplicate_threshold (1,1) double {mustBeNonnegative, mustBeScalarOrEmpty} = 0.0
-    options.dim_reduction (1,1) DimReduction = DimReduction.None
-    options.num_quants (:,1) uint32 {mustBeScalarOrEmpty, mustBePositive} = []
+    options (1,1) QuantizeOptions = QuantizeOptions();
 end
 arguments (Output)
     quantized (1,1) struct
@@ -26,7 +23,7 @@ end
 mse = [0,0,0];
 for dir = 1:3
     % FIXME: passing name-value options
-    [tables_dir, mse(dir)] = quantize_dir(tables(dir));
+    [tables_dir, mse(dir)] = quantize_dir(tables(dir),options);
     tables(dir) = tables_dir;
 end
 
@@ -39,31 +36,16 @@ end
 function [quantized, mse] = quantize_dir(tables_dir,options)
 arguments (Input)
     tables_dir (1,1) struct
-    options.use_total_mobility (1,1) logical = false
-    options.duplicate_threshold (1,1) double {mustBeNonnegative, mustBeScalarOrEmpty} = 0.0
-    options.dim_reduction (1,1) DimReduction = DimReduction.None
-    options.num_quants (:,1) uint32 {mustBeScalarOrEmpty, mustBePositive} = []
+    options (1,1) QuantizeOptions
 end
 arguments (Output)
     quantized
     mse
 end
 
-quantized = tables_dir;
-mse = 0;
-return;
+features = to_features(tables_dir,options.use_total_mobility);
 
-% prepare split features {J,krw,krg}
-
-if options.use_total_mobility
-    % augment inputs
-    % replace krw with total mobility
-end
-
-% prepare trivial quantization
-quantized = struct([]);
-
-[quantized,mse] = deduplicate(quantized,options.duplicate_threshold);
+[features_dedup,mse] = deduplicate(features,options.duplicate_threshold);
 
 if isempty(options.num_quants)
     % quantization not required
@@ -108,11 +90,13 @@ mse = [];
 
 end
 
-function features = to_features(quantized)
-
+function features = to_features(tables,use_total_mobility)
+    w = (~use_total_mobility) + 0.5 * use_total_mobility;
+    features_krw_transpose = w.*tables.krw + (1-w).* tables.krg;
+    features = [log10(tables.leverett_j),features_krw_transpose,tables.krg]';
 end
 
-function quantized = from_features(features)
+function tables_quant = from_quants(tables,mapping)
 
 end
 
