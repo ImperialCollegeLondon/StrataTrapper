@@ -120,11 +120,11 @@ function tables_quant = from_quants(tables,mapping)
 end
 
 function [encoded, decoder] = reduce_pca(quantized)
-    error("unimplemented");
+    error("not implemented");
 end
 
 function [encoded, decoder] = reduce_corr(quantized)
-    error("unimplemented");
+    error("not implemented");
 end
 
 function mapping = merge_maps(map_1, map_2)
