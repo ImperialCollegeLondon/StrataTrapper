@@ -36,7 +36,7 @@ The conceptual Mermaid flowchart for the algorithm:
 flowchart TD
 upsc[/Upscaled tables/]
 do_param_fit{Do parametric fit?}
-embed{Augment with total mobility?}
+embed{Fit total mobility?}
 clean[Near-idential entries removed]
 red{Use PCA?}
 latent[/Feature vectors/]
