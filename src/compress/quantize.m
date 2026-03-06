@@ -93,12 +93,6 @@ features_quant = decoder(quants');
 
 end
 
-function features = to_features(tables,use_total_mobility)
-    w = (~use_total_mobility) + 0.5 * use_total_mobility;
-    features_krw_transpose = w.*tables.krw + (1-w).* tables.krg;
-    features = [log10(tables.leverett_j),features_krw_transpose,tables.krg]';
-end
-
 function tables = from_features(mapping_prev, features, mapping_new, use_total_mobility)
     tables = struct();
 
@@ -111,7 +105,7 @@ function tables = from_features(mapping_prev, features, mapping_new, use_total_m
 
     krw_or_tm = features(:, (table_dim+1):(2*table_dim));
 
-    tables.krw = krw_or_tm .* (1+use_total_mobility) - tables.krg.*use_total_mobility;
+    tables.krw = max(krw_or_tm .* (1+use_total_mobility) - tables.krg.*use_total_mobility,0);
 
     tables.mapping = merge_maps(mapping_prev,mapping_new);
 end
