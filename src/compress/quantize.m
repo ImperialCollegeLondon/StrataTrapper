@@ -7,31 +7,16 @@ arguments (Output)
     quantized (1,1) struct
 end
 
-leverett_j = strata_trapped.params.cap_pressure.inv_lj(strata_trapped.capillary_pressure, ...
-    strata_trapped.porosity, strata_trapped.permeability);
+quantized = strata_trapped;
 
-tables = repmat(struct('leverett_j',[],'krw',[],'krg',[],'mapping',[]),3,1);
-for dir=1:3
-    tables(dir).leverett_j = leverett_j;
-    tables(dir).krw = squeeze(strata_trapped.rel_perm_wat(:,dir,:));
-    tables(dir).krg = squeeze(strata_trapped.rel_perm_gas(:,dir,:));
-    tables(dir).mapping = 1:numel(strata_trapped.idx);
+for table_idx = 1:numel(strata_trapped.tables)
+    tables_quant = quantize_table(strata_trapped.tables(table_idx),options);
+    quantized.tables(table_idx) = tables_quant;
 end
-
-% quantize each direction
-for dir = 1:3
-    % FIXME: passing name-value options
-    [tables_dir] = quantize_dir(tables(dir),options);
-    tables(dir) = tables_dir;
-end
-
-% transform strata_trapped into direction-wise struct array
-quantized = rmfield(strata_trapped,{'capillary_pressure','rel_perm_wat','rel_perm_gas'});
-quantized.tables = tables;
 
 end
 
-function [quantized] = quantize_dir(tables_dir,options)
+function [quantized] = quantize_table(tables_dir,options)
 arguments (Input)
     tables_dir (1,1) struct
     options (1,1) QuantizeOptions
