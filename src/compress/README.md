@@ -35,34 +35,24 @@ The conceptual Mermaid flowchart for the algorithm:
 ```mermaid
 flowchart TD
 upsc[Upscaled tables]
+do_param_fit{Do parametric fit?}
 embed{Augment with total mobility data?}
-input[Input data]
-should_clean{Merge similar entries?}
 clean[Near-idential entries removed]
-red{Dimensionality reduction}
+red{Use PCA?}
 latent[Feature vectors]
 repr[N representative cluster points]
-isparam{Were correlations used?}
-inv{Transform parameters back to tables?}
-param[N representative correlations]
 tabs[N representative saturation tables]
 
-upsc ---> embed
-embed -- yes ---> input
-embed -- no ---> input
-input  --- should_clean
-should_clean -- checksum error method ---> clean ---> red
-should_clean -- no ---> red
-red -- Corey/LET parameterisation ---> latent
-red -- Data-driven (e.g., PCA) ---> latent
-red -- no ---> latent
-latent -- ML-based clustering ---> repr
-latent -- Vector Quantisation ---> repr
-repr ---> isparam
-isparam -- yes ---> inv
-inv -- no ---> param
-inv -- yes ---> tabs
-isparam -- no ---> tabs
+upsc --> do_param_fit
+do_param_fit-- Corey/LET parameterisation --> latent
+do_param_fit -- no --> embed
+embed -- yes --> red
+embed -- no --> red
+red -- yes --> latent
+red -- no --> latent
+latent -- Remove near-identical entires --> clean
+clean -- "Quantisation (k-means or alternative)" --> repr
+repr -- "Restore back to tabular format" --> tabs
 
 ```
 
