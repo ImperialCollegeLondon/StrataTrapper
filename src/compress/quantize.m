@@ -42,7 +42,7 @@ end
 
 % FIXME: consider reducing here (higher chances of catching duplicates as
 % well
-features = to_features(tables_dir,options.use_total_mobility);
+features = to_features(tables_dir,options.fit_total_mobility);
 
 mapping_dedup = deduplicate(features,options.duplicate_threshold);
 
@@ -59,7 +59,7 @@ features_dedup = features(:,idx_dedup);
 [features_quant,mapping_quant] = quantize_impl(features_dedup,options);
 
 quantized = from_features(tables_dedup.mapping, features_quant, mapping_quant, ...
-    options.use_total_mobility);
+    options.fit_total_mobility);
 
 end
 
@@ -124,7 +124,7 @@ features_quant = decoder(quants');
 
 end
 
-function tables = from_features(mapping_prev, features, mapping_new, use_total_mobility)
+function tables = from_features(mapping_prev, features, mapping_new, fit_total_mobility)
 tables = struct();
 
 features = features';
@@ -136,7 +136,7 @@ tables.krg = features(:, (2*table_dim+1):end);
 
 krw_or_tm = features(:, (table_dim+1):(2*table_dim));
 
-tables.krw = max(krw_or_tm .* (1+use_total_mobility) - tables.krg.*use_total_mobility,0);
+tables.krw = max(krw_or_tm .* (1+fit_total_mobility) - tables.krg.*fit_total_mobility,0);
 
 tables.mapping = merge_maps(mapping_prev,mapping_new);
 end

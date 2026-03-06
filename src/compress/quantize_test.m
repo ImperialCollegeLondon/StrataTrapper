@@ -1,7 +1,7 @@
 quantized_trivial = quantize(strata_trapped,QuantizeOptions());
 
 options = QuantizeOptions();
-options.use_total_mobility = false;
+options.fit_total_mobility = false;
 options.dim_reduction = "PCA";
 options.num_quants = 10;
 options.duplicate_threshold = 0.0;
