@@ -1,11 +1,10 @@
-function [quantized, mse] = quantize(strata_trapped,options)
+function [quantized] = quantize(strata_trapped,options)
 arguments (Input)
     strata_trapped (1,1) struct
     options (1,1) QuantizeOptions = QuantizeOptions();
 end
 arguments (Output)
     quantized (1,1) struct
-    mse
 end
 
 leverett_j = strata_trapped.params.cap_pressure.inv_lj(strata_trapped.capillary_pressure, ...
@@ -20,10 +19,9 @@ for dir=1:3
 end
 
 % quantize each direction
-mse = [0,0,0];
 for dir = 1:3
     % FIXME: passing name-value options
-    [tables_dir, mse(dir)] = quantize_dir(tables(dir),options);
+    [tables_dir] = quantize_dir(tables(dir),options);
     tables(dir) = tables_dir;
 end
 
@@ -45,14 +43,22 @@ end
 features = to_features(tables_dir,options.use_total_mobility);
 
 mapping_dedup = deduplicate(features,options.duplicate_threshold);
-mapping_dedup(2) = 1;
+mapping_dedup(2) = 1; % FIXME: remove this test code
+
+tables_dedup = from_quants(tables_dir,mapping_dedup);
+
 if isempty(options.num_quants)
-    quantized = from_quants(tables_dir,mapping_dedup);
+    quantized = tables_dedup;
     return;
 end
 
-features_dedup = features(:,mapping_dedup);
+idx_dedup = unique(mapping_dedup);
+features_dedup = features(:,idx_dedup);
+
 [features_quant,mapping_quant] = quantize_impl(features_dedup,options);
+
+quantized = from_features(tables_dedup.mapping, features_quant, mapping_quant, ...
+    options.use_total_mobility);
 
 end
 
@@ -63,7 +69,7 @@ function mapping_dedup = deduplicate(features,duplicate_threshold)
     end
 end
 
-function [output, mse, mse_reduction] = quantize_impl(input,options)
+function [features_quant,mapping_quant] = quantize_impl(features,options)
 
 % encoding and decoders on the spot
 encoded = [];
@@ -71,22 +77,19 @@ decoder = [];
 switch options.dim_reduction
     case DimReduction.None    
         % Trivial transform
-        mse_reduction = 0;
+        encoded = features;
+        decoder = @(x) x;
     case DimReduction.PCA
         % PCA representation
-        [encoded, decoder, mse_reduction] = reduce_pca(quantized);
+        [encoded, decoder] = reduce_pca(quantized);
     case DimReduction.Correlations
         % feature vector is a parametric fit
-        [encoded, decoder, mse_reduction] = reduce_corr(quantized);
+        [encoded, decoder] = reduce_corr(quantized);
 end    
 
-% quantize in latent space
-quants = kmeans(encoded,options.num_quants);
+[mapping_quant,quants,~,~] = kmeans(encoded',options.num_quants,options.kmeans{:});
 
-decoded = decoder(quants);
-
-output = [];
-mse = [];
+features_quant = decoder(quants');
 
 end
 
@@ -94,6 +97,23 @@ function features = to_features(tables,use_total_mobility)
     w = (~use_total_mobility) + 0.5 * use_total_mobility;
     features_krw_transpose = w.*tables.krw + (1-w).* tables.krg;
     features = [log10(tables.leverett_j),features_krw_transpose,tables.krg]';
+end
+
+function tables = from_features(mapping_prev, features, mapping_new, use_total_mobility)
+    tables = struct();
+
+    features = features';
+
+    table_dim = size(features,2)/3;
+
+    tables.leverett_j = 10.^features(:,1:table_dim);
+    tables.krg = features(:, (2*table_dim+1):end);
+
+    krw_or_tm = features(:, (table_dim+1):(2*table_dim));
+
+    tables.krw = krw_or_tm .* (1+use_total_mobility) - tables.krg.*use_total_mobility;
+
+    tables.mapping = merge_maps(mapping_prev,mapping_new);
 end
 
 function tables_quant = from_quants(tables,mapping)
@@ -105,10 +125,16 @@ function tables_quant = from_quants(tables,mapping)
     tables_quant.mapping = ic';
 end
 
-function [encoded, decoder, mse_reduction] = reduce_pca(quantized)
-
+function [encoded, decoder] = reduce_pca(quantized)
+    error("unimplemented");
 end
 
-function [encoded, decoder, mse_reduction] = reduce_corr(quantized)
+function [encoded, decoder] = reduce_corr(quantized)
     error("unimplemented");
+end
+
+function mapping = merge_maps(map_1, map_2)
+    [~, ~, inv_1] = unique(map_1);
+    [~, ~, inv_2] = unique(map_2);
+    mapping = inv_2(inv_1);
 end
