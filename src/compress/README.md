@@ -44,12 +44,12 @@ repr[N representative cluster points]
 tabs[N representative saturation tables]
 
 upsc --> do_param_fit
-do_param_fit-- Corey/LET parameterisation --> latent
 do_param_fit -- no --> embed
-embed -- yes --> red
 embed -- no --> red
+embed -- yes --> red
 red -- yes --> latent
 red -- no --> latent
+do_param_fit-- Corey/LET parameterisation --> latent
 latent -- Remove near-identical entires --> clean
 clean -- "Quantisation (k-means or alternative)" --> repr
 repr -- "Inverse transform to tabular format" --> tabs
