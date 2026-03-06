@@ -40,6 +40,8 @@ arguments (Output)
     quantized
 end
 
+% FIXME: consider reducing here (higher chances of catching duplicates as
+% well
 features = to_features(tables_dir,options.use_total_mobility);
 
 mapping_dedup = deduplicate(features,options.duplicate_threshold);
