@@ -52,7 +52,7 @@ red -- yes --> latent
 red -- no --> latent
 latent -- Remove near-identical entires --> clean
 clean -- "Quantisation (k-means or alternative)" --> repr
-repr -- "Restore back to tabular format" --> tabs
+repr -- "Inverse transform to tabular format" --> tabs
 
 ```
 
