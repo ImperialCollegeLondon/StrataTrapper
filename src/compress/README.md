@@ -35,11 +35,16 @@ The conceptual Mermaid flowchart for the algorithm:
 ```mermaid
 flowchart TD
 upsc[/Upscaled tables/]
+
+
 do_param_fit{Do parametric fit?}
 embed{Fit total mobility?}
-clean[Near-idential entries removed]
 red{Use PCA?}
+
 latent[/Feature vectors/]
+
+clean[/De-duplicated data/]
+
 repr[/N representative cluster points/]
 tabs[/N representative saturation tables/]
 
