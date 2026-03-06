@@ -157,10 +157,10 @@ Phi = U(:,1:num_pc)*S(1:num_pc,1:num_pc);
 decoder = @(encoded) Phi*encoded + origin;
 end
 
-function [encoded, decoder] = reduce_corr(quantized)
+function [encoded, decoder] = reduce_corr(features)
 error("not implemented");
-fittype;
-fit;
+fittype; % fit J-functions directly (maybe)
+fit; % use constraints for rel perms
 end
 
 function mapping = merge_maps(map_1, map_2)
