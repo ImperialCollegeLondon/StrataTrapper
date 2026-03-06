@@ -19,4 +19,6 @@ err = compare_tables(quantized_trivial.tables,quantized.tables,false);
 [err.delta_mse]
 %%
 
-plot_result(organised,1,"visible",'off');
+plot_result(organized,1,"visible",'off');
+
+opm_export(strata_trapped,satnum=1);
