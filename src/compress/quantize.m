@@ -45,14 +45,16 @@ end
 
 features = to_features(tables_dir,options.use_total_mobility);
 
-[features_dedup,mse] = deduplicate(features,options.duplicate_threshold);
+mapping_dedup = deduplicate(features,options.duplicate_threshold);
 
 if isempty(options.num_quants)
-    % quantization not required
+    quantized = from_quants(tables,mapping_dedup);
+    mse = mse_dedup;
     return;
 end
 
-[quantized, mse, mse_reduction] = quantize_impl(quantized,options);
+features_dedup = features(:,mapping_dedup);
+[features_quant,mapping_quant] = quantize_impl(features_dedup,options);
 
 end
 
