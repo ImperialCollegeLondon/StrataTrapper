@@ -104,19 +104,16 @@ end
 function [features_quant,mapping_quant] = quantize_impl(features,options)
 
 % encoding and decoders on the spot
-encoded = [];
-decoder = [];
+encoded = features;
+decoder = @(x) x;
 switch options.dim_reduction
     case DimReduction.None
-        % Trivial transform
-        encoded = features;
-        decoder = @(x) x;
     case DimReduction.PCA
-        % PCA representation
-        [encoded, decoder] = reduce_pca(quantized);
+        % PCA
+        [encoded, decoder] = reduce_pca(features,options.num_pc);
     case DimReduction.Correlations
         % feature vector is a parametric fit
-        [encoded, decoder] = reduce_corr(quantized);
+        [encoded, decoder] = reduce_corr(features);
 end
 
 [mapping_quant,quants,~,~] = kmeans(encoded',options.num_quants,options.kmeans{:});
@@ -151,8 +148,13 @@ tables_quant.krg = tables_quant.krg(quant_idx,:);
 tables_quant.mapping = ic';
 end
 
-function [encoded, decoder] = reduce_pca(quantized)
-error("not implemented");
+function [encoded, decoder] = reduce_pca(features,num_pc)
+origin = min(features,[],2);
+[U,S,V] = svd(features-origin,"econ");
+num_pc = min(num_pc,size(V,2));
+encoded = V(:,1:num_pc)';
+Phi = U(:,1:num_pc)*S(1:num_pc,1:num_pc);
+decoder = @(encoded) Phi*encoded + origin;
 end
 
 function [encoded, decoder] = reduce_corr(quantized)
