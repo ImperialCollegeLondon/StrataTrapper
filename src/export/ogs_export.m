@@ -61,12 +61,13 @@ fclose(grid_fid);
 % create curves include file
 curve_fid = fopen([output_prefix,'curves.inc'],'wb','native','UTF-8');
 
-fprintf(curve_fid,...
-    "EXTERNAL_FILE ""chc.inc""\n" + ...
-    "EXTERNAL_FILE ""chcx.data""\n" + ...
-    "EXTERNAL_FILE ""chcy.data""\n" + ...
-    "EXTERNAL_FILE ""chcz.data""\n" + ...
-    "\n");
+fprintf(curve_fid,"EXTERNAL_FILE ""chc.inc""\n");
+
+for param_id = 1:size(strata_trapped.tables,1)
+    for dir = ['x','y','z']
+        fprintf(curve_fid,"EXTERNAL_FILE ""chc%u%s.data""\n",param_id,dir);
+    end
+end
 
 fclose(curve_fid);
 
