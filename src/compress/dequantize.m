@@ -7,9 +7,9 @@ arguments (Output)
     table (1,1) struct
 end
 
-table.leverett_j = table.leverett_j(quantized.mapping,:);
-table.krw = table.krw(quantized.mapping,:);
-table.krg = table.krg(quantized.mapping,:);
-table.mapping = 1:numel(quantized.mapping);
+table.leverett_j = table.leverett_j(table.mapping,:);
+table.krw = table.krw(table.mapping,:);
+table.krg = table.krg(table.mapping,:);
+table.mapping = 1:numel(table.mapping);
 
 end

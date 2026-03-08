@@ -1,8 +1,8 @@
 classdef QuantizeOptions
     properties
-        fir_parametric (1,1) logical = false
+        fit_parametric (1,1) logical = false
         fit_total_mobility (1,1) logical = false
-        num_prinipal_components (:,1) uint32 {mustBeScalarOrEmpty,mustBePositive} = []
+        num_principal_components (:,1) uint32 {mustBeScalarOrEmpty,mustBePositive} = []
         duplicate_threshold (1,1) double {mustBeNonnegative, mustBeScalarOrEmpty} = 0.0
         num_quants (:,1) uint32 {mustBeScalarOrEmpty, mustBePositive} = []
         

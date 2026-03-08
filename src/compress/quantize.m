@@ -25,9 +25,8 @@ arguments (Output)
     quantized
 end
 
-% FIXME: consider reducing here (higher chances of catching duplicates as
-% well
-features = to_features(tables_dir,options.fit_total_mobility);
+[features,decoder] = to_features(tables_dir,options.fit_total_mobility,options.fit_parametric,...
+    options.num_principal_components);
 
 mapping_dedup = deduplicate(features,options.duplicate_threshold);
 
@@ -41,7 +40,10 @@ end
 idx_dedup = unique(mapping_dedup);
 features_dedup = features(:,idx_dedup);
 
-[features_quant,mapping_quant] = quantize_impl(features_dedup,options);
+options.num_quants = min(options.num_quants,size(features_dedup,2));
+[mapping_quant,quants,~,~] = kmeans(features_dedup',options.num_quants,options.kmeans{:});
+
+features_quant = decoder(quants');
 
 quantized = from_features(tables_dedup.mapping, features_quant, mapping_quant, ...
     options.fit_total_mobility);
@@ -88,27 +90,6 @@ for ref_sample_num=1:num_samples
 end
 end
 
-function [features_quant,mapping_quant] = quantize_impl(features,options)
-
-% encoding and decoders on the spot
-encoded = features;
-decoder = @(x) x;
-switch options.dim_reduction
-    case DimReduction.None
-    case DimReduction.PCA
-        % PCA
-        [encoded, decoder] = reduce_pca(features,options.num_pc);
-    case DimReduction.Correlations
-        % feature vector is a parametric fit
-        [encoded, decoder] = reduce_corr(features);
-end
-
-[mapping_quant,quants,~,~] = kmeans(encoded',options.num_quants,options.kmeans{:});
-
-features_quant = decoder(quants');
-
-end
-
 function tables = from_features(mapping_prev, features, mapping_new, fit_total_mobility)
 tables = struct();
 
@@ -135,23 +116,9 @@ tables_quant.krg = tables_quant.krg(quant_idx,:);
 tables_quant.mapping = ic';
 end
 
-function [encoded, decoder] = reduce_pca(features,num_pc)
-origin = min(features,[],2);
-[U,S,V] = svd(features-origin,"econ");
-num_pc = min(num_pc,size(V,2));
-encoded = V(:,1:num_pc)';
-Phi = U(:,1:num_pc)*S(1:num_pc,1:num_pc);
-decoder = @(encoded) Phi*encoded + origin;
-end
-
-function [encoded, decoder] = reduce_corr(features)
-error("not implemented");
-fittype; % fit J-functions directly (maybe)
-fit; % use constraints for rel perms
-end
-
 function mapping = merge_maps(map_1, map_2)
 [~, ~, inv_1] = unique(map_1);
 [~, ~, inv_2] = unique(map_2);
 mapping = inv_2(inv_1);
 end
+
