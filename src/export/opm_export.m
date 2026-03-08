@@ -45,7 +45,7 @@ end
 
 % Write JFUNC include file
 mult = cap_pressure(1).mult / (dyne / centi / meter);
-jfunc_line = sprintf("'WATER' 0.0 %f * * XY /", mult); % TODO: generalize 'XY'
+jfunc_line = sprintf("'GAS' 0.0 %f * * XY /", mult); % TODO: generalize 'XY'
 jfunc_str = {"JFUNC",jfunc_line};
 jfunc_fid = fopen([output_prefix,'JFUNC.inc'],'wb','native','UTF-8');
 fprintf(jfunc_fid,'%s\n',jfunc_str{:});
