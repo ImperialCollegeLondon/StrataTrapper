@@ -1,15 +1,15 @@
-function [dequantized] = dequantize(quantized)
+function [table] = dequantize(table)
 arguments (Input)
-    quantized (1,1) struct
+    table (1,1) struct
 end
 
 arguments (Output)
-    dequantized (1,1) struct
+    table (1,1) struct
 end
 
-dequantized.leverett_j = quantized.leverett_j(quantized.mapping,:);
-dequantized.krw = quantized.krw(quantized.mapping,:);
-dequantized.krg = quantized.krg(quantized.mapping,:);
-dequantized.mapping = 1:numel(quantized.mapping);
+table.leverett_j = table.leverett_j(quantized.mapping,:);
+table.krw = table.krw(quantized.mapping,:);
+table.krg = table.krg(quantized.mapping,:);
+table.mapping = 1:numel(quantized.mapping);
 
 end
