@@ -23,8 +23,8 @@ strata_trapped.params.export_ogs(strata_trapped.saturation,[output_prefix,'chc.i
 generate_sfn(strata_trapped,output_prefix,'.data',numel(strata_trapped.params));
 
 % export curve mappings
-write_krnum(output_prefix,strata_trapped.grid,strata_trapped.idx,...
-    numel(strata_trapped.params),args.satnum);
+write_krnum(output_prefix,strata_trapped.grid,strata_trapped.idx,strata_trapped.tables,...
+    strata_trapped.param_ids,orig_satnum=args.satnum);
 
 % export permeability
 write_perm(output_prefix,strata_trapped.grid,strata_trapped.permeability,strata_trapped.idx,...
