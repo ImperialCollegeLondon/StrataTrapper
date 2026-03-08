@@ -29,12 +29,23 @@ classdef CapPressure
                 perm (:,:,:,:) double {mustBeNonnegative}
             end
 
+            pc = obj.from_lj(obj.leverett_j.func(sw),poro,perm);
+        end
+
+        function pc = from_lj(obj,leverett_j,poro,perm)
+            arguments
+                obj (1,1) CapPressure
+                leverett_j  (:,:) double
+                poro double {mustBeNonnegative}
+                perm (:,:,:,:) double {mustBeNonnegative}
+            end
+
             perm = obj.transform_perm(poro,perm);
 
             poresize_mult = poro./perm;
             poresize_mult(poro == 0) = 0;
 
-            pc = obj.mult * obj.leverett_j.func(sw) * sqrt(poresize_mult);
+            pc = obj.mult * leverett_j .* sqrt(poresize_mult);
             pc(poro == 0) = Inf;
         end
 

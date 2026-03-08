@@ -1,64 +1,47 @@
-function generate_sfn(strata_trapped,prefix,inc_ext,offset)
+function generate_sfn(strata_trapped,prefix,inc_ext)
 arguments
     strata_trapped
     prefix char
     inc_ext char
-    offset (1,1) uint32
 end
 
-cap_pressure = [strata_trapped.params.cap_pressure];
-cap_pressure = cap_pressure.normalize();
-
-leverett_j = cap_pressure.inv_lj(...
-    strata_trapped.capillary_pressure,...
-    strata_trapped.porosity,...
-    strata_trapped.permeability, ...
-    strata_trapped.param_ids);
+strata_trapped = normalize_lj(strata_trapped);
 
 dir_label = ['x','y','z'];
 
-for direction=1:3
-    file_name = [prefix,'chc',dir_label(direction),inc_ext];
-    file_id = fopen(file_name,'wb','native','UTF-8');
-    write_tables_for_direction(strata_trapped.idx,file_id,...
-        strata_trapped.rel_perm_wat, strata_trapped.rel_perm_gas,...
-        strata_trapped.saturation,leverett_j,strata_trapped.param_ids,...
-        direction,offset);
-    fclose(file_id);
+offset = numel(strata_trapped.params);
+for param_id=1:size(strata_trapped.tables,1)
+    for direction=1:3
+        file_name = sprintf('%schc%u%s%s',prefix,param_id,dir_label(direction),inc_ext);
+        file_id = fopen(file_name,'wb','native','UTF-8');
+
+        sw = strata_trapped.saturation(param_id,:);
+
+        offset = write_table(file_id,sw,strata_trapped.tables(param_id,direction),offset);
+
+        fclose(file_id);
+    end
 end
 
 end
 
-function write_tables_for_direction(idx,file_id, krw, krg,saturations,leverett_j,param_ids,...
-    direction,offset)
-for cell_index = 1:length(idx)
-    table_num = cell_index + length(idx) * (direction-1) + offset;
 
-    fprintf(file_id,'CHARACTERISTIC_CURVES sfn_%u\n',table_num);
-    fprintf(file_id,'%s\n%s\n',...
-        'TABLE swfn_table',...
-        'PRESSURE_UNITS None');
+function new_offset = write_table(file_id,sw,table,offset)
+    num_tables = numel(unique(table.mapping));
+    for m = 1:num_tables
+        table_num = offset + m;
 
-    sw = saturations(param_ids(cell_index),:);
-    write_sfn_table(file_id,"SWFN",...
-        sw, ...
-        squeeze(krw(cell_index,direction,:)), ...
-        leverett_j(cell_index,:));
+        fprintf(file_id,'CHARACTERISTIC_CURVES chc_%u\n',table_num);
+        fprintf(file_id,'%s\n%s\n','TABLE swfn_table','PRESSURE_UNITS None');
 
-    fprintf(file_id,'%s\n%s\n%s\n',...
-        'END',...
-        'TABLE sgfn_table',...
-        'PRESSURE_UNITS None');
+        write_sfn_table(file_id,"SWFN",sw,table.krw(m,:),table.leverett_j(m,:));
 
-    sg = 1 - sw;
-    sg = sg(end:-1:1);
-    write_sfn_table(file_id,"SGFN",...
-        sg, ...
-        squeeze(krg(cell_index,direction,end:-1:1)), ...
-        zeros(size(sg)));
+        fprintf(file_id,'%s\n%s\n%s\n','END','TABLE sgfn_table','PRESSURE_UNITS None');
 
-    fprintf(file_id,'%s\n%s\n',...
-        'END',...
-        'END');
-end
+        sg = 1 - sw; sg = sg(end:-1:1);
+        write_sfn_table(file_id,"SGFN",sg, table.krg(m,end:-1:1),zeros(size(sg)));
+
+        fprintf(file_id,'%s\n%s\n','END','END');
+    end
+    new_offset = offset + num_tables;
 end
