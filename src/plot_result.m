@@ -18,22 +18,20 @@ end
 [t_all,t_kr,t_krw,t_krg,ax_pc,ax_krw_x,ax_krw_y,ax_krw_z,ax_krg_x,ax_krg_y,ax_krg_z] ...
     = nested_tiles(fig);
 
-mask = strata_trapped.param_ids == param_id;
+saturation = strata_trapped.saturation(param_id,:);
 
-% reconstruct J-function data only
-leverett_j_upscaled = strata_trapped.params(param_id).cap_pressure.inv_lj(...
-    strata_trapped.capillary_pressure(mask,:),...
-    strata_trapped.porosity(mask,:),...
-    strata_trapped.permeability(mask,:));
+leverett_j = dequantize(strata_trapped.tables(param_id,1)).leverett_j;
 
-[~, ax_pc] =  stat_plot(ax_pc,strata_trapped.saturation(param_id,:),...
-    @(sw)strata_trapped.params(param_id).cap_pressure.leverett_j.func(sw),leverett_j_upscaled,...
-    param_id,true);
+[~, ax_pc] =  stat_plot(ax_pc,saturation,...
+    @(sw)strata_trapped.params(param_id).cap_pressure.leverett_j.func(sw),...
+    leverett_j,param_id,true);
+
 title(ax_pc,'Leverett J-function');
 ylabel(ax_pc,'[-]');
 ax_pc.YScale='log';
-curves_plot([ax_krw_x,ax_krw_y,ax_krw_z;ax_krg_x,ax_krg_y,ax_krg_z], ...
-    strata_trapped, strata_trapped.params(param_id), param_id, args.kr_scale);
+
+curves_plot([ax_krw_x,ax_krw_y,ax_krw_z;ax_krg_x,ax_krg_y,ax_krg_z], saturation, ...
+    strata_trapped.tables(param_id,:), strata_trapped.params(param_id), args.kr_scale);
 
 xlabel(t_all,'Wetting phase saturation',FontSize=args.font_size);
 title(t_kr,'Relative permeability',FontSize=args.font_size);
@@ -49,38 +47,31 @@ subtitle(ax_krg_z,'z','Interpreter','latex');
 end
 
 
-function curves_plot(ax_kr, strata_trapped, params,param_id,scale)
+function curves_plot(ax_kr, saturation, dequantized, params, scale)
 arguments
     ax_kr
-    strata_trapped
+    saturation
+    dequantized
     params
-    param_id
     scale = "log"
 end
-
-mask = strata_trapped.param_ids == param_id;
-saturation =  strata_trapped.saturation(param_id,:);
-sub_data = @(data,direction) squeeze(data(mask,direction,:));
-
-stat_plot(ax_kr(1,1),saturation,...
-    @(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,1),param_id);
+ 
+stat_plot(ax_kr(1,1),saturation,@(sw)params.krw.func(sw),dequantized(1).krw,[]);
 ax_kr(1,1).YScale = scale;
-stat_plot(ax_kr(2,1),saturation,...
-    @(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,1),param_id);
+
+stat_plot(ax_kr(2,1),saturation,@(sw) params.krg.func(1-sw),dequantized(1).krg,[]);
 ax_kr(2,1).YScale = scale;
 
-stat_plot(ax_kr(1,2),saturation,...
-    @(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,2),param_id);
+stat_plot(ax_kr(1,2),saturation,@(sw)params.krw.func(sw),dequantized(2).krw,[]);
 ax_kr(1,2).YScale = scale;
-stat_plot(ax_kr(2,2),saturation,...
-    @(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,2),param_id);
+
+stat_plot(ax_kr(2,2),saturation,@(sw) params.krg.func(1-sw),dequantized(2).krg,[]);
 ax_kr(2,2).YScale = scale;
 
-stat_plot(ax_kr(1,3),saturation,...
-    @(sw)params.krw.func(sw),sub_data(strata_trapped.rel_perm_wat,3),param_id);
+stat_plot(ax_kr(1,3),saturation,@(sw)params.krw.func(sw),dequantized(3).krw,[]);
 ax_kr(1,3).YScale = scale;
-stat_plot(ax_kr(2,3),saturation, ...
-    @(sw) params.krg.func(1-sw),sub_data(strata_trapped.rel_perm_gas,3),param_id);
+
+stat_plot(ax_kr(2,3),saturation,@(sw) params.krg.func(1-sw),dequantized(3).krg,[]);
 ax_kr(2,3).YScale = scale;
 end
 
