@@ -1,8 +1,7 @@
 function output = organize(strata_trapped)
 % organize tables by param_id and direction, and convert Pc to J
 
-tables = repmat(struct('leverett_j',[],'krw',[],'krg',[],'mapping',[]),...
-    numel(strata_trapped.params),3);
+tables = repmat(UpscaledTables(),numel(strata_trapped.params),3);
 
 for param_id=1:numel(strata_trapped.params)
 

@@ -21,7 +21,7 @@ end
 
 function [quantized] = quantize_table(tables_dir,sw,options)
 arguments (Input)
-    tables_dir (1,1) struct
+    tables_dir (1,1) UpscaledTables
     sw
     options (1,1) QuantizeOptions
 end
@@ -30,7 +30,7 @@ arguments (Output)
 end
 
 [features,decoder] = to_features(tables_dir,sw,options.fit_parametric,options.fit_total_mobility,...
-    options.num_principal_components);
+    options.num_principal_components,options.num_par_workers);
 
 mapping_dedup = deduplicate(features,options.duplicate_threshold);
 
@@ -97,7 +97,7 @@ end
 end
 
 function tables = from_features(mapping_prev, features, mapping_new, fit_total_mobility)
-tables = struct();
+tables = UpscaledTables();
 
 features = features';
 

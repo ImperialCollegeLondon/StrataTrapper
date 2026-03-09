@@ -8,6 +8,8 @@ arguments
     args.visible char = 'on';
 end
 
+must_be_param_id(param_id,strata_trapped.params);
+
 if isempty(args.parent)
     fig = figure('Visible',args.visible);
 else
