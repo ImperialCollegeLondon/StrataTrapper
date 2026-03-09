@@ -8,11 +8,11 @@ options.fit_parametric = false;
 
 options.fit_total_mobility = false;
 
-options.num_principal_components = [];
+options.num_principal_components = 40;
 
-options.duplicate_threshold = 1e-4;
+options.duplicate_threshold = 1e-3;
 
-options.num_quants = 4000;
+options.num_quants = [];
 
 options.num_par_workers = Inf;
 
