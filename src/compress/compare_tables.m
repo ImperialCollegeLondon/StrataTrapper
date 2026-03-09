@@ -11,7 +11,8 @@ end
 
 err = repmat(struct('delta',[],'delta_mse',Inf),size(tables_1));
 
-transform = @(table,sw) to_features(table,sw,fit_parametric,fit_total_mobility,num_principal_components);
+transform = @(table,sw) ...
+    to_features(table,sw,fit_parametric,fit_total_mobility,num_principal_components);
 
 for param_id = 1:size(tables_1,1)
     sw = saturations(param_id,:);
