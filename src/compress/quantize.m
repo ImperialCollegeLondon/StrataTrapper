@@ -9,36 +9,42 @@ end
 
 quantized = strata_trapped;
 
-for table_idx = 1:numel(strata_trapped.tables)
-    tables_quant = quantize_table(strata_trapped.tables(table_idx),options);
-    quantized.tables(table_idx) = tables_quant;
+for param_id = 1:size(strata_trapped.tables,1)
+    sw = strata_trapped.saturation(param_id,:);
+    for dir = 1:size(strata_trapped.tables,2)
+        tables_quant = quantize_table(strata_trapped.tables(param_id,dir),sw,options);
+        quantized.tables(param_id,dir) = tables_quant;
+    end
 end
 
 end
 
-function [quantized] = quantize_table(tables_dir,options)
+function [quantized] = quantize_table(tables_dir,sw,options)
 arguments (Input)
     tables_dir (1,1) struct
+    sw
     options (1,1) QuantizeOptions
 end
 arguments (Output)
     quantized
 end
 
-[features,decoder] = to_features(tables_dir,options.fit_total_mobility,options.fit_parametric,...
+[features,decoder] = to_features(tables_dir,sw,options.fit_parametric,options.fit_total_mobility,...
     options.num_principal_components);
 
 mapping_dedup = deduplicate(features,options.duplicate_threshold);
 
 tables_dedup = from_quants(tables_dir,mapping_dedup);
 
-if isempty(options.num_quants)
-    quantized = tables_dedup;
-    return;
-end
-
 idx_dedup = unique(mapping_dedup);
 features_dedup = features(:,idx_dedup);
+
+if isempty(options.num_quants)
+    features_decoded = decoder(features_dedup);
+    quantized = from_features(tables_dir.mapping, features_decoded, mapping_dedup, ...
+         options.fit_total_mobility);
+    return;
+end
 
 options.num_quants = min(options.num_quants,size(features_dedup,2));
 [mapping_quant,quants,~,~] = kmeans(features_dedup',options.num_quants,options.kmeans{:});
