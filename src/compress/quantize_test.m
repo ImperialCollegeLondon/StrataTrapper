@@ -10,9 +10,9 @@ options.fit_total_mobility = false;
 
 options.num_principal_components = [];
 
-options.duplicate_threshold = 2e-2;
+options.duplicate_threshold = 1e-4;
 
-options.num_quants = [];
+options.num_quants = 4000;
 
 options.num_par_workers = Inf;
 
@@ -24,7 +24,8 @@ err = compare_tables(quantized_trivial.tables,quantized.tables,quantized.saturat
 arrayfun(@(err) err.delta_mse, err,"UniformOutput",true)
 
 close all;
-plot_result(quantized_trivial,1,"visible",'on','kr_scale',"log");
-plot_result(quantized,1,"visible",'on','kr_scale',"log");
+plot_result(quantized_trivial,1,"visible",'on','kr_scale',"linear");
+plot_result(quantized,1,"visible",'on','kr_scale',"linear");
 % plot_result(quantized,2,"visible",'on');
 
+%%

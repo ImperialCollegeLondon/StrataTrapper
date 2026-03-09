@@ -28,7 +28,7 @@ decoder = @(x) decoder_fit(decoder_pca(x));
 end
 
 function [encoded, decoder] = reduce_pca(features,num_pc)
-origin = min(features,[],2);
+origin = mean(features,2);
 [U,S,V] = svd(features-origin,"econ");
 num_pc = min(num_pc,size(V,2));
 encoded = V(:,1:num_pc)';
