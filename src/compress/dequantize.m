@@ -1,10 +1,10 @@
 function [table] = dequantize(table)
 arguments (Input)
-    table (1,1) struct
+    table (1,1) UpscaledTables
 end
 
 arguments (Output)
-    table (1,1) struct
+    table (1,1) UpscaledTables
 end
 
 table.leverett_j = table.leverett_j(table.mapping,:);

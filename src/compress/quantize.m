@@ -105,10 +105,14 @@ table_dim = size(features,2)/3;
 
 tables.leverett_j = 10.^features(:,1:table_dim);
 tables.krg = features(:, (2*table_dim+1):end);
+tables.krg = max(tables.krg,0);
 
 krw_or_tm = features(:, (table_dim+1):(2*table_dim));
 
-tables.krw = max(krw_or_tm .* (1+fit_total_mobility) - tables.krg.*fit_total_mobility,0);
+w = (~fit_total_mobility) + 0.5 * fit_total_mobility;
+
+tables.krw = krw_or_tm ./w + (1-1/w).* tables.krg;
+tables.krw = max(tables.krw,0);
 
 tables.mapping = merge_maps(mapping_prev,mapping_new);
 end
