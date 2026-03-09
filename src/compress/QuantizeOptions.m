@@ -7,8 +7,8 @@ classdef QuantizeOptions
         num_quants (:,1) uint32 {mustBeScalarOrEmpty, mustBePositive} = []
         
         % name-value arguments as per official kmeans documentation
-        kmeans = {'OnlinePhase','on','MaxIter',1000,'Display','off','Distance','sqeuclidean',...
-            'EmptyAction','drop','Start','plus'} 
+        kmeans = {'OnlinePhase','off','MaxIter',1000,'Display','off','Distance','sqeuclidean',...
+            'EmptyAction','singleton','Start','plus'} 
 
         num_par_workers = 0;
     end
