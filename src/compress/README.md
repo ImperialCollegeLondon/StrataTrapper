@@ -54,7 +54,7 @@ embed -- no --> red
 embed -- yes --> red
 red -- yes --> latent
 red -- no --> latent
-do_param_fit-- Corey/LET parameterisation --> latent
+do_param_fit-- Corey/LET parameterisation --> red
 latent -- Remove near-identical entires --> clean
 clean -- "Quantisation (k-means or alternative)" --> repr
 repr -- "Inverse transform to tabular format" --> tabs
