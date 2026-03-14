@@ -61,8 +61,8 @@ parfor (cell_index = 1:subset_len, args.parfor_arg)
     timer_start = tic;
 
     param_id_cell = param_ids(cell_index);
-    params_cell = params(param_id_cell);
-    saturations_cell = saturations(param_id_cell,:);
+    params_cell = params(param_id_cell); %#ok<PFBNS>
+    saturations_cell = saturations(param_id_cell,:); %#ok<PFBNS>
 
     [perm_upscaled_cell, pc_upscaled, krw_cell, krg_cell, mip_cell] = upscale(...
         DR(cell_index,:), saturations_cell, params_cell, options, ...
