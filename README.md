@@ -11,6 +11,7 @@ Repository: [github.com/ImperialCollegeLondon/StrataTrapper](https://github.com/
 * [The StrataTrapper codes](#the-stratatrapper-codes)
 * [Structure](#structure)
 * [Running](#running)
+* [Output compression](#output-compression)
 * [MEX acceleration](#mex-acceleration)
 * [Versions](#versions)
 * [Contributing](#contributing)
@@ -68,10 +69,23 @@ if they are in a startup folder.
 So, using several parallel workers usually results
 in a proportional performance boost.
 
+## Output compression
+
+By default, `strata_trapper` outputs one set of saturation tables
+**per coarse cell per direction**.
+Such a number might be found too big in some situations.
+
+With [`quantize`](src/compress/quantize.m),
+toolkit can now compress the set of saturation tables
+if they are similar enough or the acceptable approximation error is high.
+
+Read [compression README](src/compress/README.md) for more details.
+
 ## MEX acceleration
 
 We provide the `CodeGenMex` class to automatically build
-a MEX-accelerated version of the `upscale` function.
+a MEX-accelerated version of computationally-demanding functions
+such as [`upscale`](src/upscale.m).
 
 ```matlab
 % 1. compile MEX functions
