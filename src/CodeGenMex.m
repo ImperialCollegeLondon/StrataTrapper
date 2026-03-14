@@ -1,7 +1,7 @@
 classdef CodeGenMex < handle
     properties
         cfg
-        built_func
+        built_func = {}
     end
 
     methods
@@ -32,17 +32,26 @@ classdef CodeGenMex < handle
         
         function self = build_with(self,options,func)
             codegen("-config",self.cfg,options{:},func);
-            self.built_func = func;
+            if isempty(self.built_func)
+                self.built_func{1} = func;
+            else
+                self.built_func{end+1} = func;
+            end
         end
 
         function self = build(self)
             self = self.build_with({"-o","upscale"},'upscale');
+
+            % NOTE: fminunc not supported
+            % self = self.build_with({"-o","fit_LET"},'fit_LET'); 
         end
 
         function self = clear(self)
             clear mex; %#ok<CLMEX>
-            delete([self.built_func,'.mex*']);
-            self.built_func = [];
+            for i = 1:numel(self.built_func)
+                delete([self.built_func{i},'.mex*']);
+            end
+            self.built_func = {};
         end
     end
 end

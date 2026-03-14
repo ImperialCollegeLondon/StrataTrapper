@@ -60,6 +60,55 @@ ogs_export(strata_trapped,satnum=1);
 
 opm_export(strata_trapped,satnum=1);
 
+%% Output compression
+
+test_output_compression(strata_trapped,visible);
+
+end
+
+function test_output_compression(strata_trapped,visible)
+
+% trivial pass
+quantized_trivial = quantize(strata_trapped,QuantizeOptions());
+err_trivial = compare_tables(quantized_trivial.tables,strata_trapped.tables,...
+    strata_trapped.saturation);
+err_trivial = arrayfun(@(err) err.delta_mse, err_trivial,"UniformOutput",true);
+assert(norm(err_trivial) <= eps);
+
+% de-duplication
+options(1) = QuantizeOptions();
+options(1).duplicate_threshold = 1e-3;
+
+options(2) = QuantizeOptions();
+options(2).fit_parametric = true;
+
+options(3) = QuantizeOptions();
+options(3).fit_total_mobility = true;
+
+options(4) = QuantizeOptions();
+options(4).num_principal_components = 3;
+
+options(5) = QuantizeOptions();
+options(5).num_quants = 3;
+
+options(6) = QuantizeOptions();
+options(6).fit_total_mobility = true;
+options(6).num_principal_components = 3;
+options(6).num_quants = 3;
+
+options(7) = QuantizeOptions();
+options(7).fit_parametric = true;
+options(7).num_principal_components = 3;
+options(7).num_quants = 3;
+
+for i=1:numel(options)
+    quantized(i) = quantize(strata_trapped,options(i));
+
+    compare_tables(strata_trapped.tables,quantized(i).tables,strata_trapped.saturation);
+
+    plot_result(quantized(i),mod(i,2)+1,"visible",visible);
+end
+
 end
 
 %% helpers

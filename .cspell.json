@@ -22,6 +22,9 @@
         "buildfile",
         "buildplan",
         "localfunctions",
-        "codegen_mex"
+        "codegen_mex",
+        "dequantize",
+        "upsc",
+        "repr"
     ]
 }
