@@ -17,6 +17,7 @@ jobs:
             globs: |
                 **/*.md
                 !CHANGELOG.md
+                !.github/copilot-instructions.md
     cspell:
         name: Spelling
         runs-on: ubuntu-latest
