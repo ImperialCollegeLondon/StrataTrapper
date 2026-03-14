@@ -20,11 +20,12 @@ write_poro(output_prefix,grid,strata_trapped.porosity,strata_trapped.idx,args.de
 strata_trapped.params.export_ogs(strata_trapped.saturation,[output_prefix,'chc.inc']);
 
 % export upscaled curves
-generate_sfn(strata_trapped,output_prefix,'.data',numel(strata_trapped.params));
+generate_sfn(strata_trapped,output_prefix,'.data');
 
 % export curve mappings
-write_krnum(output_prefix,strata_trapped.grid,strata_trapped.idx,...
-    numel(strata_trapped.params),args.satnum);
+orig_tabnum = numel(strata_trapped.params);
+write_krnum(output_prefix,strata_trapped.grid,strata_trapped.idx,orig_tabnum,...
+    strata_trapped.tables,strata_trapped.param_ids,orig_satnum=args.satnum);
 
 % export permeability
 write_perm(output_prefix,strata_trapped.grid,strata_trapped.permeability,strata_trapped.idx,...
@@ -61,12 +62,13 @@ fclose(grid_fid);
 % create curves include file
 curve_fid = fopen([output_prefix,'curves.inc'],'wb','native','UTF-8');
 
-fprintf(curve_fid,...
-    "EXTERNAL_FILE ""chc.inc""\n" + ...
-    "EXTERNAL_FILE ""chcx.data""\n" + ...
-    "EXTERNAL_FILE ""chcy.data""\n" + ...
-    "EXTERNAL_FILE ""chcz.data""\n" + ...
-    "\n");
+fprintf(curve_fid,"EXTERNAL_FILE ""chc.inc""\n");
+
+for param_id = 1:size(strata_trapped.tables,1)
+    for dir = ['x','y','z']
+        fprintf(curve_fid,"EXTERNAL_FILE ""chc%u%s.data""\n",param_id,dir);
+    end
+end
 
 fclose(curve_fid);
 

@@ -1,29 +1,37 @@
-function write_krnum(prefix,G,idx,orig_tabnum,orig_satnum)
+function write_krnum(prefix,G,idx,orig_tabnum,tables,param_ids,args)
 arguments
     prefix
     G
     idx
-    orig_tabnum {mustBeInteger, mustBePositive} % original number of SATNUM regions
-    orig_satnum = []; % original SATNUM (required if orig_tabnum > 1)
+    orig_tabnum {mustBeInteger, mustBePositive}
+    tables (:,:) UpscaledTables
+    param_ids
+    args.orig_satnum = []; % original SATNUM (required if orig_tabnum > 1)
 end
 
 if (orig_tabnum == 1)
-    orig_satnum = 1;
-elseif isempty(orig_satnum)
+    args.orig_satnum = 1;
+elseif isempty(args.orig_satnum)
     error("Original SATNUM is required when orig_tabnum > 1")
 end
 
-curve_mapping = cell_to_curve(G, idx);
+krnum = zeros(prod(G.cartDims),3);
+num_tables_prev = orig_tabnum;
+for param_id = 1:orig_tabnum
+    active_cells = idx(param_ids == param_id);
+    cart_cells = G.cells.indexMap(active_cells);
+    for dir=1:3
+        krnum(cart_cells,dir) = num_tables_prev + tables(param_id,dir).mapping;
+        num_tables_prev = max(krnum(:));
+    end
+end
 
 keywords = ["KRNUMX","KRNUMY","KRNUMZ"];
 
-num_cells = length(idx);
-krnum = [0,num_cells,num_cells*2]+orig_tabnum;
-
-for keyword_num = 1:length(keywords)
-    keyword = keywords(keyword_num);
+for dir = 1:3
+    keyword = keywords(dir);
     file_name = join([prefix,keyword,".inc"],'');
-    write_keyword(file_name,keyword,curve_mapping,krnum(keyword_num), orig_satnum);
+    write_keyword(file_name, keyword, krnum(:,dir), 0, args.orig_satnum);
 end
 
 end
