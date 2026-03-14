@@ -11,7 +11,9 @@ end
 mkdir(args.output_folder);
 output_prefix = append(args.output_folder,'/');
 
-tab_dims = numel(strata_trapped.params) + numel(strata_trapped.idx)*3;
+orig_tabnum = numel(strata_trapped.params);
+upsc_tabnum = sum(arrayfun(@(table) size(table.leverett_j,1),strata_trapped.tables(:)));
+tab_dims = orig_tabnum + upsc_tabnum;
 write_keyword([output_prefix,'TABDIMS.inc'],'TABDIMS',tab_dims,0,0);
 
 % Write umbrella RUNSPEC file
@@ -52,8 +54,8 @@ fprintf(jfunc_fid,'%s\n',jfunc_str{:});
 fclose(jfunc_fid);
 
 % Write mappings
-write_krnum(output_prefix,strata_trapped.grid,strata_trapped.idx,...
-    numel(strata_trapped.params),args.satnum);
+write_krnum(output_prefix,strata_trapped.grid,strata_trapped.idx,orig_tabnum, ...
+    strata_trapped.tables,strata_trapped.param_ids,orig_satnum=args.satnum);
 
 % Set FIPNUM regions for MIP-upscaled cells
 fip_mip = zeros(prod(grid.cartDims),1);
@@ -117,17 +119,11 @@ arguments
     prefix char
 end
 
-% NOTE: CapPressure array should be normalized
-cap_pressure = [strata_trapped.params.cap_pressure];
-
-leverett_j = cap_pressure.inv_lj(...
-    strata_trapped.capillary_pressure,...
-    strata_trapped.porosity,...
-    strata_trapped.permeability, ...
-    strata_trapped.param_ids);
+strata_trapped = normalize_lj(strata_trapped);
 
 sgwfn_fid = fopen([prefix,'SGWFN.inc'],'wb','native','UTF-8');
 fprintf(sgwfn_fid,'%s\n',"SGWFN");
+
 % 1. Write original tables
 for param_id = 1:numel(strata_trapped.params)
     sgfn_export_str = ...
@@ -136,27 +132,34 @@ for param_id = 1:numel(strata_trapped.params)
 end
 
 % 2. Write upscaled tables
-for direction=1:3
-    write_tables_for_direction(sgwfn_fid, strata_trapped.idx,...
-        strata_trapped.rel_perm_wat, strata_trapped.rel_perm_gas,...
-        strata_trapped.saturation,leverett_j, strata_trapped.param_ids,direction);
+dir_label = ['X','Y','Z'];
+offset = numel(strata_trapped.params);
+for param_id=1:size(strata_trapped.tables,1)
+    for direction=1:3
+        table = strata_trapped.tables(param_id,direction);
+        sw = strata_trapped.saturation(param_id,:);
+        offset = write_table_opm(sgwfn_fid,table,sw,param_id,dir_label(direction),offset);
+    end
 end
+
 fclose(sgwfn_fid);
 
 end
 
-function write_tables_for_direction(file_id,idx, krw, krg,saturations,leverett_j,param_id,direction)
-dir_label = ['X','Y','Z'];
-for cell_index = 1:length(idx)
-    sw = saturations(param_id(cell_index),:);
+function new_offset = write_table_opm(file_id,table,sw,param_id,dir_label,offset)
+num_tables = numel(unique(table.mapping));
+for m = 1:num_tables
+    table_num = offset + m;
+
     sg = 1 - sw;
-    krg_cell = squeeze(krg(cell_index,direction,:))';
-    krw_cell  = squeeze(krw(cell_index,direction,:))';
-    jfunc = leverett_j(cell_index,:);
-    data = [sg;krg_cell;krw_cell;jfunc];
+    krg = table.krg(m,:);
+    krw = table.krw(m,:);
+    jfunc = table.leverett_j(m,:);
+    data = [sg;krg;krw;jfunc];
     data = data(:,end:-1:1);
 
     fprintf(file_id,'%e\t%e\t%e\t%e\n',data);
-    fprintf(file_id,'/ -- KRNUM%s cell %u\n',dir_label(direction),idx(cell_index));
+    fprintf(file_id,'/ -- KRNUM%s table #%u (upscaled #%u)\n',dir_label,table_num,param_id);
 end
+new_offset = offset+num_tables;
 end
