@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.18.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.17.0...v0.18.0) (2026-03-20)
+
+
+### Features
+
+* ✨ lossy output compression via quantization ([f17cd2c](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/f17cd2cab401134007e1ea2f7e86de6b41e92d50))
+* ✨ multi-rock-type upscaling ([371ba24](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/371ba24b027b61a0b5de41810636f938b9a39a24))
+* ✨ normalization for CapPressure arrays ([27416be](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/27416bed18e7cbcd01c23bf48cb4dca5cfe320ee))
+* 🚸 `CapPressure` arrays in `inv_lj` method ([e8accf3](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/e8accf3db5a424347f2c2ae90eb55170d43cadec))
+* 🚸 new method `CapPressure@from_lj` ([5ded7ec](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/5ded7ec79da402a5d4383f2419204db8f8007305))
+* **export:** 🚸 normalized `Params` to OGS ([9686574](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/9686574d65bcd5e16fb4bbfca5c017a9277848b8))
+* **export:** 🚸 support fallback arrays for keywords ([d8a97ff](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/d8a97ff2aab85e8df86574554649a99db1dac344))
+
+
+### Bug Fixes
+
+* **export:** ♻️ unified PORO export function ([a635c0c](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/a635c0c06c465e3c52e20dae19111843e5c4246a))
+* **export:** 🐛 `JFUNC` export for OPM ([a9ec36f](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/a9ec36f6cd9711584dd539cd0f1f39bc135e08ef)), closes [#171](https://github.com/ImperialCollegeLondon/StrataTrapper/issues/171)
+* **export:** 🚚 `write_mappings -> write_krnum` + SATNUM ([cf7c577](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/cf7c5771019ecc51062c9e32ce56524826d78894))
+* **export:** 🚸 name-value args for OGS ([ab475d7](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/ab475d7185d5852b5e4ba3f5c522c79da9e063c8))
+
 ## [0.17.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.16.0...v0.17.0) (2025-12-12)
 
 
