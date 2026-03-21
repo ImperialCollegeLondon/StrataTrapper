@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.18.1](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.18.0...v0.18.1) (2026-03-21)
+
+
+### Bug Fixes
+
+* **export:** `write_perm`: unit conversion for `default_perm` ([e6d2f19](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/e6d2f197b44aa1acea105161780531b083fc4e33))
+
 ## [0.18.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.17.0...v0.18.0) (2026-03-20)
 
 
