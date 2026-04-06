@@ -18,7 +18,7 @@ jobs:
             Statistics_and_Machine_Learning_Toolbox
             Parallel_Computing_Toolbox
             Optimization_Toolbox
-      - uses: matlab-actions/run-build@v2
+      - uses: matlab-actions/run-build@v3
         with:
           #NOTE: test_codegen requires batch licensing
           tasks: check test
