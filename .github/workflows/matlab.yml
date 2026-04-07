@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: matlab-actions/setup-matlab@v2
+      - uses: matlab-actions/setup-matlab@v3
         with:
           release: ${{ matrix.release }}
           cache: true
