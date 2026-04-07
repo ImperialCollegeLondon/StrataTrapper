@@ -25,6 +25,7 @@
         "codegen_mex",
         "dequantize",
         "upsc",
-        "repr"
+        "MRST",
+        "deckformat"
     ]
 }
