@@ -18,6 +18,7 @@ jobs:
                 **/*.md
                 !CHANGELOG.md
                 !.github/copilot-instructions.md
+                !.github/skills/**/SKILL.md
     cspell:
         name: Spelling
         runs-on: ubuntu-latest
