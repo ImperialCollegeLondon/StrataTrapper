@@ -13,6 +13,7 @@ Repository: [github.com/ImperialCollegeLondon/StrataTrapper](https://github.com/
 * [Running](#running)
 * [Output compression](#output-compression)
 * [MEX acceleration](#mex-acceleration)
+* [Reservoir simulation import](#reservoir-simulation-import)
 * [Versions](#versions)
 * [Contributing](#contributing)
 * [References](#references)
@@ -102,6 +103,10 @@ codegen_mex.clear();
 ```
 
 Requires [MATLAB Coder](https://uk.mathworks.com/products/matlab-coder.html).
+
+## Reservoir simulation import
+
+See [`import_eclipse` README](src/import/README.md);
 
 ## Versions
 

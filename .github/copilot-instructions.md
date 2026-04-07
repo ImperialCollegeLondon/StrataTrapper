@@ -254,6 +254,34 @@ When an agentic vibe-coding session needs to land a change:
 - **Units**: Add new conversions to [src/units/](src/units/) as simple multiplier functions
 - **Grid/rock inputs**: Maintain MRST compatibility - ensure `strata_trapper()` can accept MRST grid structures (e.g., from `.EGRID` files)
 
+## Agent Preferences: Minimal Diffs & Iterative Workflows
+
+These are persistent agent-level preferences extracted from recent developer interactions. Agents and contributors should follow them when editing the repository or authoring automation instructions.
+
+- **Prefer small, local diffs:** Make the minimal change necessary to implement a feature or fix a bug. Avoid wholesale rewrites of files unless the change genuinely requires it. Small diffs are easier to review, revert, and test.
+- **Iterate gradually, one small step at a time:** Break multi-step work into small commits/patches and track progress with a short TODO or plan. Use the repository's `manage_todo_list`/work log pattern for multi-step changes.
+- **After iterations, optimize the big picture:** Once the incremental steps are validated, revisit the combined set of changes and perform a focused refactor or optimization pass (still using small, reviewable commits).
+- **Keep implementations simple and explicit:** Prefer direct, minimal code that does one thing. Avoid adding generic wrappers or helper layers unless there's a clear reuse case.
+- **Prefer runtime-detection for optional dependencies:** For third-party toolboxes (e.g., MRST), prefer a runtime check and clear user instructions over vendoring or automatic installation. Provide opt-in helpers to register local installs.
+- **Tests for optional features should be skipped when deps are absent:** Write tests to detect optional dependencies and skip/assume tests accordingly to keep CI stable.
+- **Follow the project's conventions:** Use `arguments` blocks, builder patterns, and MRST-compatible grid/rock shapes when adding or modifying code.
+- **Document intent in small commit messages:** Each commit should explain the why and scope; use Conventional Commits and include a co-author trailer for agentic sessions.
+
+Example prompt to see this in action:
+
+```
+Refactor `src/import/import_eclipse.m` to inline the minimal `ecl_import` logic.
+- Make a single-file, minimal change implementing the user's snippet.
+- Add a tiny test that is skipped when MRST is not present.
+- Do not add extra helpers unless strictly necessary.
+```
+
+Related customization suggestions (next small steps):
+
+- Add a short `CONTRIBUTING.md` checklist that enforces small diffs and iterative commits for new contributors.
+- Add a template `agent-instruction.md` that agents can populate when making multi-step changes (plan, edits, tests, follow-up refactor).
+
+
 ## Agentic Vibe-Coding Commit Rules for StrataTrapper
 
 **Purpose**: Reference guide for commit message format during agentic vibe-coding sessions.
