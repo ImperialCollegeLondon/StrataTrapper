@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.19.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.18.1...v0.19.0) (2026-04-07)
+
+
+### Features
+
+* ✨ import from binary ECLIPSE files with MRST ([09e602b](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/09e602b3b7f05d6c64f11c1abe6cea1b2481b069))
+
 ## [0.18.1](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.18.0...v0.18.1) (2026-03-21)
 
 
