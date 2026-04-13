@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.20.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.19.0...v0.20.0) (2026-04-13)
+
+
+### Features
+
+* ✨ stochastic downscaling ([3e2cf2e](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/3e2cf2efdfe5ffebb626f384d954a8465085b2e4))
+
 ## [0.19.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.18.1...v0.19.0) (2026-04-07)
 
 
