@@ -14,6 +14,7 @@ Repository: [github.com/ImperialCollegeLondon/StrataTrapper](https://github.com/
 * [Output compression](#output-compression)
 * [MEX acceleration](#mex-acceleration)
 * [Reservoir simulation import](#reservoir-simulation-import)
+* [Stochastic downscaling](#stochastic-downscaling)
 * [Versions](#versions)
 * [Contributing](#contributing)
 * [References](#references)
@@ -107,6 +108,10 @@ Requires [MATLAB Coder](https://uk.mathworks.com/products/matlab-coder.html).
 ## Reservoir simulation import
 
 See [`import_eclipse` README](src/import/README.md);
+
+## Stochastic downscaling
+
+See [downscaling README](src/downscale/README.md);
 
 ## Versions
 
