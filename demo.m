@@ -23,19 +23,17 @@ params  = gen_params (); % input rock-fluid parameters
 
 downscale_params = gen_downscale_params();
 
-%% Downscaling demo
-
-downscale_demo(params, downscale_params,visible);
-
 %% Grid & rock properties
 
 [grid, rock] = grid_demo(downscale_params);
 
 %% Run StrataTrapper
 
-mask = uint8([0,1,2,1,0,1,2,1,0]); % process only a fraction of cells
+mask = uint8([0;1;2;1;0;1;2;1;0]); % process only a fraction of cells
 params(2) = gen_params_2();
-sub_rock = downscale_all(grid,rock,mask,downscale_params);
+downscale_mask = true(grid.cells.num,1);
+downscale_mask(1:numel(mask)) = mask > 0;
+sub_rock = downscale(grid,rock,downscale_params.corr_lens,downscale_mask);
 
 options = Options().save_mip_step(true);
 
@@ -113,43 +111,6 @@ end
 
 %% helpers
 
-function fig = downscale_demo(params,downscale_params,visible)
-
-[sub_porosity, sub_permeability] = downscale(...
-    0.1, 100*milli*darcy * [1,1,0.5], [400,400,0.1].*meter(),downscale_params);
-
-fig = figure('Visible',visible);
-tiles = tiledlayout(fig,'flow',TileSpacing='tight',Padding='tight');
-
-    function slice_plot(ax,data,title_str,units_str)
-        imagesc(ax,data,...
-            'YData',linspace(0,400,size(data,2)), ...
-            'XData',linspace(0,400,size(data,1))...
-            );
-
-        axis(ax,'equal');
-
-        ax.XLimitMethod="tight";
-        ax.YLimitMethod="tight";
-
-        title(ax,title_str);
-        cb = colorbar(ax,"eastoutside");
-        ylabel(cb,units_str);
-    end
-
-slice_plot(nexttile(tiles),squeeze(sub_porosity(:,:,2)),'Porosity','');
-
-perm_to_plot = params.cap_pressure.transform_perm(sub_porosity,sub_permeability);
-
-sub_entry_pressures = params.cap_pressure.func(1, sub_porosity, perm_to_plot);
-
-slice_plot(nexttile(tiles),squeeze(sub_entry_pressures(:,:,2)./barsa()),'Entry pressure','bar');
-
-slice_plot(nexttile(tiles),squeeze(perm_to_plot(:,:,2)./(milli()*darcy())),'Permeability','mD');
-xlabel(tiles,'x, m');
-ylabel(tiles,'y, m');
-end
-
 function [grid, rock] = grid_demo(downscale_params)
 grid.cartDims = [5, 3, 2];
 grid.cells.num = prod(grid.cartDims);
@@ -214,31 +175,6 @@ params = Params(...
     CapPressure(contact_angle,surface_tension,TableFunction(leverett_j_data),[1,1,0]),...
     800, 1000 ...
     );
-end
-
-function [sub_rock] = downscale_all(grid,rock,mask,params)
-arguments
-    grid
-    rock
-    mask
-    params
-end
-
-coarse_idx = 1:length(mask);
-sub_rock(coarse_idx) = struct('poro',[],'perm',[]);
-
-DR = [grid.DX,grid.DY,grid.DZ];
-perm = rock.perm;
-poro = rock.poro;
-
-for cell_index = coarse_idx
-    if ~mask(cell_index)
-        continue;
-    end
-
-    [sub_rock(cell_index).poro, sub_rock(cell_index).perm] = downscale(...
-        poro(cell_index), perm(cell_index,:), DR(cell_index,:), params);
-end
 end
 
 function params = gen_params_2()
@@ -350,4 +286,15 @@ params = Params(...
     TableFunction(krw_data),...
     TableFunction(krg_data),...
     CapPressure(contact_angle,interfacial_tension,TableFunction([sw_pc,jlev]), [1 1 0]),NaN,1000);
+end
+
+function [params] = gen_downscale_params()
+params.subscale = 50 * meter();
+
+params.corr_lens = [50,50,0].*meter();
+
+poro_gen = @(num_samples) randn(1,num_samples)*0.01 + 0.2;
+perm_gen = @(num_samples) exp(randn(1,num_samples) + log(100)) * milli * darcy;
+
+params.poro_perm_gen = @(num_samples) [poro_gen(num_samples); perm_gen(num_samples)];
 end
