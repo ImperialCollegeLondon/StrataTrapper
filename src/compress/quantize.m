@@ -72,7 +72,7 @@ checksums = sum(sorted_features,1);
 sorted_checksums = sort(checksums,"ascend");
 checksum_diffs = diff(sorted_checksums);
 
-can_dedup = any(checksum_diffs <= duplicate_threshold);
+can_dedup = any(checksum_diffs < duplicate_threshold);
 
 if ~can_dedup
     mapping_dedup = 1:size(features,2);
