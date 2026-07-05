@@ -1,14 +1,15 @@
-function sub_rock = import_from_mapping_ijk(dims_fine,sub_coarse,rock_fine)
+function [sub_rock, mask] = import_from_mapping_ijk(dims_fine,sub_coarse,rock_fine,parfor_arg)
 % import_from_mapping_ijk map fine-scale rock properties
 %   to sub_rock input of strata_trapper
 arguments
     dims_fine
     sub_coarse (:,3) {mustBeInteger,mustBeNonnegative} % coarse-grid ijk triplets for each fine cell
-    rock_fine 
+    rock_fine
+    parfor_arg = 0;
 end
 
 ind_coarse = sub_coarse_to_ind_coarse(sub_coarse);
-sub_rock = import_from_mapping_linear(dims_fine, ind_coarse, rock_fine);
+[sub_rock, mask] = import_from_mapping_linear(dims_fine, ind_coarse, rock_fine, parfor_arg);
 end
 
 function ind_coarse =sub_coarse_to_ind_coarse(sub_coarse)

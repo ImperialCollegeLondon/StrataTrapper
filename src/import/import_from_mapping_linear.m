@@ -1,24 +1,30 @@
-function sub_rock=import_from_mapping_linear(dims_fine,ind_coarse,rock_fine)
+function [sub_rock,mask]=import_from_mapping_linear(dims_fine,ind_coarse,rock_fine,parfor_arg)
 % import_from_mapping_linear map fine-scale rock properties
 %   to sub_rock input of strata_trapper
 arguments
     dims_fine (1,3) {mustBeInteger,mustBeNonnegative} % Cartesian index dimensions of the fine grid
     ind_coarse (:,1) {mustBeNumeric} % coarse-grid indices for each fine cell
     rock_fine (1,1) struct % MRST-like rock data struct with .poro and .perm
+    parfor_arg = 0;
 end
 
 min_ind_coarse=min(ind_coarse,[],"all","omitmissing");
 max_ind_coarse=max(ind_coarse,[],"all","omitmissing");
 
 sub_rock(1:max_ind_coarse)=struct('poro',[],'perm',[]);
+mask = true(max_ind_coarse,1);
+idx = (1:numel(ind_coarse))';
 
-for i=min_ind_coarse:max_ind_coarse
+parfor (i=min_ind_coarse:max_ind_coarse, parfor_arg)
     [ind_local,ijk_local,ind_fine_local,dims_local] ...
-        = ind_fine_to_ind_local(ind_coarse,i,dims_fine);
+        = ind_fine_to_ind_local(ind_coarse,i,dims_fine,idx);
 
     sub_poro = zeros(dims_local);
     sub_poro(ind_local)=rock_fine.poro(ind_fine_local);
     sub_rock(i).poro=sub_poro;
+    if max(sub_poro(:))<= 0
+        mask(i) = false;
+    end
 
     sub_perm = zeros([dims_local,3]);
     for dir = 1:3
@@ -27,14 +33,22 @@ for i=min_ind_coarse:max_ind_coarse
         sub_perm(ind_perm_dir) = rock_fine.perm(ind_fine_local, dir);
     end
 
+    if max(sub_perm(:))<= 0
+        mask(i) = false;
+    end
+
     sub_rock(i).perm=sub_perm;
 end
 
 end
 
 function [ind_local,ijk_local,ind_fine_local,dims_local] ...
-    = ind_fine_to_ind_local(ind_coarse,i,dims_fine)
-ind_fine_local=find(ind_coarse==i);
+    = ind_fine_to_ind_local(ind_coarse,i,dims_fine,idx)
+
+% ind_fine_local=find(ind_coarse==i);
+mask = ind_coarse==i;
+ind_fine_local = idx(mask);
+
 [i_fine_local,j_fine_local,k_fine_local]=ind2sub(dims_fine,ind_fine_local);
 ijk_fine_local=[i_fine_local,j_fine_local,k_fine_local];
 local_sub_min=min(ijk_fine_local,[],1,"omitmissing");

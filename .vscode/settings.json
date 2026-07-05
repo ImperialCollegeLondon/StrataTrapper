@@ -9,7 +9,8 @@
         "matlab",
         "export",
         "matlab-repo-init",
-        "options"
+        "options",
+        "import"
     ],
     "yaml.schemas": {
         "https://raw.githubusercontent.com/citation-file-format/citation-file-format/main/schema.json": [
