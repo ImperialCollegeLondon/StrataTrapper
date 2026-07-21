@@ -76,19 +76,18 @@ perm_x = perm(:,1);
 sub_log_perm_x = normalize(corr_field,log(perm_x),stdev_log_perm);
 sub_perm_x = exp(sub_log_perm_x);
 
-KyKx = perm(2)./perm(1);
-KvKh = perm(3)./perm(1);
+% Compute averaged directional permeabilities and mult-match with input
 
-% FIXME: implement optimization-based directional permeability multipliers:
-% 1. Compute mean-based permeabilities
-% 2. Compute multiplicative mismatch with input permeabilities
-% 3. Apply multipliers
-% 4. Repeat until match
+reperm_x = squeeze(mean(sub_perm_x,[2, 3]));
+reperm_y = squeeze(mean(sub_perm_x,[1, 3]));
+reperm_z = squeeze(mean(sub_perm_x,[1, 2]));
+reperm =[harmmean(reperm_x),harmmean(reperm_y),harmmean(reperm_z)];
+mults = perm./reperm;
 
 sub_perm = zeros([sub_dims,3]);
-sub_perm(:,:,:,1) = sub_perm_x;
-sub_perm(:,:,:,2) = sub_perm_x*KyKx;
-sub_perm(:,:,:,3) = sub_perm_x*KvKh;
+sub_perm(:,:,:,1) = sub_perm_x * mults(1);
+sub_perm(:,:,:,2) = sub_perm_x * mults(2) ;
+sub_perm(:,:,:,3) = sub_perm_x * mults(3);
 
 end
 

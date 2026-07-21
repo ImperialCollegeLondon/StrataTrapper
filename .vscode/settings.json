@@ -10,7 +10,8 @@
         "export",
         "matlab-repo-init",
         "options",
-        "import"
+        "import",
+        "downscale"
     ],
     "yaml.schemas": {
         "https://raw.githubusercontent.com/citation-file-format/citation-file-format/main/schema.json": [
