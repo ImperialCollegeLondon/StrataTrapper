@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.21.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.20.0...v0.21.0) (2026-07-21)
+
+
+### Features
+
+* **import:** make sub_rock from given grid mapping ([8991867](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/8991867b7eb64394f4b51b882edb1cdafbcdd343))
+* **import:** make sub_rock from given grid mapping ([8991867](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/8991867b7eb64394f4b51b882edb1cdafbcdd343))
+
+
+### Bug Fixes
+
+* **compress:** deduplication condition ([49e93eb](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/49e93ebdd801e3b0c8fcfd779d6bb79fc3998624))
+* **downscale:** 🐛 permeability reupscaling precision ([dca5c2d](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/dca5c2dfd2824dfd2e929bd4d541a815c631c2d2))
+
+
+### Performance Improvements
+
+* **import:** ⚡️ optimize `import_from_mapping` ([2b38cdb](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/2b38cdbae7a472b4baa28717943f36dc6b2bbe04))
+
 ## [0.20.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.19.0...v0.20.0) (2026-04-13)
 
 
