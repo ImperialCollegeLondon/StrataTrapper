@@ -6,8 +6,6 @@
 ### Features
 
 * **import:** make sub_rock from given grid mapping ([8991867](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/8991867b7eb64394f4b51b882edb1cdafbcdd343))
-* **import:** make sub_rock from given grid mapping ([8991867](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/8991867b7eb64394f4b51b882edb1cdafbcdd343))
-
 
 ### Bug Fixes
 
