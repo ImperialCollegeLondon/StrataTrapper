@@ -31,9 +31,8 @@ downscale_params = gen_downscale_params();
 
 mask = uint8([0;1;2;1;0;1;2;1;0]); % process only a fraction of cells
 params(2) = gen_params_2();
-downscale_mask = true(grid.cells.num,1);
-downscale_mask(1:numel(mask)) = mask > 0;
-sub_rock = downscale(grid,rock,downscale_params.corr_lens,downscale_mask);
+corr_lens = repmat(downscale_params.corr_lens,2,1);
+sub_rock = downscale(grid,rock,corr_lens,mask);
 
 options = Options().save_mip_step(true);
 
