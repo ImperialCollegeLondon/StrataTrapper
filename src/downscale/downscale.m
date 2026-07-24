@@ -1,39 +1,41 @@
-function [sub_rock] = downscale(grid,rock,corr_len_m,mask,args)
+function [sub_rock] = downscale(grid,rock,corr_len_m,corr_len_map,args)
 arguments
     grid (1,1) struct % MRST grid struct imported from ECLIPSE
     rock (1,1) struct % MRST rock struct imported from ECLIPSE
-    corr_len_m (1,3) double % correlation lengths [cx,cy,cz] (meters)
-    mask (:,1) logical = true(grid.cells.num,1);
+    corr_len_m (:,3) double % correlation lengths [cx,cy,cz] (meters)
+    corr_len_map (:,1) uint8 = ones(grid.cells.num,1);
     args.sub_dim_min (1,1) uint32 = 3
     args.sub_dim_max (1,1) uint32 = Inf
+    % args.parfor_arg = 0;
 end
 
 poro = rock.poro;
 perm = rock.perm;
 perm_x = perm(:,1);
-
+mask = false(grid.cells.num,1);
+numel_act = min(grid.cells.num,numel(corr_len_map));
+mask(1:numel_act) = corr_len_map(1:numel_act) > 0;
 stdev_poro = std(poro(mask),0,"all");
 stdev_log_perm = std(log(perm_x(mask)),0,"all");
 
 DR = [grid.DX,grid.DY,grid.DZ];
 
-sub_dims = get_sub_dims(DR,corr_len_m,args.sub_dim_min,args.sub_dim_max);
-
 coarse_idx = 1:grid.cells.num;
 sub_rock(coarse_idx) = struct('poro',[],'perm',[]);
 
 for i = coarse_idx
-    % parfor i = coarse_idx
-    if ~mask(i)
+% parfor (i = coarse_idx,args.parfor_arg) % BUG: parfor fails where for does not
+    if mask(i) == false
         continue;
     end
     dr = DR(i,:);
-    sub_dims_i = sub_dims(i,:);
+    corr_len_i = corr_len_m(corr_len_map(i),:);
+    sub_dims_i = get_sub_dims(dr,corr_len_i,args.sub_dim_min,args.sub_dim_max);
     poro_i = poro(i);
     perm_i = perm(i,:);
 
-    [sub_poro,sub_perm] = downscale_cell(poro_i,perm_i,dr,sub_dims_i,corr_len_m,...
-    stdev_poro,stdev_log_perm,max_rel_stdev_poro=0.3);
+    [sub_poro,sub_perm] = downscale_cell(poro_i,perm_i,dr,sub_dims_i,corr_len_i,...
+        stdev_poro,stdev_log_perm,max_rel_stdev_poro=0.3);
 
     sub_rock(i).poro = sub_poro;
     sub_rock(i).perm = sub_perm;
@@ -41,9 +43,14 @@ end
 end
 
 function sub_dims = get_sub_dims(DR,corr_len_m,sub_dim_min,sub_dim_max)
-corr_len = repmat(corr_len_m,size(DR,1),1);
-corr_len(:,corr_len_m<eps) = DR(:,corr_len_m<eps);
-sub_dims = uint32(ceil(DR./corr_len));
+arguments
+    DR (1,3) 
+    corr_len_m (1,3) 
+    sub_dim_min 
+    sub_dim_max 
+end
+corr_len_m(:,corr_len_m<eps) = DR(:,corr_len_m<eps);
+sub_dims = uint32(ceil(DR./corr_len_m));
 sub_dims = max(sub_dims,sub_dim_min);
 sub_dims(:,3) = min(sub_dims(:,3),sub_dim_max);
 end
