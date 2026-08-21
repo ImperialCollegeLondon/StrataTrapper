@@ -75,8 +75,8 @@ for index_saturation = 1:length(saturations)
     pc_mid_tot = 0;
     sub_sw = zeros(0,0,0); coder.varsize('sub_sw');
     for iteration_num=1:max_iterations
-        [pc_mid_tot, sw_mid, pc_mid, sub_sw, converged, err] = mip_iteration(...
-            sw_target, dr, entry_pressures, porosities, permeabilities, pc_mid, ...
+        [pc_mid_tot, sw_mid, pc_mid, sub_sw, converged, err] = mip_iter_imb(...
+            sw_target, dr, pc_max, porosities, permeabilities, pc_mid, ...
             Nz_sub, Nx_sub, Ny_sub,...
             params, options);
 
@@ -151,52 +151,6 @@ krg         = interp1(sw_upscaled, krg', saturations, "linear","extrap")';
 
 end
 
-function [pc_mid_tot, sw_mid, pc_mid, sub_sw, converged, err] = mip_iteration(...
-    sw_target, dr, entry_pressures, porosities, permeabilities, pc_mid,...
-    Nz_sub, Nx_sub, Ny_sub, ...
-    params, options)
-
-invaded_mat_mid = calc_percolation(pc_mid, entry_pressures,...
-    options.hydrostatic_correction, dr(3), params.rho_water, params.rho_gas);
-
-volume = prod(dr);
-sub_volume = volume./double(Nz_sub*Nx_sub*Ny_sub);
-pore_volumes = porosities .* sub_volume;
-pore_volume = sum(pore_volumes,'all');
-
-sub_sw = invaded_mat_mid .* params.cap_pressure.inv(pc_mid,porosities,permeabilities) ...
-    + ~invaded_mat_mid .* 1;
-sub_sw(~isfinite(sub_sw)) = 1;
-sw_mid = sum(sub_sw.*pore_volumes,'all')/pore_volume;
-
-% FIXME: Pc should converge as well as Sw
-pc_mid_tot = sum((1-sub_sw).*pore_volumes.*pc_mid,"all")/(pore_volume*(1-sw_mid));
-
-if sw_mid >=1
-    pc_mid_tot = pc_mid;
-end
-
-sw_err = sw_target - sw_mid;
-err = abs(sw_err);
-converged = err <= options.sat_tol;
-if converged
-    return;
-end
-
-deriv = params.cap_pressure.deriv(sw_mid, mean(porosities,'all'), mean(permeabilities,'all'));
-
-dpc = sw_err*deriv;
-
-pc_mid = pc_mid + dpc * 0.8;
-if ~isfinite(pc_mid)
-    error('')
-end
-if pc_mid < min(entry_pressures(:))
-    pc_mid = min(entry_pressures(:));
-end
-
-end
-
 function [krg, krw] = calc_relative_permeabilities(dr_sub, perm_upscaled_mD, Kg_sub_mD, Kw_sub_mD)
 
 K_phase_upscaled = zeros(1,6);
@@ -208,7 +162,7 @@ Kx_mD = perm_upscaled_mD(1);
 Ky_mD = perm_upscaled_mD(2);
 Kz_mD = perm_upscaled_mD(3);
 
-K_phase_upscaled([1,4]) = K_phase_upscaled([1,4]) ./ Kx_mD; % NOTE: avoid dividing two small numbers
+K_phase_upscaled([1,4]) = K_phase_upscaled([1,4]) ./ Kx_mD;
 K_phase_upscaled([2,5]) = K_phase_upscaled([2,5]) ./ Ky_mD;
 K_phase_upscaled([3,6]) = K_phase_upscaled([3,6]) ./ Kz_mD;
 
@@ -242,6 +196,7 @@ function [pc_eff, sw_eff, pc_bc, sub_sw, converged, err] = mip_iter_imb(...
     params, options)
 
 % invaded with water
+% if false -> only gas, if true -> partial water
 invaded_mat_mid = calc_percolation_imb(pc_bc, max_pressures,...
     options.hydrostatic_correction, dr(3), params.rho_water, params.rho_gas);
 
@@ -251,20 +206,16 @@ pore_volumes = porosities .* sub_volume;
 pore_volume = sum(pore_volumes,'all');
 
 sub_sw = invaded_mat_mid .* params.cap_pressure.inv(pc_bc,porosities,permeabilities) ...
-    + ~invaded_mat_mid .* 0;
+    + ~invaded_mat_mid .* params.sw_resid;
 sub_sw(~isfinite(sub_sw)) = 0;
 sw_eff = sum(sub_sw.*pore_volumes,'all')/pore_volume;
 
-% FIXME: Pc should converge as well as Sw
 pc_eff = sum((1-sub_sw).*pore_volumes.*pc_bc,"all")/(pore_volume*(1-sw_eff));
 
 if sw_eff >=1
     pc_eff = pc_bc; % FIXME: verify this branch for imbibition
 end
 
-% FIXME change target criteria to other sampling methods
-% based on individual threshold pressures
-% FIXME move convergence processing to the outside
 sw_err = sw_target - sw_eff;
 err = abs(sw_err);
 converged = err <= options.sat_tol;

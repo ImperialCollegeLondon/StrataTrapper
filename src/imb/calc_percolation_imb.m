@@ -1,4 +1,4 @@
-function [invasion,num_iter] = calc_percolation_imb(p_boundary,p_max, ...
+function [wat_invasion,num_iter] = calc_percolation_imb(p_boundary,p_max, ...
     include_gravity, Lz, rho_water, rho_gas)
 
 h_ref = Lz*0.5;
@@ -12,22 +12,22 @@ if ~ismissing(rho_gas)
     hydrostatic_correction = include_gravity * std_gravity() * (rho_water - rho_gas) * (h - h_ref);
 end
 
-invasion = false(size(p_max));
-invadable = (p_max + hydrostatic_correction) > p_boundary;
-idx_invadable = find(invadable)';
-[I,J,K] = ind2sub(size(invadable),idx_invadable);
+wat_invasion = false(size(p_max));
+wat_invadable = (p_max + hydrostatic_correction) > p_boundary;
+idx_wat_invadable = find(wat_invadable)';
+[I,J,K] = ind2sub(size(wat_invadable),idx_wat_invadable);
 is_invading = true;
 num_iter = 0;
 while is_invading
-    [invasion, is_invading] = calc_percolation_iter(invasion,[I;J;K]);
-    not_checked = find(invadable & ~invasion)';
-    [I,J,K] = ind2sub(size(invadable),not_checked);
+    [wat_invasion, is_invading] = calc_percolation_iter(wat_invasion,[I;J;K]);
+    not_checked = find(wat_invadable & ~wat_invasion)';
+    [I,J,K] = ind2sub(size(wat_invadable),not_checked);
     num_iter = num_iter+1;
 end
 end
 
-function [invasion,has_changed] = calc_percolation_iter(invasion,Idx)
-[Nx,Ny,Nz] = size(invasion);
+function [wat_invasion,has_changed] = calc_percolation_iter(wat_invasion,Idx)
+[Nx,Ny,Nz] = size(wat_invasion);
 has_changed = false;
 for num_col = 1:size(Idx,2)
     i = Idx(1,num_col);
@@ -39,19 +39,19 @@ for num_col = 1:size(Idx,2)
     is_connected = is_boundary;
 
     if ~is_connected
-        is_connected = find_invaded_nearby(invasion, i,j,k, Nx,Ny,Nz);
+        is_connected = find_invaded_nearby(wat_invasion, i,j,k, Nx,Ny,Nz);
     end
 
     if ~is_connected
         continue;
     end
 
-    invasion(i,j,k) = true;
+    wat_invasion(i,j,k) = true;
     has_changed = true;
 end
 end
 
-function is_next_to_invaded = find_invaded_nearby(invasion, i,j,k, Nx,Ny,Nz)
+function is_next_to_invaded = find_invaded_nearby(wat_invasion, i,j,k, Nx,Ny,Nz)
 is_next_to_invaded = false;
 delta_around = [-1,1];
 
@@ -61,7 +61,7 @@ for di=delta_around
         continue;
     end
 
-    is_next_to_invaded = invasion(ii,j,k);
+    is_next_to_invaded = wat_invasion(ii,j,k);
     if is_next_to_invaded
         return;
     end
@@ -73,7 +73,7 @@ for dj=delta_around
         continue;
     end
 
-    is_next_to_invaded = invasion(i,jj,k);
+    is_next_to_invaded = wat_invasion(i,jj,k);
     if is_next_to_invaded
         return;
     end
@@ -85,7 +85,7 @@ for dk=delta_around
         continue;
     end
 
-    is_next_to_invaded = invasion(i,j,kk);
+    is_next_to_invaded = wat_invasion(i,j,kk);
     if is_next_to_invaded
         return;
     end
