@@ -62,36 +62,19 @@ pc_max_finite = pc_max(:);
 pc_max_finite = pc_max_finite(is_pc_max_finite);
 pc_points = linspace(max(pc_max_finite),min(entry_pressures(:)),length(saturations));
 
+% TODO: maybe catch sg_cr by bisection?
+% min sw: kg === 0
 for index_saturation = 1:length(saturations)
 
-    sw_target = saturations(index_saturation);
-
-    pc_mid = pc_points(index_saturation);
-    sw_mid = sw_target;
-
-    calc_endpoint = index_saturation == 1 || index_saturation == length(saturations);
-    max_iterations = calc_endpoint*1000 + ~calc_endpoint*100;
-    err_prev = Inf;
-    pc_mid_tot = 0;
-    sub_sw = zeros(0,0,0); coder.varsize('sub_sw');
-    for iteration_num=1:max_iterations
-        [pc_mid_tot, sw_mid, pc_mid, sub_sw, converged, err] = mip_iter_imb(...
-            sw_target, dr, pc_max, porosities, permeabilities, pc_mid, ...
+    pc_boundary = pc_points(index_saturation);
+   
+        [~, sw_mid, sub_sw] = mip_iter_imb(...
+            dr, pc_max, porosities, permeabilities, pc_boundary, ...
             Nz_sub, Nx_sub, Ny_sub,...
             params, options);
 
-        if converged
-            break;
-        end
-
-        if abs(err - err_prev) <= eps
-            break;
-        end
-        err_prev = err;
-    end
-
     sw_upscaled(index_saturation) = sw_mid;
-    pc_upscaled(index_saturation) = pc_mid_tot;
+    pc_upscaled(index_saturation) = pc_boundary;
 
     Kg_sub_mD = params.krg.func(1-sub_sw);
     Kw_sub_mD = params.krw.func(sub_sw);
@@ -190,8 +173,8 @@ coder.varsize('sub_sw');
 mip_cell_data = struct('sw',nan,'sub_sw',sub_sw);
 end
 
-function [pc_eff, sw_eff, pc_bc, sub_sw, converged, err] = mip_iter_imb(...
-    sw_target, dr, max_pressures, porosities, permeabilities, pc_bc,...
+function [pc_eff, sw_eff, sub_sw] = mip_iter_imb(dr, max_pressures, ...
+    porosities, permeabilities, pc_bc,...
     Nz_sub, Nx_sub, Ny_sub, ...
     params, options)
 
@@ -211,30 +194,5 @@ sub_sw(~isfinite(sub_sw)) = 0;
 sw_eff = sum(sub_sw.*pore_volumes,'all')/pore_volume;
 
 pc_eff = sum((1-sub_sw).*pore_volumes.*pc_bc,"all")/(pore_volume*(1-sw_eff));
-
-if sw_eff >=1
-    pc_eff = pc_bc; % FIXME: verify this branch for imbibition
-end
-
-sw_err = sw_target - sw_eff;
-err = abs(sw_err);
-converged = err <= options.sat_tol;
-if converged
-    return;
-end
-
-deriv = params.cap_pressure.deriv(sw_eff, mean(porosities,'all'), mean(permeabilities,'all'));
-
-dpc = sw_err*deriv;
-
-pc_bc = pc_bc + dpc * 0.8;
-if ~isfinite(pc_bc)
-    error('')
-end
-
-% FIXME: fix this
-if pc_bc < min(max_pressures(:))
-    pc_bc = min(max_pressures(:));
-end
 
 end

@@ -45,8 +45,8 @@ strata_trapped = strata_trapper(grid, sub_rock, params, ...
 
 %% Visualize saturation functions
 
-plot_result(strata_trapped,1,visible=visible);
-plot_result(strata_trapped,2,visible=visible);
+plot_result(strata_trapped,1,visible=visible,kr_scale="linear");
+plot_result(strata_trapped,2,visible=visible,kr_scale="linear");
 
 %% OGS inputs generation
 
@@ -60,7 +60,7 @@ opm_export(strata_trapped,satnum=1);
 
 %% Output compression
 
-test_output_compression(strata_trapped,visible);
+% test_output_compression(strata_trapped,visible);
 
 end
 
