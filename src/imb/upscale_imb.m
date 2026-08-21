@@ -60,7 +60,7 @@ pc_max = params.cap_pressure.func(params.sw_resid,porosities,permeabilities);
 is_pc_max_finite = isfinite(pc_max(:));
 pc_max_finite = pc_max(:);
 pc_max_finite = pc_max_finite(is_pc_max_finite);
-pc_points = linspace(max(pc_max_finite),min(entry_pressures(:)),length(saturations));
+pc_points = logspace(log10(max(pc_max_finite)),log10(min(entry_pressures(:))),length(saturations));
 
 % TODO: maybe catch sg_cr by bisection?
 % min sw: kg === 0

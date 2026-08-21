@@ -1,4 +1,4 @@
-function demo(args)
+function strata_trapped = demo(args)
 arguments
     args.parfor_arg = Inf;
     args.show_figures = true;
@@ -45,8 +45,8 @@ strata_trapped = strata_trapper(grid, sub_rock, params, ...
 
 %% Visualize saturation functions
 
-plot_result(strata_trapped,1,visible=visible,kr_scale="linear");
-plot_result(strata_trapped,2,visible=visible,kr_scale="linear");
+plot_result(strata_trapped,1,visible=visible,kr_scale="log");
+plot_result(strata_trapped,2,visible=visible,kr_scale="log");
 
 %% OGS inputs generation
 
