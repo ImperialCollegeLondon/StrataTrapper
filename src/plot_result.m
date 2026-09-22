@@ -6,6 +6,7 @@ arguments
     args.kr_scale = "log"
     args.parent = struct([]);
     args.visible char = 'on';
+    args.full_stat_plot = true;
 end
 
 if isempty(args.parent)
@@ -24,14 +25,15 @@ leverett_j = dequantize(strata_trapped.tables(param_id,1)).leverett_j;
 
 [~, ax_pc] =  stat_plot(ax_pc,saturation,...
     @(sw)strata_trapped.params(param_id).cap_pressure.leverett_j.func(sw),...
-    leverett_j,param_id,true);
+    leverett_j,param_id=param_id,show_legend=true,all_lines=args.full_stat_plot);
 
 title(ax_pc,'Leverett J-function');
 ylabel(ax_pc,'[-]');
 ax_pc.YScale='log';
 
 curves_plot([ax_krw_x,ax_krw_y,ax_krw_z;ax_krg_x,ax_krg_y,ax_krg_z], saturation, ...
-    strata_trapped.tables(param_id,:), strata_trapped.params(param_id), args.kr_scale);
+    strata_trapped.tables(param_id,:), strata_trapped.params(param_id), ...
+    args.kr_scale, args.full_stat_plot);
 
 xlabel(t_all,'Wetting phase saturation',FontSize=args.font_size);
 title(t_kr,'Relative permeability',FontSize=args.font_size);
@@ -47,53 +49,67 @@ subtitle(ax_krg_z,'z','Interpreter','latex');
 end
 
 
-function curves_plot(ax_kr, saturation, dequantized, params, scale)
+function curves_plot(ax_kr, saturation, dequantized, params, scale, all_lines)
 arguments
     ax_kr
     saturation
     dequantized
     params
-    scale = "log"
+    scale
+    all_lines
 end
 
-stat_plot(ax_kr(1,1),saturation,@(sw)params.krw.func(sw),dequantized(1).krw,[]);
+stat_plot(ax_kr(1,1),saturation,@(sw)params.krw.func(sw),dequantized(1).krw,...
+    all_lines=all_lines);
 ax_kr(1,1).YScale = scale;
 
-stat_plot(ax_kr(2,1),saturation,@(sw) params.krg.func(1-sw),dequantized(1).krg,[]);
+stat_plot(ax_kr(2,1),saturation,@(sw) params.krg.func(1-sw),dequantized(1).krg,...
+    all_lines=all_lines);
 ax_kr(2,1).YScale = scale;
 
-stat_plot(ax_kr(1,2),saturation,@(sw)params.krw.func(sw),dequantized(2).krw,[]);
+stat_plot(ax_kr(1,2),saturation,@(sw)params.krw.func(sw),dequantized(2).krw,...
+    all_lines=all_lines);
 ax_kr(1,2).YScale = scale;
 
-stat_plot(ax_kr(2,2),saturation,@(sw) params.krg.func(1-sw),dequantized(2).krg,[]);
+stat_plot(ax_kr(2,2),saturation,@(sw) params.krg.func(1-sw),dequantized(2).krg,...
+    all_lines=all_lines);
 ax_kr(2,2).YScale = scale;
 
-stat_plot(ax_kr(1,3),saturation,@(sw)params.krw.func(sw),dequantized(3).krw,[]);
+stat_plot(ax_kr(1,3),saturation,@(sw)params.krw.func(sw),dequantized(3).krw,...
+    all_lines=all_lines);
 ax_kr(1,3).YScale = scale;
 
-stat_plot(ax_kr(2,3),saturation,@(sw) params.krg.func(1-sw),dequantized(3).krg,[]);
+stat_plot(ax_kr(2,3),saturation,@(sw) params.krg.func(1-sw),dequantized(3).krg,...
+    all_lines=all_lines);
 ax_kr(2,3).YScale = scale;
 end
 
 
-function [y_lim, ax] = stat_plot(ax, x_data, base_func, data, param_id, show_legend,color)
+function [y_lim, ax] = stat_plot(ax, x_data, base_func, data, args)
 arguments
     ax
     x_data (1,:) double
     base_func
     data   (:,:) double
-    param_id
-    show_legend (1,1) logical = false
-    color = 'blue'
+    args.param_id = []
+    args.show_legend (1,1) logical = false
+    args.color = 'blue'
+    args.all_lines (1,1) logical
 end
-
-parallelcoords(ax,data,'Quantile',0.01,'XData',x_data,'Color',color);
 
 if ~isempty(base_func)
-    hold(ax,'on');
     plot(ax,x_data,base_func(x_data),'-r');
-    hold(ax,'off');
 end
+
+hold(ax,'on');
+common_plot_args = {ax,data,'XData',x_data,'Color',args.color};
+if args.all_lines
+    parallelcoords(common_plot_args{:});
+else
+    parallelcoords(common_plot_args{:},'Quantile',0.01);
+end
+hold(ax,'off');
+
 
 ylabel(ax,'');
 xlabel(ax,'');
@@ -103,10 +119,14 @@ ax.XLimitMethod="tickaligned";
 
 ax.YLimitMethod="tight";
 
-if show_legend
-    legends = {'Median','Quantiles 0.01 and 0.99',''};
-    if ~isempty(base_func)
-        legends{end+1} = sprintf('Fine-scale curve (id: %u)',param_id);
+if args.show_legend
+    legends{1} = sprintf('Fine-scale curve (id: %u)',args.param_id);
+
+    if args.all_lines
+        legends{2} = 'Upscaled curves';
+    else
+        legends{2} = 'Median';
+        legends{3} = 'Quantiles 0.01 and 0.99';
     end
 
     legend(ax,legends,'Location','northoutside');

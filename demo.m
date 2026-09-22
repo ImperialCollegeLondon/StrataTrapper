@@ -60,11 +60,11 @@ opm_export(strata_trapped,satnum=1);
 
 %% Output compression
 
-test_output_compression(strata_trapped,visible);
+test_output_compression(strata_trapped,visible,args.plot_quantized);
 
 end
 
-function test_output_compression(strata_trapped,visible)
+function test_output_compression(strata_trapped,visible,plot_quantized)
 
 % trivial pass
 quantized_trivial = quantize(strata_trapped,QuantizeOptions());
@@ -104,7 +104,7 @@ for i=1:numel(options)
 
     compare_tables(strata_trapped.tables,quantized(i).tables,strata_trapped.saturation);
     
-    if ~args.plot_quantized
+    if ~plot_quantized
         continue;
     end
 
