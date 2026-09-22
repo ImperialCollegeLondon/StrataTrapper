@@ -3,6 +3,7 @@ arguments
     args.parfor_arg = Inf;
     args.show_figures = true;
     args.show_progress = true;
+    args.plot_quantized = true;
 end
 
 if args.show_figures
@@ -102,6 +103,10 @@ for i=1:numel(options)
     quantized(i) = quantize(strata_trapped,options(i));
 
     compare_tables(strata_trapped.tables,quantized(i).tables,strata_trapped.saturation);
+    
+    if ~args.plot_quantized
+        continue;
+    end
 
     plot_result(quantized(i),mod(i,2)+1,"visible",visible);
 end
