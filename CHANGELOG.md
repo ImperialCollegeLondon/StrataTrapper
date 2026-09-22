@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.22.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.21.0...v0.22.0) (2026-09-22)
+
+
+### Features
+
+* `plot_quantized` flag for `demo` ([8ae5ac7](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/8ae5ac774a18f414ec42a3a3403b0d4544a69d4c))
+* **downscale:** per-region correlations ([b0b3a34](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/b0b3a34fba56d30fee6e86c0cf81d791f4e4f522))
+* **plot:** `plot_result(___,full_stat_plot=...)` ([77c9023](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/77c9023c5241afe512fe380e6b923e15bf36ff86))
+
 ## [0.21.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.20.0...v0.21.0) (2026-07-22)
 
 
