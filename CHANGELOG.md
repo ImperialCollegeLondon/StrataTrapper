@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.22.1](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.22.0...v0.22.1) (2026-10-06)
+
+
+### Bug Fixes
+
+* iteration-free MIP step ([fb1bfca](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/fb1bfcae7f655509cc4b60e49bb0f8dbf3604ab6))
+* **plot:** quantiles by default ([af1b17a](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/af1b17a5f470600ee86cc9d08dfdc15dbd6486c4))
+* remove unused option ([2d36fac](https://github.com/ImperialCollegeLondon/StrataTrapper/commit/2d36facd70b91e7f287dfd08f7adbe87c7b091e5))
+
 ## [0.22.0](https://github.com/ImperialCollegeLondon/StrataTrapper/compare/v0.21.0...v0.22.0) (2026-09-22)
 
 
