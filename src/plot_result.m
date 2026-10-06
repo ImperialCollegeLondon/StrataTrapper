@@ -6,7 +6,7 @@ arguments
     args.kr_scale = "log"
     args.parent = struct([]);
     args.visible char = 'on';
-    args.full_stat_plot = true;
+    args.full_stat_plot = false;
 end
 
 if isempty(args.parent)
