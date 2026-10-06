@@ -60,38 +60,21 @@ pc_max = params.cap_pressure.func(params.sw_resid,porosities,permeabilities);
 is_pc_max_finite = isfinite(pc_max(:));
 pc_max_finite = pc_max(:);
 pc_max_finite = pc_max_finite(is_pc_max_finite);
-pc_points = linspace(max(pc_max_finite),min(entry_pressures(:)),length(saturations));
+pc_points = logspace(log10(max(pc_max_finite)),log10(min(entry_pressures(:))),length(saturations));
 
 for index_saturation = 1:length(saturations)
 
-    sw_target = saturations(index_saturation);
+    pc_boundary = pc_points(index_saturation);
 
-    pc_mid = pc_points(index_saturation);
-    sw_mid = sw_target;
+    % sub_sw = zeros(0,0,0); coder.varsize('sub_sw');
 
-    calc_endpoint = index_saturation == 1 || index_saturation == length(saturations);
-    max_iterations = calc_endpoint*1000 + ~calc_endpoint*100;
-    err_prev = Inf;
-    pc_mid_tot = 0;
-    sub_sw = zeros(0,0,0); coder.varsize('sub_sw');
-    for iteration_num=1:max_iterations
-        [pc_mid_tot, sw_mid, pc_mid, sub_sw, converged, err] = mip_iteration(...
-            sw_target, dr, entry_pressures, porosities, permeabilities, pc_mid, ...
-            Nz_sub, Nx_sub, Ny_sub,...
-            params, options);
-
-        if converged
-            break;
-        end
-
-        if abs(err - err_prev) <= eps
-            break;
-        end
-        err_prev = err;
-    end
+    [sw_mid, sub_sw] = mip_iteration(...
+        dr, entry_pressures, porosities, permeabilities, pc_boundary, ...
+        Nz_sub, Nx_sub, Ny_sub,...
+        params, options);
 
     sw_upscaled(index_saturation) = sw_mid;
-    pc_upscaled(index_saturation) = pc_mid_tot;
+    pc_upscaled(index_saturation) = pc_boundary;
 
     Kg_sub_mD = params.krg.func(1-sub_sw);
     Kw_sub_mD = params.krw.func(sub_sw);
@@ -151,12 +134,12 @@ krg         = interp1(sw_upscaled, krg', saturations, "linear","extrap")';
 
 end
 
-function [pc_mid_tot, sw_mid, pc_mid, sub_sw, converged, err] = mip_iteration(...
-    sw_target, dr, entry_pressures, porosities, permeabilities, pc_mid,...
+function [sw_mid, sub_sw] = mip_iteration(...
+    dr, entry_pressures, porosities, permeabilities, pc_boundary,...
     Nz_sub, Nx_sub, Ny_sub, ...
     params, options)
 
-invaded_mat_mid = calc_percolation(pc_mid, entry_pressures,...
+invaded_mat_mid = calc_percolation(pc_boundary, entry_pressures,...
     options.hydrostatic_correction, dr(3), params.rho_water, params.rho_gas);
 
 volume = prod(dr);
@@ -164,36 +147,10 @@ sub_volume = volume./double(Nz_sub*Nx_sub*Ny_sub);
 pore_volumes = porosities .* sub_volume;
 pore_volume = sum(pore_volumes,'all');
 
-sub_sw = invaded_mat_mid .* params.cap_pressure.inv(pc_mid,porosities,permeabilities) ...
+sub_sw = invaded_mat_mid .* params.cap_pressure.inv(pc_boundary,porosities,permeabilities) ...
     + ~invaded_mat_mid .* 1;
 sub_sw(~isfinite(sub_sw)) = 1;
 sw_mid = sum(sub_sw.*pore_volumes,'all')/pore_volume;
-
-% FIXME: Pc should converge as well as Sw
-pc_mid_tot = sum((1-sub_sw).*pore_volumes.*pc_mid,"all")/(pore_volume*(1-sw_mid));
-
-if sw_mid >=1
-    pc_mid_tot = pc_mid;
-end
-
-sw_err = sw_target - sw_mid;
-err = abs(sw_err);
-converged = err <= options.sat_tol;
-if converged
-    return;
-end
-
-deriv = params.cap_pressure.deriv(sw_mid, mean(porosities,'all'), mean(permeabilities,'all'));
-
-dpc = sw_err*deriv;
-
-pc_mid = pc_mid + dpc * 0.8;
-if ~isfinite(pc_mid)
-    error('')
-end
-if pc_mid < min(entry_pressures(:))
-    pc_mid = min(entry_pressures(:));
-end
 
 end
 
