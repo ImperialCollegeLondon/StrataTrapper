@@ -6,7 +6,7 @@ jobs:
   buildtool:
     strategy:
       matrix:
-        release: [R2023a, R2024b]
+        release: [R2023a, R2026a]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
